@@ -21,7 +21,9 @@ public abstract class Ship {
     }
 
     public void hit() {
-        mHitPoints--;
+        if (mHitPoints > 0) {
+            mHitPoints--;
+        }
     }
 
     public boolean isSunk() {
