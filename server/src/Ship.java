@@ -4,11 +4,13 @@ import java.util.List;
 public abstract class Ship {
     private Coordinate mSize;
     private int mHitPoints;
+    protected Board mBoard;
     protected Weapon[] mWeapons;
 
-    protected Ship(Coordinate size) {
+    protected Ship(Board board, Coordinate size) {
         mSize = size;
         mHitPoints = size.getRow() * size.getColumn();
+        mBoard = board;
         mWeapons = new Weapon[0];
     }
 

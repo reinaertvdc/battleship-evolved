@@ -1,14 +1,14 @@
 import java.util.Observable;
 
 public abstract class Weapon extends Observable {
-    protected Board mBoard;
     private int mCooldown;
     private int mCurrentCooldown;
+    protected Board mBoard;
 
-    public Weapon(Board board, int cooldown, int currentCooldown) {
-        mBoard = board;
+    protected Weapon(Board board, int cooldown, int currentCooldown) {
         mCooldown = cooldown;
         mCurrentCooldown = currentCooldown;
+        mBoard = board;
     }
 
     public void coolDown() {
@@ -21,12 +21,12 @@ public abstract class Weapon extends Observable {
         if (!isReady()) {
             throw new NotReadyException();
         } else {
-            _deploy(field, coordinate);
+            execute(field, coordinate);
             mCurrentCooldown = mCooldown;
         }
     }
 
-    protected abstract void _deploy(Field field, Coordinate coordinate);
+    protected abstract void execute(Field field, Coordinate coordinate);
 
     public int getCooldown() {
         return mCooldown;
