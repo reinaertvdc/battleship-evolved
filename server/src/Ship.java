@@ -31,6 +31,6 @@ public abstract class Ship {
     }
 
     public boolean isSunk() {
-        return mHitPoints > 0;
+        return mHitPoints <= 0;
     }
 }
