@@ -37,7 +37,7 @@ public abstract class Weapon extends Observable {
         return mCoolDown;
     }
 
-    public int getCurrentCooldown() {
+    public int getCurrentCoolDown() {
         return mCurrentCoolDown;
     }
 
