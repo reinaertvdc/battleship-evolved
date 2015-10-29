@@ -1,7 +1,7 @@
-public class WeaponShot extends Weapon {
-    private static final int COOL_DOWN = 1;
+public class WeaponRadar extends Weapon {
+    private static final int COOL_DOWN = 3;
 
-    public WeaponShot(Board board) {
+    public WeaponRadar(Board board) {
         super(board, COOL_DOWN, COOL_DOWN);
     }
 

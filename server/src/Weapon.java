@@ -1,19 +1,19 @@
 import java.util.Observable;
 
 public abstract class Weapon extends Observable {
-    private int mCooldown;
-    private int mCurrentCooldown;
+    private int mCoolDown;
+    private int mCurrentCoolDown;
     protected Board mBoard;
 
-    protected Weapon(Board board, int cooldown, int currentCooldown) {
-        mCooldown = cooldown;
-        mCurrentCooldown = currentCooldown;
+    protected Weapon(Board board, int coolDown, int currentCoolDown) {
+        mCoolDown = coolDown;
+        mCurrentCoolDown = currentCoolDown;
         mBoard = board;
     }
 
     public void coolDown() {
-        if (mCurrentCooldown > 0) {
-            mCurrentCooldown--;
+        if (mCurrentCoolDown > 0) {
+            mCurrentCoolDown--;
         }
     }
 
@@ -22,22 +22,22 @@ public abstract class Weapon extends Observable {
             throw new NotReadyException();
         } else {
             execute(field, coordinate);
-            mCurrentCooldown = mCooldown;
+            mCurrentCoolDown = mCoolDown;
         }
     }
 
     protected abstract void execute(Field field, Coordinate coordinate);
 
-    public int getCooldown() {
-        return mCooldown;
+    public int getCoolDown() {
+        return mCoolDown;
     }
 
     public int getCurrentCooldown() {
-        return mCurrentCooldown;
+        return mCurrentCoolDown;
     }
 
     public boolean isReady() {
-        return mCooldown <= 0;
+        return mCoolDown <= 0;
     }
 
     public class NotReadyException extends Exception {
