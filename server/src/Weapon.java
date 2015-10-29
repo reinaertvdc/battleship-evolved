@@ -1,5 +1,10 @@
 import java.util.Observable;
 
+/**
+ * Weapon is the abstract base class for all weapons.
+ *
+ * @author Reinaert Van de Cruys
+ */
 public abstract class Weapon extends Observable {
     private int mCoolDown;
     private int mCurrentCoolDown;

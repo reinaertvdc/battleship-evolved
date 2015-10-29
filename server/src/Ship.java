@@ -1,6 +1,8 @@
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * Ship is the abstract base class for all ships.
+ *
+ * @author Reinaert Van de Cruys
+ */
 public abstract class Ship {
     private Coordinate mSize;
     private int mHitPoints;
