@@ -7,6 +7,13 @@ public class Coordinate {
     public Coordinate(int row, int column) {
         mRow = row;
         mColumn = column;
+        //TODO: IndexOutOfBoundsException
+    }
+
+    public Coordinate(char row, int column) {
+        if (row >= '0' && row <= '9')
+            mRow = row - '0';
+        mColumn = column;
     }
 
     public int getRow() {
