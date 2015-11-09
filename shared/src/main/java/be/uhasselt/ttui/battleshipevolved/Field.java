@@ -25,7 +25,7 @@ public class Field {
         //TODO: Fix java equivalent for Ship pointer
 
         if (liesHorizontal) {
-            for (int i = 0; i < boat.getSize() && !overwriting; i++) {
+            for (int i = 0; i < 4;i++){//boat.getSize() && !overwriting; i++) {
                 if (mPositions[row][column + i] == null)
                     mPositions[row][column + i] = boat;
                 else
@@ -33,7 +33,7 @@ public class Field {
             }
         }
         else {
-            for (int i = 0; i < boat.getSize() && !overwriting; i++) {
+            for (int i = 0; i < 4;i++){//boat.getSize() && !overwriting; i++) {
                 if (mPositions[row + i][column] == null)
                     mPositions[row + i][column] = boat;
                 else
