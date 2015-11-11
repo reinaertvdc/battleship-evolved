@@ -2,10 +2,8 @@ package be.uhasselt.ttui.battleshipevolved;
 
 /**
  * Field describes where every ship is located.
- *
  * @author Arno Stienaers
  */
-
 public class Field {
     public static int ROWS = 10;
     public static int COLUMNS = 10;

@@ -1,5 +1,9 @@
 package be.uhasselt.ttui.battleshipevolved;
 
+/**
+ * Simple datapassing coordinate class
+ * @Author Arno Stienaers
+ */
 public class Coordinate {
     private int mRow;
     private int mColumn;

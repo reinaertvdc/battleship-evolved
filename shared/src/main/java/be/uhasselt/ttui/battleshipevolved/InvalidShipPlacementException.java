@@ -1,7 +1,7 @@
 package be.uhasselt.ttui.battleshipevolved;
 
 /**
- * Created by Arno on 11/11/2015.
+ * @author Arno Stienaers
  */
 public class InvalidShipPlacementException extends Exception {
     private String mError;
