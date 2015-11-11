@@ -13,7 +13,8 @@ public class Player {
 
     public void placeBattleShip(Board board, Coordinate coordinate, boolean liesHorizontal) {
         ShipBattleship ship = new ShipBattleship(board);
-        mField.deployShip(ship, coordinate, liesHorizontal);
+        //mField.deployShip(ship, coordinate, liesHorizontal);
+        //TODO: Catch exception
     }
 
 

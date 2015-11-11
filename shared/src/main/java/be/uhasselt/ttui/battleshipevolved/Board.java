@@ -1,20 +1,17 @@
 package be.uhasselt.ttui.battleshipevolved;
 
+import java.util.ArrayList;
+
 /**
  * Board holds every players field
  *
  * @author Arno Stienaers
  */
 public class Board {
+    private ArrayList<Field> mFields;
 
-    private Field[] fields;
-
-    public Board(Player[] players) {
+    public Board(ArrayList<Field> fields) {
         //TODO: Find way to show what needs to be shown
-        fields = new Field[players.length];
-
-        for (int i = 0; i < players.length; i++) {
-            fields[i] = players[i].getField();
-        }
+        mFields = fields;
     }
 }

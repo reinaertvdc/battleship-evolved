@@ -23,7 +23,8 @@ public class Game {
         //set the turn to player 1
         mTurn = 0;
         //init the board
-        mBoard = new Board((Player[]) mPlayers.toArray());
+        //mBoard = new Board((Player[]) mPlayers.toArray());
+        //TODO: Fix mBoard init
     }
 
     public void placementTurn() {
