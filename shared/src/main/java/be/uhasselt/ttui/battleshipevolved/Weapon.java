@@ -10,12 +10,10 @@ import java.util.Observable;
 public abstract class Weapon extends Observable {
     private int mCoolDown;
     private int mCurrentCoolDown;
-    protected Board mBoard;
 
-    protected Weapon(Board board, int coolDown, int currentCoolDown) {
+    protected Weapon(int coolDown, int currentCoolDown) {
         mCoolDown = coolDown;
         mCurrentCoolDown = currentCoolDown;
-        mBoard = board;
     }
 
     public void coolDown() {

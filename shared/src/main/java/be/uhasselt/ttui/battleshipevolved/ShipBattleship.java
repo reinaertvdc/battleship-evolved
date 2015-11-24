@@ -8,8 +8,8 @@ package be.uhasselt.ttui.battleshipevolved;
 public class ShipBattleship extends Ship {
     private static final Coordinate SIZE = new Coordinate(1, 4);
 
-    public ShipBattleship(Board board) {
-        super(board, SIZE);
-        mWeapons = new Weapon[]{new WeaponShot(mBoard)};
+    public ShipBattleship() {
+        super(SIZE);
+        mWeapons = new Weapon[]{new WeaponShot()};
     }
 }

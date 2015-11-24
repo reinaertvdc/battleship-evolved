@@ -8,8 +8,8 @@ package be.uhasselt.ttui.battleshipevolved;
 public class ShipAircraftCarrier extends Ship {
     private static final Coordinate SIZE = new Coordinate(1, 5);
 
-    public ShipAircraftCarrier(Board board) {
-        super(board, SIZE);
-        mWeapons = new Weapon[]{new WeaponShot(mBoard), new WeaponAirStrike(mBoard)};
+    public ShipAircraftCarrier() {
+        super(SIZE);
+        mWeapons = new Weapon[]{new WeaponShot(), new WeaponAirStrike()};
     }
 }

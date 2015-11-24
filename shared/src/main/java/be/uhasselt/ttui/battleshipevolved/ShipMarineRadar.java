@@ -8,8 +8,8 @@ package be.uhasselt.ttui.battleshipevolved;
 public class ShipMarineRadar extends Ship {
     private static final Coordinate SIZE = new Coordinate(1, 3);
 
-    public ShipMarineRadar(Board board) {
-        super(board, SIZE);
-        mWeapons = new Weapon[]{new WeaponRadar(mBoard)};
+    public ShipMarineRadar() {
+        super(SIZE);
+        mWeapons = new Weapon[]{new WeaponRadar()};
     }
 }

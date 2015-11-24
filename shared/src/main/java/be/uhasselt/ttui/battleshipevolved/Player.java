@@ -11,8 +11,8 @@ public class Player {
         mShips = new ArrayList<>();
     }
 
-    public void placeBattleShip(Board board, Coordinate coordinate, boolean liesHorizontal) {
-        ShipBattleship ship = new ShipBattleship(board);
+    public void placeBattleShip(Coordinate coordinate, boolean liesHorizontal) {
+        ShipBattleship ship = new ShipBattleship();
         //mField.deployShip(ship, coordinate, liesHorizontal);
         //TODO: Catch exception
     }

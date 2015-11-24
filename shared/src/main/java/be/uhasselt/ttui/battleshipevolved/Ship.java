@@ -8,13 +8,11 @@ package be.uhasselt.ttui.battleshipevolved;
 public abstract class Ship {
     private Coordinate mSize;
     private int mHitPoints;
-    protected Board mBoard;
     protected Weapon[] mWeapons;
 
-    protected Ship(Board board, Coordinate size) {
+    protected Ship(Coordinate size) {
         mSize = size;
         mHitPoints = size.getRow() * size.getColumn();
-        mBoard = board;
         mWeapons = new Weapon[0];
     }
 

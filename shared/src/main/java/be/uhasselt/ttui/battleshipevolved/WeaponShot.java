@@ -8,8 +8,8 @@ package be.uhasselt.ttui.battleshipevolved;
 public class WeaponShot extends Weapon {
     private static final int COOL_DOWN = 1;
 
-    public WeaponShot(Board board) {
-        super(board, COOL_DOWN, COOL_DOWN);
+    public WeaponShot() {
+        super(COOL_DOWN, COOL_DOWN);
     }
 
     protected void execute(Field field, Coordinate coordinate) {

@@ -8,7 +8,6 @@ import java.util.ArrayList;
  */
 public class Game {
     private final static int maxPlayers = 4;
-    private Board mBoard;
     private ArrayList<Player> mPlayers;
     private int mTurn;
 
@@ -22,15 +21,12 @@ public class Game {
         }
         //set the turn to player 1
         mTurn = 0;
-        //init the board
-        //mBoard = new Board((Player[]) mPlayers.toArray());
-        //TODO: Fix mBoard init
     }
 
     public void placementTurn() {
         Player player = mPlayers.get(mTurn);
         Coordinate co = new Coordinate(0,0);
-        player.placeBattleShip(mBoard, co, true);
+        player.placeBattleShip(co, true);
     }
 
 
