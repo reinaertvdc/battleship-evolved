@@ -21,12 +21,29 @@ public class Game {
         }
         //set the turn to player 1
         mTurn = 0;
+        insertTestValues();
     }
 
     public void placementTurn() {
         Player player = mPlayers.get(mTurn);
         Coordinate co = new Coordinate(0,0);
         player.placeBattleShip(co, true);
+    }
+
+    public void insertTestValues() {
+        try {
+            Ship player1Boat1 = new ShipAircraftCarrier();
+            Ship player1Boat2 = new ShipPatrolBoat();
+            mPlayers.get(0).getField().deployShip(player1Boat1, new Coordinate(0, 0), true);
+            mPlayers.get(0).getField().deployShip(player1Boat2, new Coordinate(2, 2), false);
+            Ship player2Boat1 = new ShipCruiser();
+            mPlayers.get(1).getField().deployShip(player2Boat1, new Coordinate(0, 0), false);
+
+            mPlayers.get(0).getField().shoot(new Coordinate(0, 1));
+            mPlayers.get(0).getField().shoot(new Coordinate(1, 1));
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
 
