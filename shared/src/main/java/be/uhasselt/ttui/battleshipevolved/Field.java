@@ -98,6 +98,8 @@ public class Field extends Observable {
                 status = CoordinateStatus.Status.MISSED;
             mVisibleField[coor.getRow()][coor.getColumn()] = status;
             mFieldRevealed = true;
+            setChanged();
+            notifyObservers(new CoordinateStatus(coor, status));
         }
     }
 
@@ -110,12 +112,13 @@ public class Field extends Observable {
         CoordinateStatus.Status currentStatus;
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLUMNS; j++) {
-                currentStatus = getStatus(new Coordinate(i, j));
+                currentStatus = calcStatus(new Coordinate(i, j));
                 mVisibleField[i][j] = currentStatus;
                 fieldStatus.add(new CoordinateStatus(i, j, currentStatus));
             }
         }
         mFieldRevealed = false;
+        setChanged();
         notifyObservers(fieldStatus);
     }
 
@@ -147,7 +150,7 @@ public class Field extends Observable {
         return !overwriting;
     }
 
-    private CoordinateStatus.Status getStatus(Coordinate coor) {
+    private CoordinateStatus.Status calcStatus(Coordinate coor) {
         CoordinateStatus.Status status;
         if (isShot(coor))
             if (boatPlacedAt(coor))
@@ -160,7 +163,8 @@ public class Field extends Observable {
     }
 
     private void updateCoor(Coordinate coor){
-        mVisibleField[coor.getRow()][coor.getColumn()] = getStatus(coor);
-        notifyObservers(new CoordinateStatus(coor, getStatus(coor)));
+        mVisibleField[coor.getRow()][coor.getColumn()] = calcStatus(coor);
+        setChanged();
+        notifyObservers(new CoordinateStatus(coor, calcStatus(coor)));
     }
 }

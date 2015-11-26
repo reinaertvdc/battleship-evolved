@@ -10,6 +10,7 @@ public class Game {
     private final static int maxPlayers = 4;
     private ArrayList<Player> mPlayers;
     private int mTurn;
+    private Board mBoard;
 
     public Game() {
 
@@ -21,6 +22,7 @@ public class Game {
         }
         //set the turn to player 1
         mTurn = 0;
+        mBoard = new Board(mPlayers.toArray(new Player[maxPlayers]));
         insertTestValues();
     }
 
@@ -39,8 +41,12 @@ public class Game {
             Ship player2Boat1 = new ShipCruiser();
             mPlayers.get(1).getField().deployShip(player2Boat1, new Coordinate(0, 0), false);
 
+            mPlayers.get(0).getField().refreshField();
             mPlayers.get(0).getField().shoot(new Coordinate(0, 1));
+            mPlayers.get(0).getField().shoot(new Coordinate(0, 0));
             mPlayers.get(0).getField().shoot(new Coordinate(1, 1));
+            mPlayers.get(0).getField().shoot(new Coordinate(1, 0));
+            mPlayers.get(0).getField().reveal(new Coordinate(2, 2));
         } catch (Exception e){
             System.out.println(e.getMessage());
         }
