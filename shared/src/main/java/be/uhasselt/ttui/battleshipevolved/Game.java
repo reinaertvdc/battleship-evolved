@@ -12,6 +12,7 @@ public class Game {
     private int mTurn;
     private Board mBoard;
 
+    //TODO: create Turnpassing function and attach Board as observer.
     public Game() {
 
         //create 4 players and init
@@ -46,7 +47,9 @@ public class Game {
             mPlayers.get(0).getField().shoot(new Coordinate(0, 0));
             mPlayers.get(0).getField().shoot(new Coordinate(1, 1));
             mPlayers.get(0).getField().shoot(new Coordinate(1, 0));
+            mPlayers.get(0).getField().shoot(new Coordinate(2, 0));
             mPlayers.get(0).getField().reveal(new Coordinate(2, 2));
+            mPlayers.get(0).getField().reveal(new Coordinate(3, 3));
         } catch (Exception e){
             System.out.println(e.getMessage());
         }
