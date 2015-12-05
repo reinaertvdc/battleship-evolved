@@ -104,10 +104,18 @@ public class Field extends Observable {
     }
 
     /**
+     * Test if the field has to hide something and does so.
+     */
+    public void hide() {
+        if(mFieldRevealed)
+            refreshField();
+    }
+
+    /**
      * Refreshes the entire field
      * @post mFieldRevealed = false
      */
-    public void refreshField() {
+    private void refreshField() {
         ArrayList<CoordinateStatus> fieldStatus = new ArrayList<CoordinateStatus>();
         CoordinateStatus.Status currentStatus;
         for (int i = 0; i < ROWS; i++) {

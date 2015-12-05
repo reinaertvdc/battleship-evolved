@@ -5,10 +5,12 @@ import java.util.ArrayList;
 public class Player {
     private Field mField;
     private ArrayList<Ship> mShips;
+    private int mID;
 
-    public Player() {
+    public Player(int id) {
         mField = new Field();
         mShips = new ArrayList<>();
+        mID = id;
     }
 
     public void placeBattleShip(Coordinate coordinate, boolean liesHorizontal) {
@@ -21,4 +23,6 @@ public class Player {
     public Field getField() {
         return mField;
     }
+
+    public int getID() {return mID;}
 }
