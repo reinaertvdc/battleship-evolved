@@ -13,7 +13,7 @@ import be.uhasselt.ttui.battleshipevolved.Game;
  */
 public class Main {
     public final static int PLAYERAMOUNT = 4;
-    private static ArrayList<Socket> mPlayers;
+    private static ArrayList<PlayerServer> mPlayers;
 
     public static void main(String[] args) {
         ServerSocket serverSocket = null;
@@ -28,9 +28,9 @@ public class Main {
                 System.out.println("Client " + count + " connected.");
                 PlayerServer playerServer = new PlayerServer(playerSocket, count);
                 playerServer.start();
-                mPlayers.add(playerSocket);
-                count++;
+                mPlayers.add(playerServer);
                 System.out.println("Client " + count + " saved.");
+                count++;
                 updateAmount();
                 System.out.println("Clients notified.");
             }
@@ -44,7 +44,7 @@ public class Main {
     private static void updateAmount() {
         try {
             for (int i = 0; i < mPlayers.size(); i++) {
-                PrintWriter outp = new PrintWriter(mPlayers.get(i).getOutputStream(), true);
+                PrintWriter outp = new PrintWriter(mPlayers.get(i).getSocket().getOutputStream(), true);
                 outp.println("Players " + mPlayers.size() + " " + PLAYERAMOUNT);
             }
         } catch (IOException e) {

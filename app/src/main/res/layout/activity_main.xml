@@ -5,10 +5,29 @@
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
          TextureView, etc. -->
-    <TextView android:id="@+id/fullscreen_content" android:layout_width="match_parent"
+    <!--<TextView android:id="@+id/fullscreen_content" android:layout_width="match_parent"
         android:layout_height="match_parent" android:keepScreenOn="true" android:textColor="#33b5e5"
         android:textStyle="bold" android:textSize="50sp" android:gravity="center"
-        android:text="@string/dummy_content" />
+        android:text="@string/connect_string" /> -->
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:id="@+id/fullscreen_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+        <EditText android:id="@+id/connect_text"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:hint="IP of the server" />
+
+        <Button android:id="@+id/connect_button" style="?metaButtonBarButtonStyle"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_weight="1" android:text="@string/connect_button" />
+
+
+    </LinearLayout>
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->

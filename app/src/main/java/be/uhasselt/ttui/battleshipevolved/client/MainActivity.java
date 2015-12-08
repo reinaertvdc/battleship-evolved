@@ -8,7 +8,11 @@ import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 
+import android.widget.Button;
+import android.widget.EditText;
 import be.uhasselt.ttui.battleshipevolved.Game;
+
+import java.net.Socket;
 
 /**
  * MainActivity is the entry point for the Battleship Evolved app.
@@ -34,7 +38,17 @@ public class MainActivity extends AppCompatActivity {
 
     private View mContentView;
     private View mControlsView;
+    private EditText mConnectTextView;
     private boolean mVisible;
+
+    // Create an anonymous implementation of OnClickListener
+    private View.OnClickListener mConnectListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            // do something when the button is clicked
+            String ip = mConnectTextView.getText().toString();
+            System.out.println(ip);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +59,8 @@ public class MainActivity extends AppCompatActivity {
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
-
+        mConnectTextView = (EditText) findViewById(R.id.connect_text);
+        mConnectTextView.setText("192.168.16.131");
 
         // Set up the user interaction to manually show or hide the system UI.
         mContentView.setOnClickListener(new View.OnClickListener() {
@@ -54,13 +69,14 @@ public class MainActivity extends AppCompatActivity {
                 toggle();
             }
         });
+        Button button = (Button)findViewById(R.id.connect_button);
+        button.setOnClickListener(mConnectListener);
 
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
 
-        Game game = new Game();
         System.out.println("The app works!");
     }
 

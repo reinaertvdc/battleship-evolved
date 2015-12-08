@@ -10,6 +10,9 @@ public class PlayerServer extends Thread {
     private Socket mSocket = null;
     private int mID;
 
+    public Socket getSocket() {
+        return mSocket;
+    }
     public PlayerServer(Socket socket, int id) {
         mSocket = socket;
         mID = id;
