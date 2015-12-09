@@ -61,7 +61,7 @@ public class Board extends JFrame implements Observer {
                 mFields[i].setVisible(true);
             }
             //mFields[p.getID()].setBorder(BorderFactory.createLineBorder(Color.RED));
-            mFields[p.getID()].setVisible(false);
+            //mFields[p.getID()].setVisible(false);
         }
     }
 }
