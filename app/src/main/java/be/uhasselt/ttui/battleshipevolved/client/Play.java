@@ -2,6 +2,7 @@ package be.uhasselt.ttui.battleshipevolved.client;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -12,14 +13,14 @@ import java.util.ArrayList;
 public class Play  extends Activity {
     private TextView mTxtOnline;
     private TextView mTxtCooldown;
-    private Grid mGrid;
+    private GridController mGrid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_play);
-        //mGrid = (Grid) findViewById(R.id.gridlayout);
+        mGrid = new GridController(10, 10, (TableLayout) findViewById(R.id.gridLayout), this);
         mTxtOnline = (TextView) findViewById(R.id.onlineText);
         mTxtCooldown = (TextView) findViewById(R.id.cooldownText);
 

@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary">
 
-    <include layout="@layout/grid"
-        android:id="@+id/gridlayout"
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/gridLayout"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
-        android:layout_width="wrap_content"/>
+        android:background="@color/colorPrimary">
+    </TableLayout>
     <TextView
         android:id="@+id/onlineText"
-        android:text="Loading cooldowns."
+        android:text="Loading weapons."
         android:textSize="24dp"
-        android:backgroundTint="@color/colorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorAccent"
-        android:layout_toRightOf="@id/gridlayout"/>
+        android:layout_toRightOf="@id/gridLayout"/>
     <TextView
         android:id="@+id/cooldownText"
         android:text="Loading cooldowns."
         android:textSize="24dp"
-        android:backgroundTint="@color/colorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorCooldown"
+        android:layout_toRightOf="@id/gridLayout"
         android:layout_below="@id/onlineText"/>
-
 </RelativeLayout>
