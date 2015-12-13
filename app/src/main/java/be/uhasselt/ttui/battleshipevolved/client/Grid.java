@@ -8,7 +8,7 @@ import android.os.Bundle;
  */
 public class Grid extends Activity{
     public Grid (int rows, int columns) {
-        setContentView(R.layout.activity_main);
+
     }
 
     @Override
