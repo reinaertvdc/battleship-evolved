@@ -36,6 +36,7 @@ public class Main {
             }
             Game game = new Game();
             serverSocket.close();
+            mPlayers.get(0).sendMessage("Lololol");
         } catch (IOException e) {
             System.err.println("Could not listen on port: 4004");
         }
