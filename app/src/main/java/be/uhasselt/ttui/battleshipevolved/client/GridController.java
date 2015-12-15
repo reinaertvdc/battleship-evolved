@@ -1,9 +1,9 @@
 package be.uhasselt.ttui.battleshipevolved.client;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.widget.ImageView;
+import android.view.Gravity;
+import android.widget.AbsListView;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -15,7 +15,7 @@ public class GridController {
     private int mRows;
     private int mColumns;
     private TableLayout mGridLayout;
-    private ImageView mGrid[][];
+    private TextView mGrid[][];
     private Activity mParent;
 
     public GridController(int rows, int columns, TableLayout grid, Play play) {
@@ -23,17 +23,24 @@ public class GridController {
         mColumns = columns;
         mGridLayout = grid;
         mParent = play;
-        mGrid = new ImageView[mRows][mColumns];
-        //createGrid(); //TODO: Stop createGrid from crashing.
+        mGrid = new TextView[mRows][mColumns];
+        createGrid(); //TODO: Stop createGrid from crashing.
     }
 
     private void createGrid() {
         TableRow numberRow = new TableRow(mParent);
         numberRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-        numberRow.addView(null);
+        TextView placeholder = new TextView(mParent);
+        placeholder.setWidth(50); //TODO: unfix size
+        placeholder.setHeight(50);
+        numberRow.addView(placeholder);
         for (int j = 0; j < mColumns; j++) {
             TextView number = new TextView(mParent);
-            number.setText(j);
+            number.setGravity(Gravity.CENTER);
+            number.setWidth(50); //TODO: unfix size
+            number.setHeight(50);
+            number.setText(j + "");
+            number.setTextColor(mParent.getResources().getColor(R.color.colorCoordinate));
             numberRow.addView(number);
         }
         mGridLayout.addView(numberRow);
@@ -42,13 +49,21 @@ public class GridController {
             TableRow tr = new TableRow(mParent);
             tr.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
             TextView letter = new TextView(mParent);
-            letter.setText((char) (i + 'A'));
+            letter.setWidth(50); //TODO: unfix size
+            letter.setHeight(50);
+            letter.setGravity(Gravity.CENTER);
+            letter.setText("" + (char) (i + 'A'));
+            letter.setTextColor(mParent.getResources().getColor(R.color.colorCoordinate));
             tr.addView(letter);
             for (int j = 0; j < mColumns; j++) {
-                ImageView image = new ImageView(mParent);
-                image.setBackgroundColor(mParent.getResources().getColor(R.color.colorWater));
-                tr.addView(image);
-                mGrid[i][j] = image;
+                TextView item = new TextView(mParent);
+                item.setText(" ");
+                item.setWidth(50); //TODO: unfix size
+                item.setHeight(50);
+                //item.setBackground(mParent.getResources().getDrawable(R.drawable.border));
+                item.setBackgroundColor(mParent.getResources().getColor(R.color.colorWater));
+                tr.addView(item);
+                mGrid[i][j] = item;
             }
             mGridLayout.addView(tr);
         }
