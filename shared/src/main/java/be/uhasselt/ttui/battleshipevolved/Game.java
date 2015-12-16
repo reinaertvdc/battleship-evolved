@@ -28,6 +28,11 @@ public class Game extends Observable {
         insertTestValues();
     }
 
+    public ArrayList<Player> getPlayers() {
+        return mPlayers;
+    }
+
+
     public void placementTurn() {
         Player player = mPlayers.get(mTurn);
         Coordinate co = new Coordinate(0,0);

@@ -16,7 +16,7 @@ import java.net.Socket;
 
 public class ConnectionThread extends Service {
     public static final String SERVERIP = ""; //your computer IP address should be written here
-    public static final int SERVERPORT = 5000;
+    public static final int SERVERPORT = 4004;
     PrintWriter mOut;
     Socket mSocket;
     InetAddress mServerAddr;

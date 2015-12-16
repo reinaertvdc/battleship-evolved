@@ -33,4 +33,20 @@ public class Coordinate {
     public int getColumn() {
         return mColumn;
     }
+
+    public boolean setFromString(String string) {
+        //normal case
+        char row, column;
+        row = string.charAt(0);
+        column = string.charAt(1);
+        if (row >= 'A' && row <= 'J')
+            mRow = row - 'A';
+        else return false;
+        if (column >= '0' && column <= '9')
+            mColumn = column - '0';
+        else return false;
+
+
+        return true;
+    }
 }
