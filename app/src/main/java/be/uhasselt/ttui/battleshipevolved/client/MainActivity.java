@@ -1,6 +1,11 @@
 package be.uhasselt.ttui.battleshipevolved.client;
 
 import android.annotation.SuppressLint;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +18,7 @@ import android.widget.EditText;
 import be.uhasselt.ttui.battleshipevolved.Game;
 
 import java.net.Socket;
+import java.sql.Connection;
 
 /**
  * MainActivity is the entry point for the Battleship Evolved app.
@@ -41,12 +47,49 @@ public class MainActivity extends AppCompatActivity {
     private EditText mConnectTextView;
     private boolean mVisible;
 
+    //functions for binding to the connectionThread service
+    private boolean isBound = false;
+    private ConnectionThread mBoundService = null;
+    private ServiceConnection mConn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mBoundService = ((ConnectionThread.LocalBinder)service).getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mBoundService = null;
+        }
+    };
+    private void doBinding() {
+        bindService(new Intent(this, ConnectionThread.class), mConn, Context.BIND_AUTO_CREATE);
+        isBound = true;
+    }
+    private void doUnbinding() {
+        if (isBound) {
+            unbindService(mConn);
+            isBound = false;
+        }
+    }
+    //end functions for binding
+
     // Create an anonymous implementation of OnClickListener
     private View.OnClickListener mConnectListener = new View.OnClickListener() {
         public void onClick(View v) {
             // do something when the button is clicked
-            String ip = mConnectTextView.getText().toString();
-            System.out.println(ip);
+            if (!isBound) {
+                String ip = mConnectTextView.getText().toString();
+                System.out.println("Connecting to: " + ip);
+                Intent intent = new Intent(MainActivity.this, ConnectionThread.class);
+                Bundle b = new Bundle();
+                b.putString("ip", ip);
+                intent.putExtras(b);
+                startService(intent);
+                System.out.println("Service should be started");
+                doBinding();
+            } else {
+
+            }
         }
     };
 
@@ -60,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
         mConnectTextView = (EditText) findViewById(R.id.connect_text);
-        mConnectTextView.setText("192.168.16.131");
+        mConnectTextView.setText("192.168.1.158");
 
         // Set up the user interaction to manually show or hide the system UI.
         mContentView.setOnClickListener(new View.OnClickListener() {
@@ -184,5 +227,11 @@ public class MainActivity extends AppCompatActivity {
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        doUnbinding();
     }
 }

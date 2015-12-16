@@ -8,18 +8,17 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.io.BufferedWriter;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class ConnectionThread extends Service {
-    public static final String SERVERIP = ""; //your computer IP address should be written here
+    public static String SERVERIP = ""; //your computer IP address should be written here
     public static final int SERVERPORT = 4004;
-    PrintWriter mOut;
-    Socket mSocket;
-    InetAddress mServerAddr;
+    private PrintWriter mOut;
+    private Socket mSocket;
+    private InetAddress mServerAddr;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -42,10 +41,6 @@ public class ConnectionThread extends Service {
         System.out.println("I am in on create");
     }
 
-    public void IsBoundable(){
-        Toast.makeText(this, "I bind like butter", Toast.LENGTH_LONG).show();
-    }
-
     public void sendMessage(String message){
         if (mOut != null && !mOut.checkError()) {
             System.out.println("in sendMessage " + message);
@@ -55,35 +50,84 @@ public class ConnectionThread extends Service {
     }
 
     @Override
-    public int onStartCommand(Intent intent,int flags, int startId){
-        super.onStartCommand(intent, flags, startId);
-        System.out.println("I am in on start");
-        //Toast.makeText(this,"Service created ...", Toast.LENGTH_LONG).show();
+    public int onStartCommand(Intent intent, int flags, int startId){
+        //super.onStartCommand(intent, flags, startId);
+        String ip = intent.getExtras().getString("ip");
+        Toast.makeText(this,"Connecting to " + ip + "...", Toast.LENGTH_LONG).show();
         Runnable connect = new connectSocket();
+        SERVERIP = ip;
         new Thread(connect).start();
         return START_STICKY;
     }
 
+
     class connectSocket implements Runnable {
+        public void sendMessage(String message) {
+            mOut.println(message);
+        }
+
         @Override
         public void run() {
+            DataInputStream inp;
             try {
-                //here you must put your computer's IP address.
                 mServerAddr = InetAddress.getByName(SERVERIP);
-                Log.e("TCP Client", "C: Connecting...");
-                //create a socket to make the connection with the server
                 mSocket = new Socket(mServerAddr, SERVERPORT);
                 try {
-                    //send the message to the server
+                    //setup the input datastream
+                    inp = new DataInputStream(mSocket.getInputStream());
+                } catch (IOException e) {
+                    System.out.println(e);
+                    return;
+                }
+
+                try {
+                    //setup the output datastream
                     mOut = new PrintWriter(new BufferedWriter(new OutputStreamWriter(mSocket.getOutputStream())), true);
-                    Log.e("TCP Client", "C: Sent.");
-                    Log.e("TCP Client", "C: Done.");
+                    mOut.println("Hi!");
                 }
                 catch (Exception e) {
+                    //something went wrong with sending the message to the server.
                     Log.e("TCP", "S: Error", e);
+                    return;
                 }
-            } catch (Exception e) {
-                Log.e("TCP", "C: Error", e);
+            } catch (UnknownHostException e) {
+                System.out.println("Could not resolve hostname " + SERVERIP);
+                return;
+            } catch (IOException e) {
+                //if the connection could not be made
+                System.out.println("Could not connect to " + SERVERIP);
+                return;
+            }
+
+            boolean active = true;
+
+            while (active)
+            {
+                String line = "";
+                try {
+                    line = inp.readLine();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("Received message \'" + line + "\' from the server ");
+                if (line == null)
+                {
+                    //server was terminated, so we close the client as well
+                    active = false;
+                    //TODO: goto MainActivity and notify user server disconnected?
+                }
+                //interpretMessage(line);
+            }
+
+            //close socket and streams
+            System.out.println("Closing down sockets");
+            try {
+                mSocket.close();
+                mOut.close();
+                inp.close();
+            } catch (IOException e) {
+                System.out.println("Could not close socket");
+                return;
             }
         }
     }

@@ -7,4 +7,5 @@
     <string name="connect_button">Connect</string>
 
     <string name="title_activity_place_ships">PlaceShipsActivity</string>
+    <string name="title_activity_connect">Connect to the server</string>
 </resources>
