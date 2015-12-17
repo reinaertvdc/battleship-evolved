@@ -1,10 +1,17 @@
 package be.uhasselt.ttui.battleshipevolved.client;
 
 import android.annotation.SuppressLint;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
@@ -64,11 +71,18 @@ public class PlaceShipsActivity extends AppCompatActivity {
         }
     };
 
-    private static final int SQUARES_IN_FIELD = 12;
+    private static final float NEEDED_VIEWPORT_RATIO = 18 / 12;
+
+    private final Drawable mFieldTile =
+            ContextCompat.getDrawable(getApplicationContext(), R.drawable.field_tile);
+    private final Drawable mEdgeTile =
+            ContextCompat.getDrawable(getApplicationContext(), R.drawable.edge_tile);
 
     private Point mViewportSize;
-
+    private boolean mLandscapeMode;
     private float mSquareSize;
+    private int mTopOffset;
+    private int mLeftOffset;
 
     private Coordinate mShipAircraftCarrierSize, mShipBattleshipSize, mShipCruiserSize,
                        mShipDecoySize, mShipDestroyerSize, mShipMarineRadarSize,
@@ -90,11 +104,18 @@ public class PlaceShipsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        doBinding();
+
         setContentView(R.layout.activity_place_ships);
 
         mContentView = findViewById(R.id.fullscreen_content);
 
+        private float mSquareSize;
+        private int mTopOffset;
+        private int mLeftOffset;
+
         mViewportSize = getViewportSize();
+        mLandscapeMode = mViewportSize.x >= mViewportSize.y;
         mSquareSize = calculateSquareSize();
 
         loadShipSizes();
@@ -102,36 +123,6 @@ public class PlaceShipsActivity extends AppCompatActivity {
         adjustShipImageSizes();
         setShipImagePositions();
         createShipImageOnTouchListeners();
-
-        //FrameLayout fl = (FrameLayout) findViewById(R.id.place_ships_field);
-        //fl.addView(ship1);
-
-        /*blueSquare.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public  boolean onTouch(View v, MotionEvent event) {
-                System.out.print("Touch event: ");
-                LayoutParams layoutParams = (LayoutParams) blueSquare.getLayoutParams();
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        System.out.println("ACTION_DOWN");
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        System.out.println("ACTION_MOVE");
-                        int xCord = (int)event.getRawX();
-                        int yCord = (int)event.getRawY();
-                        if (xCord > viewportWidth) {xCord = viewportWidth;}
-                        if (yCord > viewportHeight) {yCord = viewportHeight;}
-                        layoutParams.leftMargin = xCord - 25;
-                        layoutParams.topMargin = yCord - 75;
-                        blueSquare.setLayoutParams(layoutParams);
-                        break;
-                    default:
-                        System.out.println("UNKNOWN");
-                        break;
-                }
-                return true;
-            }
-        });*/
     }
 
     private void createShipImageOnTouchListeners() {
@@ -168,6 +159,7 @@ public class PlaceShipsActivity extends AppCompatActivity {
                         layoutParams.leftMargin = start.x;
                         layoutParams.topMargin = start.y;
                         image.setLayoutParams(layoutParams);
+                        //mBoundService.sendMessage("shoot 2 E4");
                         break;
                 }
                 return true;
@@ -232,7 +224,6 @@ public class PlaceShipsActivity extends AppCompatActivity {
         setShipImagePosition(mImgShipPatrolBoat, mImgShipPatrolBoatPos, 5, 0);
         setShipImagePosition(mImgShipMissileCommand, mImgShipMissileCommandPos, 6, 0);
         setShipImagePosition(mImgShipDecoy, mImgShipDecoyPos, 6, 2);
-
     }
 
     private Point getViewportSize() {
@@ -250,7 +241,25 @@ public class PlaceShipsActivity extends AppCompatActivity {
     }
 
     private int calculateSquareSize() {
-        return Math.min(mViewportSize.x, mViewportSize.y) / SQUARES_IN_FIELD;
+        float viewportRatio;
+        if (mLandscapeMode) {
+            viewportRatio = mViewportSize.x / mViewportSize.y;
+            if (viewportRatio > NEEDED_VIEWPORT_RATIO) {
+                mLeftOffset = (int) (mViewportSize.x * (viewportRatio - NEEDED_VIEWPORT_RATIO) / 2);
+            } else {
+                mTopOffset = (int) (mViewportSize.y * (viewportRatio - NEEDED_VIEWPORT_RATIO) / 2);
+            }
+        } else {
+            viewportRatio = mViewportSize.y / mViewportSize.x;
+            if (viewportRatio > NEEDED_VIEWPORT_RATIO) {
+                mTopOffset = (int) (mViewportSize.x * (viewportRatio - NEEDED_VIEWPORT_RATIO) / 2);
+            } else {
+                mLeftOffset = (int) (mViewportSize.y * (viewportRatio - NEEDED_VIEWPORT_RATIO) / 2);
+            }
+        }
+
+
+        //return Math.min(mViewportSize.x, mViewportSize.y) / SQUARES_IN_FIELD;
     }
 
     private void setShipImagePosition(ImageView image, Point position, int top, int left) {
@@ -259,6 +268,12 @@ public class PlaceShipsActivity extends AppCompatActivity {
         layoutParams.leftMargin = Math.round((mSquareSize * left * 1.5f) + mSquareSize / 2);
         position.set(layoutParams.leftMargin, layoutParams.topMargin);
         image.setLayoutParams(layoutParams);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        doUnbinding();
     }
 
     @Override
@@ -279,4 +294,30 @@ public class PlaceShipsActivity extends AppCompatActivity {
         mHideHandler.removeCallbacks(mShowPart2Runnable);
         mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
     }
+
+    //functions for binding to the connectionThread service
+    private boolean isBound = false;
+    private ConnectionThread mBoundService = null;
+    private ServiceConnection mConn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mBoundService = ((ConnectionThread.LocalBinder)service).getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mBoundService = null;
+        }
+    };
+    private void doBinding() {
+        bindService(new Intent(this, ConnectionThread.class), mConn, Context.BIND_AUTO_CREATE);
+        isBound = true;
+    }
+    private void doUnbinding() {
+        if (isBound) {
+            unbindService(mConn);
+            isBound = false;
+        }
+    }
+    //end functions for binding
 }

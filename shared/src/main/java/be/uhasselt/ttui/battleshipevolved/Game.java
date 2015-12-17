@@ -58,14 +58,16 @@ public class Game extends Observable {
             mPlayers.get(0).getField().deployShip(player1Boat2, new Coordinate(2, 2), false);
             Ship player2Boat1 = new ShipCruiser();
             mPlayers.get(1).getField().deployShip(player2Boat1, new Coordinate(0, 0), false);
+            Ship player3Boat1 = new ShipAircraftCarrier();
+            mPlayers.get(2).getField().deployShip(player3Boat1, new Coordinate(5, 5), false);
 
             mPlayers.get(0).getField().shoot(new Coordinate(0, 1));
-//            mPlayers.get(0).getField().shoot(new Coordinate(0, 0));
-//            mPlayers.get(0).getField().shoot(new Coordinate(1, 1));
-//            mPlayers.get(0).getField().shoot(new Coordinate(1, 0));
-//            mPlayers.get(0).getField().shoot(new Coordinate(2, 0));
-//            mPlayers.get(0).getField().reveal(new Coordinate(2, 2));
-//            mPlayers.get(0).getField().reveal(new Coordinate(3, 3));
+            mPlayers.get(0).getField().shoot(new Coordinate(0, 0));
+            mPlayers.get(0).getField().shoot(new Coordinate(1, 1));
+            mPlayers.get(0).getField().shoot(new Coordinate(1, 0));
+            mPlayers.get(0).getField().shoot(new Coordinate(2, 0));
+            mPlayers.get(0).getField().reveal(new Coordinate(2, 2));
+            mPlayers.get(0).getField().reveal(new Coordinate(3, 3));
             nextTurn();
         } catch (Exception e){
             System.out.println(e.getMessage());

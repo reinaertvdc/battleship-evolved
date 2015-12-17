@@ -86,7 +86,9 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtras(b);
                 startService(intent);
                 System.out.println("Service should be started");
-                doBinding();
+                //doBinding();
+                // TODO are we connected?
+                startActivity(new Intent(MainActivity.this, PlaceShipsActivity.class));
             } else {
 
             }
