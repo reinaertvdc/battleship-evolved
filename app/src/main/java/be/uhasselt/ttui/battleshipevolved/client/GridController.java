@@ -24,7 +24,31 @@ public class GridController {
         mGridLayout = grid;
         mParent = play;
         mGrid = new TextView[mRows][mColumns];
-        createGrid(); //TODO: Stop createGrid from crashing.
+        createGrid();
+    }
+
+    public void setShip(int row, int column) {
+        try {
+            mGrid[row][column].setBackgroundColor(mParent.getResources().getColor(R.color.colorShip));
+        } catch (IndexOutOfBoundsException e) {
+            System.err.println("Out of grid bounds.");
+        }
+    }
+
+    public void setDamaged(int row, int column) {
+        try {
+            mGrid[row][column].setBackgroundColor(mParent.getResources().getColor(R.color.colorDamage));
+        } catch (IndexOutOfBoundsException e) {
+            System.err.println("Out of grid bounds.");
+        }
+    }
+
+    public void setWater(int row, int column) {
+        try {
+            mGrid[row][column].setBackgroundColor(mParent.getResources().getColor(R.color.colorWater));
+        } catch (IndexOutOfBoundsException e) {
+            System.err.println("Out of grid bounds.");
+        }
     }
 
     private void createGrid() {
@@ -61,7 +85,7 @@ public class GridController {
                 item.setWidth(50); //TODO: unfix size
                 item.setHeight(50);
                 //item.setBackground(mParent.getResources().getDrawable(R.drawable.border));
-                item.setBackgroundColor(mParent.getResources().getColor(R.color.colorWater));
+                item.setBackgroundColor(mParent.getResources().getColor(R.color.colorFog));
                 tr.addView(item);
                 mGrid[i][j] = item;
             }

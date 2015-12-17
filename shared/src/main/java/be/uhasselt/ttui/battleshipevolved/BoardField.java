@@ -25,6 +25,9 @@ import javax.swing.JPanel;
  */
 public class BoardField extends JPanel implements Observer {
     private JPanel[][] mGrid;
+    private static int MAX = 40;
+    private static int PREF = 30;
+    private static int MIN = 25;
     //private BufferedImage[] mStatusImages;
 
     public BoardField() {
@@ -66,7 +69,9 @@ public class BoardField extends JPanel implements Observer {
             for (int j = 0; j < Field.COLUMNS; j++) {
                 JPanel panel = new JPanel();
                 panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                panel.setPreferredSize(new Dimension(25, 25));
+                panel.setMaximumSize(new Dimension(MAX, MAX));
+                panel.setPreferredSize(new Dimension(PREF, PREF));
+                panel.setMinimumSize(new Dimension(MIN, MIN));
                 c.gridx = j + 1;
                 //JLabel label = new JLabel(new ImageIcon(mStatusImages[0]));
                 //panel.add(label);
@@ -87,7 +92,9 @@ public class BoardField extends JPanel implements Observer {
         for (int i = 0; i < Field.ROWS; i++) {
             c.gridx = 0;
             JPanel normalPanel = new JPanel();
-            normalPanel.setPreferredSize(new Dimension(25, 25));
+            normalPanel.setMaximumSize(new Dimension(MAX, MAX));
+            normalPanel.setPreferredSize(new Dimension(PREF, PREF));
+            normalPanel.setMinimumSize(new Dimension(MIN, MIN));
             c.gridy = i + 1;
             JLabel normalLabel = new JLabel("" + (char)(i + 'A'));
             normalLabel.setFont(normalFont);
@@ -96,22 +103,26 @@ public class BoardField extends JPanel implements Observer {
             normalPanel.setBackground(Color.BLACK);
             this.add(normalPanel, c);
 
-            c.gridx = Field.ROWS + 1;
-            JPanel upsidedownPanel = new JPanel();
-            upsidedownPanel.setPreferredSize(new Dimension(25, 25));
-            c.gridy = i + 1;
-            JLabel upsidedownLabel = new JLabel("" + (char)(i + 'A'));
-            //upsidedownLabel.setFont(upsidedownFont);
-            upsidedownLabel.setForeground(Color.WHITE);
-            upsidedownPanel.add(upsidedownLabel);
-            upsidedownPanel.setBackground(Color.BLACK);
-            this.add(upsidedownPanel, c);
+//            c.gridx = Field.ROWS + 1;
+//            JPanel upsidedownPanel = new JPanel();
+//            upsidedownPanel.setMaximumSize(new Dimension(MAX, MAX));
+//            upsidedownPanel.setPreferredSize(new Dimension(PREF, PREF));
+//            upsidedownPanel.setMinimumSize(new Dimension(MIN, MIN));
+//            c.gridy = i + 1;
+//            JLabel upsidedownLabel = new JLabel("" + (char)(i + 'A'));
+//            //upsidedownLabel.setFont(upsidedownFont);
+//            upsidedownLabel.setForeground(Color.WHITE);
+//            upsidedownPanel.add(upsidedownLabel);
+//            upsidedownPanel.setBackground(Color.BLACK);
+//            this.add(upsidedownPanel, c);
         }
 
         for (int j = 0; j < Field.COLUMNS; j++) {
             c.gridy = 0;
             JPanel normalPanel = new JPanel();
-            normalPanel.setPreferredSize(new Dimension(25, 25));
+            normalPanel.setMaximumSize(new Dimension(MAX, MAX));
+            normalPanel.setPreferredSize(new Dimension(PREF, PREF));
+            normalPanel.setMinimumSize(new Dimension(MIN, MIN));
             c.gridx = j + 1;
             JLabel normalLabel = new JLabel("" + (j + 1));
             normalLabel.setFont(normalFont);
@@ -120,31 +131,35 @@ public class BoardField extends JPanel implements Observer {
             normalPanel.setBackground(Color.BLACK);
             this.add(normalPanel, c);
 
-            c.gridy = Field.COLUMNS + 1;
-            JPanel upsidedownPanel = new JPanel();
-            upsidedownPanel.setPreferredSize(new Dimension(25, 25));
-            c.gridx = j + 1;
-            JLabel upsidedownLabel = new JLabel("" + (j + 1));
-            //upsidedownLabel.setFont(upsidedownFont);
-            upsidedownLabel.setForeground(Color.WHITE);
-            upsidedownPanel.add(upsidedownLabel);
-            upsidedownPanel.setBackground(Color.BLACK);
-            this.add(upsidedownPanel, c);
+//            c.gridy = Field.COLUMNS + 1;
+//            JPanel upsidedownPanel = new JPanel();
+//            upsidedownPanel.setMaximumSize(new Dimension(MAX, MAX));
+//            upsidedownPanel.setPreferredSize(new Dimension(PREF, PREF));
+//            upsidedownPanel.setMinimumSize(new Dimension(MIN, MIN));
+//            c.gridx = j + 1;
+//            JLabel upsidedownLabel = new JLabel("" + (j + 1));
+//            //upsidedownLabel.setFont(upsidedownFont);
+//            upsidedownLabel.setForeground(Color.WHITE);
+//            upsidedownPanel.add(upsidedownLabel);
+//            upsidedownPanel.setBackground(Color.BLACK);
+//            this.add(upsidedownPanel, c);
         }
     }
 
     private void loadCorners() {
         GridBagConstraints c = new GridBagConstraints();
-        for (int i = 0; i < Field.ROWS + 2; i += Field.ROWS + 1){
-            for (int j = 0; j < Field.COLUMNS + 2; j += Field.COLUMNS + 1){
+        //for (int i = 0; i < Field.ROWS + 2; i += Field.ROWS + 1){
+            //for (int j = 0; j < Field.COLUMNS + 2; j += Field.COLUMNS + 1){
                 JPanel corner = new JPanel();
-                corner.setPreferredSize(new Dimension(25, 25));
+                corner.setMaximumSize(new Dimension(MAX, MAX));
+                corner.setPreferredSize(new Dimension(PREF, PREF));
+                corner.setMinimumSize(new Dimension(MIN, MIN));
                 corner.setBackground(Color.BLACK);
-                c.gridx = j;
-                c.gridy = i;
+                c.gridx = 0;
+                c.gridy = 0;
                 this.add(corner, c);
-            }
-        }
+            //}
+        //}
     }
 
     private void colourCoordinate(CoordinateStatus cState) {

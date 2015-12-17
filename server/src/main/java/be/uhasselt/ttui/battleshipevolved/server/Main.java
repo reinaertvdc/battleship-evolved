@@ -19,7 +19,6 @@ public class Main {
         ServerSocket serverSocket = null;
         mPlayers = new ArrayList<>();
         int count = 0;
-
         try {
             serverSocket = new ServerSocket(4004);
             System.out.println("The server started and listens to port 4004.");

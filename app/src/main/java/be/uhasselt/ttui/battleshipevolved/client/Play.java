@@ -24,6 +24,7 @@ public class Play  extends Activity {
         mTxtOnline = (TextView) findViewById(R.id.onlineText);
         mTxtCooldown = (TextView) findViewById(R.id.cooldownText);
 
+        //Test values:
         ArrayList<String> testOnline = new ArrayList<>();
         testOnline.add("Airstrike online");
         testOnline.add("Radar online");

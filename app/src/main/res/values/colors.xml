@@ -7,6 +7,7 @@
     <color name="colorShip">#000000</color>
     <color name="colorWater">#0000ff</color>
     <color name="colorDamage">#ff0000</color>
+    <color name="colorFog">#888888</color>
     <color name="colorCoordinate">#ffffff</color>
 
     <color name="black_overlay">#66000000</color>

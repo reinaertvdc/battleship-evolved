@@ -3,6 +3,7 @@ package be.uhasselt.ttui.battleshipevolved;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -21,11 +22,16 @@ import javax.swing.border.Border;
  * @Author Arno Stienaers
  */
 public class Board extends JFrame implements Observer {
-    BoardField[] mFields;
+    private BoardField[] mFields;
+    private Audio mAudio;
 
     //TODO: Aangenomen dat het aantal players 4 is, moet weggewerkt worden.
     public Board(Player[] players) {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setUndecorated(true);
+        this.setExtendedState(Frame.MAXIMIZED_BOTH);
+        mAudio = new Audio();
+        JPanel background = new JPanel();
         mFields = new BoardField[players.length];
         JPanel grid = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -38,6 +44,7 @@ public class Board extends JFrame implements Observer {
             c.gridy = 0;
             grid.add(mFields[i], c);
             players[i].getField().addObserver(mFields[i]);
+            players[i].getField().addObserver(mAudio);
         }
         for (int i = 0; i < players.length / 2; i++) {
             mFields[i + 2] = new BoardField();
@@ -45,9 +52,12 @@ public class Board extends JFrame implements Observer {
             c.gridy = 1;
             grid.add(mFields[i + 2], c);
             players[i + 2].getField().addObserver(mFields[i + 2]);
+            players[i + 2].getField().addObserver(mAudio);
         }
+        background.add(grid);
+        background.setBackground(Color.black);
 
-        this.getContentPane().add(grid);
+        this.getContentPane().add(background);
         this.pack();
         this.setVisible(true);
     }
