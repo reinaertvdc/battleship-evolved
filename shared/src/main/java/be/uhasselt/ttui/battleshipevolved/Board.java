@@ -3,6 +3,7 @@ package be.uhasselt.ttui.battleshipevolved;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -26,6 +27,9 @@ public class Board extends JFrame implements Observer {
     //TODO: Aangenomen dat het aantal players 4 is, moet weggewerkt worden.
     public Board(Player[] players) {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //this.setUndecorated(true);
+        this.setExtendedState(Frame.MAXIMIZED_BOTH);
+        JPanel background = new JPanel();
         mFields = new BoardField[players.length];
         JPanel grid = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -46,8 +50,10 @@ public class Board extends JFrame implements Observer {
             grid.add(mFields[i + 2], c);
             players[i + 2].getField().addObserver(mFields[i + 2]);
         }
+        background.add(grid);
+        background.setBackground(Color.black);
 
-        this.getContentPane().add(grid);
+        this.getContentPane().add(background);
         this.pack();
         this.setVisible(true);
     }
