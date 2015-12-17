@@ -15,8 +15,11 @@ public class Player {
 
     public void placeBattleShip(Coordinate coordinate, boolean liesHorizontal) {
         ShipBattleship ship = new ShipBattleship();
-        //mField.deployShip(ship, coordinate, liesHorizontal);
-        //TODO: Catch exception
+        try {
+            mField.deployShip(ship, coordinate, liesHorizontal);
+        } catch (InvalidShipPlacementException e) {
+            System.err.println(e.getError());
+        }
     }
 
 

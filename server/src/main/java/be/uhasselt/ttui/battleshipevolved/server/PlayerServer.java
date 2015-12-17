@@ -80,23 +80,49 @@ public class PlayerServer extends Thread {
         }
     }
 
+    /**
+     * Interprets a message given by a client and calls the appropriate function
+     * @param message The message given by the client
+     */
     private void interpretMessage(String message) {
         String[] words = message.split(" ");
+        System.out.println(words.length);
         if (words[0].compareTo("place") == 0) {
             handlePlace(words);
-        } // else if () {}
+        } else if (words[0].compareTo("shoot") == 0) {
+            handleShoot(words);
+        }
         //enzoverder
     }
 
+    /**
+     * Handles the ship placement commands.
+     * @param words the list of words in the command
+     */
     private void handlePlace(String[] words) {
         if (words[1].compareTo("battleship") == 0) {
             Coordinate coor = new Coordinate(0, 0);
             if (coor.setFromString(words[2])) {
                 mPlayer.placeBattleShip(coor, true);
-                handlePlace(words); //niet nodig?
             } else {
                 System.out.print("Could not interpret " + words[2]);
+                return;
             }
         } //enzoverder
+    }
+
+    /**
+     * Handles the shooting commands
+     * @param words the list of words in the command
+     */
+    private void handleShoot(String[] words) {
+        int player = Integer.parseInt(words[1]) - 1;
+        Coordinate coor = new Coordinate(0, 0);
+        if (coor.setFromString(words[2])) {
+            mGame.shoot(player, coor);
+        } else {
+            System.out.print("Could not interpret " + words[2]);
+            return;
+        }
     }
 }

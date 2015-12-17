@@ -72,5 +72,14 @@ public class Game extends Observable {
         }
     }
 
+    /**
+     * Shoots a player on his field at coordinate coordinate
+     * @param player The player to be shot
+     * @param coordinate the coordinate to shoot at
+     */
+    public void shoot(int player, Coordinate coordinate) {
+        mPlayers.get(player).getField().shoot(coordinate);
+    }
+
 
 }

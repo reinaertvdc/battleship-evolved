@@ -43,7 +43,7 @@ public class Coordinate {
             mRow = row - 'A';
         else return false;
         if (column >= '0' && column <= '9')
-            mColumn = column - '0';
+            mColumn = column - '0' - 1; // column titled '1' has index 0
         else return false;
 
 

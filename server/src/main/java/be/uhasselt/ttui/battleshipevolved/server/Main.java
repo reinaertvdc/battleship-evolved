@@ -37,7 +37,9 @@ public class Main {
             Game game = new Game();
             serverSocket.close();
             //give each playerthread a pointer to the game instance
-
+            for (int i = 0; i < mPlayers.size(); i++) {
+                mPlayers.get(i).setGame(game);
+            }
             mPlayers.get(0).sendMessage("Lololol");
         } catch (IOException e) {
             System.err.println("Could not listen on port: 4004");
