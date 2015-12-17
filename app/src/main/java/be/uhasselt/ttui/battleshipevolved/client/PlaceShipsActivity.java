@@ -135,25 +135,18 @@ public class PlaceShipsActivity extends AppCompatActivity {
     }
 
     private void createShipImageOnTouchListeners() {
-        mImgShipAircraftCarrierPos = new Point();
-        mImgShipBattleshipPos = new Point();
-        mImgShipCruiserPos = new Point();
-        mImgShipDecoyPos = new Point();
-        mImgShipDestroyerPos = new Point();
-        mImgShipMarineRadarPos = new Point();
-        mImgShipMissileCommandPos = new Point();
-        mImgShipPatrolBoatPos = new Point();
-        createOnTouchListener(mImgShipAircraftCarrier, mImgShipAircraftCarrierPos);
-        createOnTouchListener(mImgShipBattleship, mImgShipBattleshipPos);
-        createOnTouchListener(mImgShipCruiser, mImgShipCruiserPos);
-        createOnTouchListener(mImgShipDecoy, mImgShipDecoyPos);
-        createOnTouchListener(mImgShipDestroyer, mImgShipDestroyerPos);
-        createOnTouchListener(mImgShipMarineRadar, mImgShipMarineRadarPos);
-        createOnTouchListener(mImgShipMissileCommand, mImgShipMissileCommandPos);
-        createOnTouchListener(mImgShipPatrolBoat, mImgShipPatrolBoatPos);
+        createOnTouchListener(mImgShipAircraftCarrier, mImgShipAircraftCarrierPos, new Point());
+        createOnTouchListener(mImgShipBattleship, mImgShipBattleshipPos, new Point());
+        createOnTouchListener(mImgShipCruiser, mImgShipCruiserPos, new Point());
+        createOnTouchListener(mImgShipDecoy, mImgShipDecoyPos, new Point());
+        createOnTouchListener(mImgShipDestroyer, mImgShipDestroyerPos, new Point());
+        createOnTouchListener(mImgShipMarineRadar, mImgShipMarineRadarPos, new Point());
+        createOnTouchListener(mImgShipMissileCommand, mImgShipMissileCommandPos, new Point());
+        createOnTouchListener(mImgShipPatrolBoat, mImgShipPatrolBoatPos, new Point());
     }
 
-    private void createOnTouchListener(final ImageView image, final Point position) {
+    private void createOnTouchListener(final ImageView image, final Point start,
+                                       final Point position) {
         image.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -172,6 +165,9 @@ public class PlaceShipsActivity extends AppCompatActivity {
                         position.set((int) event.getRawX(), (int) event.getRawY());
                         break;
                     default:
+                        layoutParams.leftMargin = start.x;
+                        layoutParams.topMargin = start.y;
+                        image.setLayoutParams(layoutParams);
                         break;
                 }
                 return true;
@@ -220,14 +216,22 @@ public class PlaceShipsActivity extends AppCompatActivity {
     }
 
     private void setShipImagePositions() {
-        setShipImagePosition(mImgShipAircraftCarrier, 0, 0);
-        setShipImagePosition(mImgShipBattleship, 1, 0);
-        setShipImagePosition(mImgShipCruiser, 2, 0);
-        setShipImagePosition(mImgShipDestroyer, 3, 0);
-        setShipImagePosition(mImgShipMarineRadar, 4, 0);
-        setShipImagePosition(mImgShipPatrolBoat, 5, 0);
-        setShipImagePosition(mImgShipMissileCommand, 6, 0);
-        setShipImagePosition(mImgShipDecoy, 6, 2);
+        mImgShipAircraftCarrierPos = new Point();
+        mImgShipBattleshipPos = new Point();
+        mImgShipCruiserPos = new Point();
+        mImgShipDestroyerPos = new Point();
+        mImgShipMarineRadarPos = new Point();
+        mImgShipPatrolBoatPos = new Point();
+        mImgShipMissileCommandPos = new Point();
+        mImgShipDecoyPos = new Point();
+        setShipImagePosition(mImgShipAircraftCarrier, mImgShipAircraftCarrierPos, 0, 0);
+        setShipImagePosition(mImgShipBattleship, mImgShipBattleshipPos, 1, 0);
+        setShipImagePosition(mImgShipCruiser, mImgShipCruiserPos, 2, 0);
+        setShipImagePosition(mImgShipDestroyer, mImgShipDestroyerPos, 3, 0);
+        setShipImagePosition(mImgShipMarineRadar, mImgShipMarineRadarPos, 4, 0);
+        setShipImagePosition(mImgShipPatrolBoat, mImgShipPatrolBoatPos, 5, 0);
+        setShipImagePosition(mImgShipMissileCommand, mImgShipMissileCommandPos, 6, 0);
+        setShipImagePosition(mImgShipDecoy, mImgShipDecoyPos, 6, 2);
 
     }
 
@@ -249,10 +253,11 @@ public class PlaceShipsActivity extends AppCompatActivity {
         return Math.min(mViewportSize.x, mViewportSize.y) / SQUARES_IN_FIELD;
     }
 
-    private void setShipImagePosition(ImageView image, int top, int left) {
+    private void setShipImagePosition(ImageView image, Point position, int top, int left) {
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) image.getLayoutParams();
         layoutParams.topMargin = Math.round((mSquareSize * top * 1.5f) + mSquareSize / 2);
         layoutParams.leftMargin = Math.round((mSquareSize * left * 1.5f) + mSquareSize / 2);
+        position.set(layoutParams.leftMargin, layoutParams.topMargin);
         image.setLayoutParams(layoutParams);
     }
 
