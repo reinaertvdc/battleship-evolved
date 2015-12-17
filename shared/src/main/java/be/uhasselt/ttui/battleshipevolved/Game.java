@@ -77,9 +77,18 @@ public class Game extends Observable {
      * @param player The player to be shot
      * @param coordinate the coordinate to shoot at
      */
-    public void shoot(int player, Coordinate coordinate) {
-        mPlayers.get(player).getField().shoot(coordinate);
+    public boolean shoot(int player, Coordinate coordinate) {
+        return mPlayers.get(player).getField().shoot(coordinate);
     }
 
+    /**
+     * Reveals a cross on the field.
+     * @param player The player whose field is revealed
+     * @param coordinate the center of the cross
+     * @return
+     */
+    public boolean scan(int player, Coordinate coordinate) {
+
+    }
 
 }
