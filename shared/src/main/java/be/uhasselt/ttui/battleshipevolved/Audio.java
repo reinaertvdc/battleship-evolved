@@ -24,44 +24,41 @@ public class Audio implements Observer {
     public Audio() {
         mAudioHitPaths = new ArrayList<String>();
         mAudioHitPaths.add(RESOURCE_PATH + "Missile1.wav");
+        mAudioHitPaths.add(RESOURCE_PATH + "Missile2.wav");
+        mAudioHitPaths.add(RESOURCE_PATH + "Missile3.wav");
         mAudioWaterPaths = new ArrayList<String>();
         mAudioWaterPaths.add(RESOURCE_PATH + "Water1.wav");
+        mAudioWaterPaths.add(RESOURCE_PATH + "Water2.wav");
+        mAudioWaterPaths.add(RESOURCE_PATH + "Water3.wav");
+        mAudioWaterPaths.add(RESOURCE_PATH + "Water4.wav");
         mAudioDiscoveredPaths = new ArrayList<String>();
         mAudioDiscoveredPaths.add(RESOURCE_PATH + "Hint.wav");
-        mAudioDiscoveredPaths = new ArrayList<String>();
-        mAudioDiscoveredPaths.add(RESOURCE_PATH + "BattleShipDeath1.wav");
+        mAudioShipSunkPaths = new ArrayList<String>();
+        mAudioShipSunkPaths.add(RESOURCE_PATH + "BattleShipDeath1.wav");
     }
 
     @Override
     public void update(Observable o, Object arg) {
-        if (arg instanceof CoordinateStatus) {
-            CoordinateStatus cStatus = (CoordinateStatus) arg;
-            playSound(cStatus.getStatus());
-        } else if (arg instanceof ArrayList<?>) {
-            for (Object obj : (ArrayList<?>) arg)
-                if (obj instanceof CoordinateStatus) {
-                    CoordinateStatus cStatus = (CoordinateStatus) obj;
-                    playSound(cStatus.getStatus());
-                }
-        }/* else if (arg == true) {
-            AudioPlayer player = new AudioPlayer();
-            player.play(mAudioShipSunkPaths.get(0));
-        }*/
+        if (arg instanceof SoundType) {
+            SoundType sType = (SoundType) arg;
+            playSound(sType.getType());
+        }
     }
 
-    private void playSound(CoordinateStatus.Status type) {
+    private void playSound(SoundType.Type type) {
         AudioPlayer player = new AudioPlayer();
         switch (type) {
-            case FOG:
-                break;
             case HIT:
-                player.play(mAudioHitPaths.get(0));
+                player.play(mAudioHitPaths.get((int)(Math.random() * mAudioHitPaths.size())));
                 break;
             case MISSED:
-                player.play(mAudioWaterPaths.get(0));
+                player.play(mAudioWaterPaths.get((int)(Math.random() * mAudioWaterPaths.size())));
                 break;
-            case BOAT:
-                player.play(mAudioDiscoveredPaths.get(0));
+            case SPOTTED:
+                player.play(mAudioDiscoveredPaths.get((int)(Math.random() * mAudioDiscoveredPaths.size())));
+                break;
+            case SUNK:
+                player.play(mAudioShipSunkPaths.get((int)(Math.random() * mAudioShipSunkPaths.size())));
                 break;
         }
     }

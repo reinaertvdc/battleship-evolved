@@ -76,11 +76,16 @@ public class Field extends Observable {
             if (mPositions[row][column] != null) {
                 mPositions[row][column].hit();
                 updateCoor(impact);
+                setChanged();
+                notifyObservers(new SoundType(SoundType.Type.HIT));
                 if (mPositions[row][column].isSunk())
-                    notifyObservers(true);
+                    setChanged();
+                    notifyObservers(new SoundType(SoundType.Type.SUNK));
                 return true; //Ship was shot
             }
             updateCoor(impact);
+            setChanged();
+            notifyObservers(new SoundType(SoundType.Type.MISSED));
             return false; //Shot missed
         }
         return false; //Already shot here
@@ -102,6 +107,9 @@ public class Field extends Observable {
             mFieldRevealed = true;
             setChanged();
             notifyObservers(new CoordinateStatus(coor, status));
+            if (status == CoordinateStatus.Status.BOAT)
+                setChanged();
+                notifyObservers(new SoundType(SoundType.Type.SPOTTED));
         }
     }
 
