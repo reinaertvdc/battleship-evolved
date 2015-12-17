@@ -13,8 +13,8 @@ import javax.sound.sampled.Clip;
  */
 public class Audio implements Observer {
     private static final String RESOURCE_PATH =
-            System.getProperty("user.dir") + "\\server\\src\\main\\java\\be\\uhasselt\\" +
-                    "ttui\\battleshipevolved\\server\\resources\\audio\\";
+            System.getProperty("user.dir") + "/server/src/main/java/be/uhasselt/" +
+                    "ttui/battleshipevolved/server/resources/audio/";
 
     private ArrayList<String> mAudioHitPaths;
     private ArrayList<String> mAudioWaterPaths;
