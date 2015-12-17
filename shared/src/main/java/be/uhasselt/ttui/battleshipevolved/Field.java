@@ -143,8 +143,8 @@ public class Field extends Observable {
     private boolean checkSpace(Coordinate anchor, Coordinate otherAnchor) throws IndexOutOfBoundsException {
         int row = anchor.getRow();
         int column = anchor.getColumn();
-        int endRow = otherAnchor.getRow() + row;
-        int endColumn = otherAnchor.getColumn() + column;
+        int endRow = otherAnchor.getRow();
+        int endColumn = otherAnchor.getColumn();
         boolean overwriting = false;
 
         if (endRow > ROWS || endColumn > COLUMNS)
