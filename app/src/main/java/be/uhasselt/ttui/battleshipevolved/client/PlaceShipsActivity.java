@@ -110,10 +110,6 @@ public class PlaceShipsActivity extends AppCompatActivity {
 
         mContentView = findViewById(R.id.fullscreen_content);
 
-        private float mSquareSize;
-        private int mTopOffset;
-        private int mLeftOffset;
-
         mViewportSize = getViewportSize();
         mLandscapeMode = mViewportSize.x >= mViewportSize.y;
         mSquareSize = calculateSquareSize();
@@ -258,8 +254,8 @@ public class PlaceShipsActivity extends AppCompatActivity {
             }
         }
 
-
-        //return Math.min(mViewportSize.x, mViewportSize.y) / SQUARES_IN_FIELD;
+        //TODO: Check line below? I randomly uncommented it because I wanted it to compile.
+        return Math.min(mViewportSize.x, mViewportSize.y); // SQUARES_IN_FIELD;
     }
 
     private void setShipImagePosition(ImageView image, Point position, int top, int left) {
