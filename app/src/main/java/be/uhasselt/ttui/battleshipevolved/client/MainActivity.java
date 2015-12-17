@@ -1,10 +1,7 @@
 package be.uhasselt.ttui.battleshipevolved.client;
 
 import android.annotation.SuppressLint;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
+import android.content.*;
 import android.os.IBinder;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +12,7 @@ import android.view.View;
 
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 import be.uhasselt.ttui.battleshipevolved.Game;
 
 import java.net.Socket;
@@ -46,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private View mControlsView;
     private EditText mConnectTextView;
     private boolean mVisible;
+    private serverMessage messageReceiver;
+
 
     //functions for binding to the connectionThread service
     private boolean isBound = false;
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
         mConnectTextView = (EditText) findViewById(R.id.connect_text);
-        mConnectTextView.setText("192.168.1.158");
+        mConnectTextView.setText("192.168.5.157");
 
         // Set up the user interaction to manually show or hide the system UI.
         mContentView.setOnClickListener(new View.OnClickListener() {
@@ -119,6 +119,9 @@ public class MainActivity extends AppCompatActivity {
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+
+        //create the listener to the ConnectionThread
+        messageReceiver = new serverMessage();
 
         System.out.println("The app works!");
     }
@@ -234,4 +237,36 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         doUnbinding();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(messageReceiver, new IntentFilter("SERVER_MESSAGE"));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(messageReceiver);
+    }
+
+    public class serverMessage extends BroadcastReceiver
+    {
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            System.out.println("HAAALLOOO, DOES THIS WORK????");
+            System.out.println(intent.getAction());
+            System.out.println("GUESS IT DOES WORK???");
+            String action = intent.getAction();
+            if(action.equalsIgnoreCase("SERVER_MESSAGE")){
+                Bundle extra = intent.getExtras();
+                String message = extra.getString("message");
+                System.out.println(message);
+                Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+                toast.show();
+            }
+        }
+    }
+
 }

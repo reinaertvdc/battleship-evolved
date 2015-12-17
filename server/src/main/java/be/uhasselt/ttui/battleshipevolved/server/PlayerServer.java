@@ -67,7 +67,13 @@ public class PlayerServer extends Thread {
                 e.printStackTrace();
             }
             System.out.print("Received message \'" + line + " from player " + mID + "\n");
-            interpretMessage(line);
+            if (line == null) {
+                //client disconnected
+                active = false;
+                //TODO (maybe) allow the client to reconnect?
+            } else {
+                interpretMessage(line);
+            }
         }
 
         //close streams and socket

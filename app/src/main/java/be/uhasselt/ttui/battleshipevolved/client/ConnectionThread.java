@@ -115,6 +115,10 @@ public class ConnectionThread extends Service {
                     //server was terminated, so we close the client as well
                     active = false;
                     //TODO: goto MainActivity and notify user server disconnected?
+                } else {
+                    Intent i = new Intent("SERVER_MESSAGE");
+                    i.putExtra("message", line);
+                    sendBroadcast(i);
                 }
                 //interpretMessage(line);
             }
