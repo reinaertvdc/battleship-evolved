@@ -88,7 +88,7 @@ public class Game extends Observable {
      * @return
      */
     public boolean scan(int player, Coordinate coordinate) {
-
+        return true;
     }
 
 }
