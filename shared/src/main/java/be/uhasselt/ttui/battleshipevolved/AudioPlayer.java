@@ -29,9 +29,9 @@ public class AudioPlayer implements LineListener {
      */
     void play(String audioFilePath) {
         ClassLoader classLoader = getClass().getClassLoader();
-        File audioFile = new File(classLoader.getResource(audioFilePath).getFile());
 
         try {
+            File audioFile = new File(classLoader.getResource(audioFilePath).getFile());
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
             AudioFormat format = audioStream.getFormat();
             DataLine.Info info = new DataLine.Info(Clip.class, format);

@@ -13,6 +13,7 @@ public class Audio implements Observer {
     private ArrayList<String> mAudioHitPaths;
     private ArrayList<String> mAudioWaterPaths;
     private ArrayList<String> mAudioDiscoveredPaths;
+    private ArrayList<String> mAudioShipSunkPaths;
 
     public Audio() {
         mAudioHitPaths = new ArrayList<String>();
@@ -21,6 +22,8 @@ public class Audio implements Observer {
         mAudioWaterPaths.add("audio/Water1");
         mAudioDiscoveredPaths = new ArrayList<String>();
         mAudioDiscoveredPaths.add("audio/Hint");
+        mAudioDiscoveredPaths = new ArrayList<String>();
+        mAudioDiscoveredPaths.add("audio/BattleShipDeath1");
     }
 
     @Override
@@ -34,6 +37,9 @@ public class Audio implements Observer {
                     CoordinateStatus cStatus = (CoordinateStatus) obj;
                     playSound(cStatus.getStatus());
                 }
+        } else if (arg == true) {
+            AudioPlayer player = new AudioPlayer();
+            player.play(mAudioShipSunkPaths.get(0));
         }
     }
 

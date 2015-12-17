@@ -76,6 +76,8 @@ public class Field extends Observable {
             if (mPositions[row][column] != null) {
                 mPositions[row][column].hit();
                 updateCoor(impact);
+                if (mPositions[row][column].isSunk())
+                    notifyObservers(true);
                 return true; //Ship was shot
             }
             updateCoor(impact);
