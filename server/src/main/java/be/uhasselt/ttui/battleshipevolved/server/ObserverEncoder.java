@@ -14,11 +14,17 @@ import be.uhasselt.ttui.battleshipevolved.Player;
  */
 public class ObserverEncoder implements Observer {
     ArrayList<PlayerServer> mClients;
+    boolean[] mConnected;
     Game mGame;
 
     public ObserverEncoder (Game game, ArrayList<PlayerServer> servers){
         mClients = servers;
         mGame = game;
+        mConnected = new boolean[4];
+        mConnected[0] = true;
+        mConnected[1] = true;
+        mConnected[2] = true;
+        mConnected[3] = true;
         attachToObservables();
     }
 
@@ -40,12 +46,29 @@ public class ObserverEncoder implements Observer {
                 if (obj instanceof CoordinateStatus)
                     sendHit(findFieldOriginPlayer(o), (CoordinateStatus) obj);
         }
-        if (arg instanceof Player) {
+        else if (arg instanceof Player) {
             //next turn was called
             for (int i = 0; i < mClients.size(); i++) {
-                Player player = (Player)arg;
                 PlayerServer server = mClients.get(i);
+                //first check if any player has left the game
+                ArrayList<Player> players = mGame.getPlayers();
+                for (int j = 0; j < players.size(); j++)
+                    if (!players.get(j).isPlaying() && mConnected[j] == true) {
+                        mConnected[j] = false;
+                        server.sendMessage("player " + j + " has left the game");
+                    }
+                Player player = (Player)arg;
                 server.sendMessage("next turn for player " + player.getID());
+            }
+        } else if (arg instanceof String) {
+            String str = (String)arg;
+            if (str.equalsIgnoreCase("Game Over")) {
+                //game has ended
+                for (int i = 0; i < mClients.size(); i++) {
+                    PlayerServer server = mClients.get(i);
+                    server.sendMessage("game has ended");
+                    server.shutdown();
+                }
             }
         }
     }

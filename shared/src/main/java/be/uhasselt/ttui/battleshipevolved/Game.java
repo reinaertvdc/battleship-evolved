@@ -72,13 +72,16 @@ public class Game extends Observable {
         Player currentPlayer = mPlayers.get(mTurn);
         currentPlayer.refreshWeaponCooldowns();
 
-
+        setChanged();
         //assign the next turn
         mTurn = getNextPlayer();
-
-        //notify all observers
-        setChanged();
-        notifyObservers(mPlayers.get(mTurn));
+        if (mTurn == -1) {
+            //game has end
+            notifyObservers("Game Over");
+        } else {
+            //notify all observers
+            notifyObservers(mPlayers.get(mTurn));
+        }
     }
 
     /**

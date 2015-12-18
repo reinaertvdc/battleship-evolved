@@ -20,7 +20,11 @@ public class PlayerServer extends Thread {
     private int mID;
     private Game mGame = null;
     private Player mPlayer = null;
+    private boolean active;
 
+    public void shutdown() {
+        active = false;
+    }
 
     public Socket getSocket() {
         return mSocket;
@@ -57,7 +61,7 @@ public class PlayerServer extends Thread {
             System.out.println(e);
             return;
         }
-        boolean active = true;
+        active = true;
 
         while (active)
         {
@@ -68,7 +72,7 @@ public class PlayerServer extends Thread {
                 e.printStackTrace();
             }
             System.out.print("Received message \'" + line + "\' from player " + mID + "\n");
-            if (line == null) {
+            if (line == null || !active) {
                 //client disconnected
                 active = false;
                 //TODO (maybe) allow the client to reconnect?
