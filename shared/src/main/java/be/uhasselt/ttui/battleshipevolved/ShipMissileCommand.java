@@ -6,10 +6,12 @@ package be.uhasselt.ttui.battleshipevolved;
  * @author Reinaert Van de Cruys
  */
 public class ShipMissileCommand extends Ship {
-    private static final Coordinate SIZE = new Coordinate(2, 2);
+    static {
+        NAME = "missilecommand";
+        SIZE = new Coordinate(2, 2);
+    }
 
     public ShipMissileCommand() {
-        super(SIZE);
         mWeapons = new Weapon[]{new WeaponArtillery()};
     }
 }

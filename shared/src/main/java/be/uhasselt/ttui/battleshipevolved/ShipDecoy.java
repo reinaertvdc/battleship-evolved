@@ -6,9 +6,8 @@ package be.uhasselt.ttui.battleshipevolved;
  * @author Reinaert Van de Cruys
  */
 public class ShipDecoy extends Ship {
-    private static final Coordinate SIZE = new Coordinate(1, 1);
-
-    public ShipDecoy() {
-        super(SIZE);
+    static {
+        NAME = "decoy";
+        SIZE = new Coordinate(1, 1);
     }
 }

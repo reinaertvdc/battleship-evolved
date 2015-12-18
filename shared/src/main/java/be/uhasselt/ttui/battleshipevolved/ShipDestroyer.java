@@ -6,10 +6,12 @@ package be.uhasselt.ttui.battleshipevolved;
  * @author Reinaert Van de Cruys
  */
 public class ShipDestroyer extends Ship {
-    private static final Coordinate SIZE = new Coordinate(1, 3);
+    static {
+        NAME = "destroyer";
+        SIZE = new Coordinate(1, 3);
+    }
 
     public ShipDestroyer() {
-        super(SIZE);
         mWeapons = new Weapon[]{new WeaponShot()};
     }
 }

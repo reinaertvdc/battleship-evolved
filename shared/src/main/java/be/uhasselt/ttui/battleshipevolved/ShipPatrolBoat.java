@@ -6,10 +6,12 @@ package be.uhasselt.ttui.battleshipevolved;
  * @author Reinaert Van de Cruys
  */
 public class ShipPatrolBoat extends Ship {
-    private static final Coordinate SIZE = new Coordinate(1, 2);
+    static {
+        NAME = "patrolboat";
+        SIZE = new Coordinate(1, 2);
+    }
 
     public ShipPatrolBoat() {
-        super(SIZE);
         mWeapons = new Weapon[]{new WeaponShot()};
     }
 }

@@ -6,10 +6,12 @@ package be.uhasselt.ttui.battleshipevolved;
  * @author Reinaert Van de Cruys
  */
 public class ShipMarineRadar extends Ship {
-    private static final Coordinate SIZE = new Coordinate(1, 3);
+    static {
+        NAME = "marineradar";
+        SIZE = new Coordinate(1, 3);
+    }
 
     public ShipMarineRadar() {
-        super(SIZE);
         mWeapons = new Weapon[]{new WeaponRadar()};
     }
 }

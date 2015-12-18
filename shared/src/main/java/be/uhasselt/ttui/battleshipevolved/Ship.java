@@ -6,18 +6,13 @@ package be.uhasselt.ttui.battleshipevolved;
  * @author Reinaert Van de Cruys
  */
 public abstract class Ship {
-    private Coordinate mSize;
-    private int mHitPoints;
-    protected Weapon[] mWeapons;
-
-    protected Ship(Coordinate size) {
-        mSize = size;
-        mHitPoints = size.getRow() * size.getColumn();
-        mWeapons = new Weapon[0];
-    }
+    protected static String NAME;
+    protected static Coordinate SIZE;
+    protected Weapon[] mWeapons = new Weapon[0];
+    private int mHitPoints = SIZE.getRow() * SIZE.getColumn();
 
     public Coordinate getSize() {
-        return mSize;
+        return SIZE;
     }
 
     public Weapon[] getWeapons() {
@@ -32,5 +27,9 @@ public abstract class Ship {
 
     public boolean isSunk() {
         return mHitPoints <= 0;
+    }
+
+    public String getName() {
+        return NAME;
     }
 }
