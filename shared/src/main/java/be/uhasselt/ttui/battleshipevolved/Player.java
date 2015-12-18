@@ -90,6 +90,36 @@ public class Player {
         return "no marineradar ship found with a radar on board";
     }
 
+    public String shoot(Field field, Coordinate coordinate) {
+        boolean foundWeapon = false;
+        for (int i = 0; i < mShips.size(); i++) {
+            Ship ship = mShips.get(i);
+            if (ship.isSunk()) {
+                return "ship has sunk";
+            }
+
+            Weapon[] weapons = ship.getWeapons();
+            for (int j = 0; j < weapons.length; j++) {
+                Weapon weapon = weapons[j];
+                if (weapon instanceof WeaponShot) {
+                    foundWeapon = true;
+                    WeaponShot weaponShot = (WeaponShot) weapon;
+                    try {
+                        weaponShot.deploy(field, coordinate);
+                        return "success";
+                    } catch (Weapon.NotReadyException e) {
+                        continue;
+                    }
+                }
+            }
+        }
+        //if no radar ship is found, give the error
+        if (foundWeapon)
+            return "All shots are on cooldown";
+        else
+            return "no ship found with a radar on board";
+    }
+
     public String airstrike(Field field, Coordinate coordinate) {
         for (int i = 0; i < mShips.size(); i++) {
             Ship ship = mShips.get(i);

@@ -155,7 +155,7 @@ public class PlayerServer extends Thread {
         int player = Integer.parseInt(words[1]) - 1;
         Coordinate coor = new Coordinate(0, 0);
         if (coor.setFromString(words[2])) {
-            message = mGame.shoot(player, coor);
+            message = mGame.shoot(mID, player, coor);
         } else {
             message = "Could not interpret " + words[2];
         }

@@ -79,17 +79,13 @@ public class Game extends Observable {
 
     /**
      * Shoots a player on his field at coordinate coordinate
-     * @param player The player to be shot
+     * @param commander The playerID who is giving the command
+     * @param target The playerID whose field is revealed
      * @param coordinate the coordinate to shoot at
      * @return the message with either the error or == "success"
      */
-    public String shoot(int player, Coordinate coordinate) {
-        if (mPlayers.get(player).getField().shoot(coordinate)) {
-
-            return "hit";
-        }
-        else
-            return "miss";
+    public String shoot(int commander, int target, Coordinate coordinate) {
+        return mPlayers.get(commander).shoot(mPlayers.get(target).getField(), coordinate);
     }
 
     /**
