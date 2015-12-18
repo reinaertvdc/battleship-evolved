@@ -5,7 +5,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
@@ -171,7 +170,10 @@ public class PlaceShipsActivity extends AppCompatActivity {
                         break;
                     case MotionEvent.ACTION_UP:
                         mPointerID1 = INVALID_POINTER_ID;
-                        // TODO snap in grid
+                        if (image.getX() >= mSquareSize * 7) {
+                            image.setX(mOffsetLeft + (Math.round(image.getX() / mSquareSize) - 1) * mSquareSize);
+                            image.setY(mOffsetTop + Math.round(image.getY() / mSquareSize) * mSquareSize);
+                        }
                         break;
                     case MotionEvent.ACTION_POINTER_UP:
                         mPointerID1 = INVALID_POINTER_ID;
@@ -189,10 +191,6 @@ public class PlaceShipsActivity extends AppCompatActivity {
         });
     }
 
-    private PointF getCenter(PointF point1, PointF point2) {
-        return new PointF((point1.x + point2.x) / 2, (point1.y + point2.y) / 2);
-    }
-
     private float getAngle(PointF point1, PointF point2) {
         PointF vector = new PointF(point2.x - point1.x, point2.y - point1.y);
         return (float) Math.atan2(vector.y, vector.x);
@@ -202,40 +200,6 @@ public class PlaceShipsActivity extends AppCompatActivity {
         float posX = event.getX(event.findPointerIndex(pointerID));
         float posY = event.getY(event.findPointerIndex(pointerID));
         return new PointF(posX, posY);
-    }
-
-    private void setImageSize(ImageView image, Point size) {
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) image.getLayoutParams();
-        layoutParams.width = size.x;
-        layoutParams.height = size.y;
-        image.setLayoutParams(layoutParams);
-    }
-
-    private void setImageRawPosition(ImageView image, PointF position) {
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) image.getLayoutParams();
-        layoutParams.leftMargin = (int) position.x;
-        layoutParams.topMargin = (int) position.y;
-        image.setLayoutParams(layoutParams);
-    }
-
-    private void putImgBetweenPoints(ImageView image, PointF point1, PointF point2) {
-        if (point1 == null || point2 == null) {
-            return;
-        }
-        PointF vector = new PointF(point2.x - point1.x, point2.y - point1.y);
-        double angle = Math.atan2(vector.y, vector.x) * 180.0 / Math.PI;
-        image.setRotation((float) angle);
-        setImageRawPosition(image, point1);
-    }
-
-    private Point getImageSize(ImageView image) {
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) image.getLayoutParams();
-        return new Point(layoutParams.width, layoutParams.height);
-    }
-
-    private Point getPosition(ImageView image) {
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) image.getLayoutParams();
-        return new Point(layoutParams.leftMargin, layoutParams.topMargin);
     }
 
     private void drawField() {
