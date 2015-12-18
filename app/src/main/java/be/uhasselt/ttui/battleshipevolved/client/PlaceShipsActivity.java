@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,8 +42,7 @@ public class PlaceShipsActivity extends AppCompatActivity {
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
     private View mContentView;
-    int viewportWidth;
-    int viewportHeight;
+    private FrameLayout mLayout;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -71,18 +71,13 @@ public class PlaceShipsActivity extends AppCompatActivity {
         }
     };
 
-    private static final float NEEDED_VIEWPORT_RATIO = 18 / 12;
+    private static final int NEEDED_VIEWPORT_COLUMNS = 18;
+    private static final int NEEDED_VIEWPORT_ROWS = 12;
+    private static final float NEEDED_VIEWPORT_RATIO =
+            (float) NEEDED_VIEWPORT_COLUMNS / NEEDED_VIEWPORT_ROWS;
 
-    private final Drawable mFieldTile =
-            ContextCompat.getDrawable(getApplicationContext(), R.drawable.field_tile);
-    private final Drawable mEdgeTile =
-            ContextCompat.getDrawable(getApplicationContext(), R.drawable.edge_tile);
-
-    private Point mViewportSize;
-    private boolean mLandscapeMode;
-    private float mSquareSize;
-    private int mTopOffset;
-    private int mLeftOffset;
+    private int mSquareSize;
+    private int mOffsetTop = 0, mOffsetLeft = 0;
 
     private Coordinate mShipAircraftCarrierSize, mShipBattleshipSize, mShipCruiserSize,
                        mShipDecoySize, mShipDestroyerSize, mShipMarineRadarSize,
@@ -104,19 +99,15 @@ public class PlaceShipsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setContentView(R.layout.activity_place_ships);
+        mContentView = findViewById(R.id.fullscreen_content);
+        mLayout = (FrameLayout) findViewById(R.id.place_ships_field);
+
         doBinding();
 
-        setContentView(R.layout.activity_place_ships);
+        calculateSquareSizeAndOffset();
 
-        mContentView = findViewById(R.id.fullscreen_content);
-
-        private float mSquareSize;
-        private int mTopOffset;
-        private int mLeftOffset;
-
-        mViewportSize = getViewportSize();
-        mLandscapeMode = mViewportSize.x >= mViewportSize.y;
-        mSquareSize = calculateSquareSize();
+        drawField();
 
         loadShipSizes();
         loadShipImages();
@@ -149,22 +140,66 @@ public class PlaceShipsActivity extends AppCompatActivity {
                         break;
                     case MotionEvent.ACTION_MOVE:
                         Point movement = new Point((int) event.getRawX() - position.x,
-                                                   (int) event.getRawY() - position.y);
+                                (int) event.getRawY() - position.y);
                         layoutParams.leftMargin += movement.x;
                         layoutParams.topMargin += movement.y;
                         image.setLayoutParams(layoutParams);
                         position.set((int) event.getRawX(), (int) event.getRawY());
                         break;
                     default:
-                        layoutParams.leftMargin = start.x;
-                        layoutParams.topMargin = start.y;
-                        image.setLayoutParams(layoutParams);
+                        if (position.x > mSquareSize * 6) {
+                            int row = Math.min(Math.max(Math.round(position.y / mSquareSize), 7), );
+                            int column = Math.max(Math.round(position.y / mSquareSize), 7);
+                        }
+
+                        //layoutParams.leftMargin = start.x;
+                        //layoutParams.topMargin = start.y;
+                        //image.setLayoutParams(layoutParams);
+
                         //mBoundService.sendMessage("shoot 2 E4");
                         break;
                 }
                 return true;
             }
         });
+    }
+
+    private void drawField() {
+        Drawable fieldTileImg =
+                ContextCompat.getDrawable(getApplicationContext(), R.drawable.field_tile);
+        Drawable edgeTileImg =
+                ContextCompat.getDrawable(getApplicationContext(), R.drawable.edge_tile);
+
+        for (int i = 0; i < NEEDED_VIEWPORT_ROWS; i++) {
+            for (int j = 6; j < NEEDED_VIEWPORT_COLUMNS; j++) {
+                ImageView fieldTile = new ImageView(this);
+                fieldTile.setLayoutParams(new FrameLayout.LayoutParams(mSquareSize, mSquareSize));
+                if (i == 0 || i == NEEDED_VIEWPORT_ROWS - 1 ||
+                        j == 6 || j == NEEDED_VIEWPORT_COLUMNS - 1) {
+                    fieldTile.setImageDrawable(edgeTileImg);
+                } else {
+                    fieldTile.setImageDrawable(fieldTileImg);
+                }
+                setImagePosition(fieldTile, mSquareSize * j, mSquareSize * i);
+                mLayout.addView(fieldTile);
+            }
+        }
+    }
+
+    private void calculateSquareSizeAndOffset() {
+        Point viewportResolution = getViewportResolution();
+        System.out.println(viewportResolution);
+        float viewportRatio = (float) viewportResolution.x / viewportResolution.y;
+        System.out.println(viewportRatio);
+        if (viewportRatio > NEEDED_VIEWPORT_RATIO) {
+            System.out.println("1");
+            mSquareSize = viewportResolution.y / NEEDED_VIEWPORT_ROWS;
+            mOffsetLeft = (int)(viewportResolution.x * (viewportRatio - NEEDED_VIEWPORT_RATIO) / 2);
+        } else {
+            System.out.println("2");
+            mSquareSize = viewportResolution.x / NEEDED_VIEWPORT_COLUMNS;
+            mOffsetTop = (int)(viewportResolution.y * (NEEDED_VIEWPORT_RATIO - viewportRatio) / 2);
+        }
     }
 
     private void loadShipImages() {
@@ -226,47 +261,33 @@ public class PlaceShipsActivity extends AppCompatActivity {
         setShipImagePosition(mImgShipDecoy, mImgShipDecoyPos, 6, 2);
     }
 
-    private Point getViewportSize() {
-        Point viewportSize = new Point();
+    private Point getViewportResolution() {
+        Point viewportResolution = new Point();
         if (Build.VERSION.SDK_INT >= 13) {
-            getWindowManager().getDefaultDisplay().getSize(viewportSize);
+            getWindowManager().getDefaultDisplay().getSize(viewportResolution);
         } else {
             //noinspection deprecation
-            viewportWidth = getWindowManager().getDefaultDisplay().getWidth();
-            //noinspection deprecation
-            viewportHeight = getWindowManager().getDefaultDisplay().getHeight();
-            viewportSize.set(viewportWidth, viewportHeight);
+            viewportResolution.set(getWindowManager().getDefaultDisplay().getWidth(),
+                                   getWindowManager().getDefaultDisplay().getHeight());
         }
-        return viewportSize;
-    }
-
-    private int calculateSquareSize() {
-        float viewportRatio;
-        if (mLandscapeMode) {
-            viewportRatio = mViewportSize.x / mViewportSize.y;
-            if (viewportRatio > NEEDED_VIEWPORT_RATIO) {
-                mLeftOffset = (int) (mViewportSize.x * (viewportRatio - NEEDED_VIEWPORT_RATIO) / 2);
-            } else {
-                mTopOffset = (int) (mViewportSize.y * (viewportRatio - NEEDED_VIEWPORT_RATIO) / 2);
-            }
-        } else {
-            viewportRatio = mViewportSize.y / mViewportSize.x;
-            if (viewportRatio > NEEDED_VIEWPORT_RATIO) {
-                mTopOffset = (int) (mViewportSize.x * (viewportRatio - NEEDED_VIEWPORT_RATIO) / 2);
-            } else {
-                mLeftOffset = (int) (mViewportSize.y * (viewportRatio - NEEDED_VIEWPORT_RATIO) / 2);
-            }
-        }
-
-
-        //return Math.min(mViewportSize.x, mViewportSize.y) / SQUARES_IN_FIELD;
+        return viewportResolution;
     }
 
     private void setShipImagePosition(ImageView image, Point position, int top, int left) {
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) image.getLayoutParams();
-        layoutParams.topMargin = Math.round((mSquareSize * top * 1.5f) + mSquareSize / 2);
-        layoutParams.leftMargin = Math.round((mSquareSize * left * 1.5f) + mSquareSize / 2);
+        layoutParams.leftMargin =
+                mOffsetLeft + Math.round((mSquareSize * left * 1.5f) + mSquareSize / 2);
+        layoutParams.topMargin =
+                mOffsetTop + Math.round((mSquareSize * top * 1.5f) + mSquareSize / 2);
         position.set(layoutParams.leftMargin, layoutParams.topMargin);
+        image.setLayoutParams(layoutParams);
+        image.bringToFront();
+    }
+
+    private void setImagePosition(ImageView image, int left, int top) {
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) image.getLayoutParams();
+        layoutParams.leftMargin = mOffsetLeft + left;
+        layoutParams.topMargin = mOffsetTop + top;
         image.setLayoutParams(layoutParams);
     }
 
