@@ -98,7 +98,10 @@ public class PlayerServer extends Thread {
     private void interpretMessage(String message) {
         String[] words = message.split(" ");
         String command = words[0];
-        if (command.equalsIgnoreCase("place")) {
+        if (message.equalsIgnoreCase("Hi!")) {
+            //connection was made. Return ack
+            sendMessage("Hello!");
+        } else if (command.equalsIgnoreCase("place")) {
             handlePlace(words);
         } else if (command.equalsIgnoreCase("shoot")) {
             handleShoot(words);

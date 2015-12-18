@@ -22,7 +22,6 @@ public class ConnectionThread extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        System.out.println("I am in Ibinder onBind method");
         return myBinder;
     }
 
@@ -30,7 +29,6 @@ public class ConnectionThread extends Service {
 
     public class LocalBinder extends Binder {
         public ConnectionThread getService() {
-            System.out.println("I am in Localbinder ");
             return ConnectionThread.this;
         }
     }
@@ -38,12 +36,10 @@ public class ConnectionThread extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        System.out.println("I am in on create");
     }
 
     public void sendMessage(String message){
         if (mOut != null && !mOut.checkError()) {
-            System.out.println("in sendMessage " + message);
             mOut.println(message);
             mOut.flush();
         }
@@ -52,8 +48,13 @@ public class ConnectionThread extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
         //super.onStartCommand(intent, flags, startId);
-        String ip = intent.getExtras().getString("ip");
-        Toast.makeText(this,"Connecting to " + ip + "...", Toast.LENGTH_LONG).show();
+        String ip;
+        try {
+            ip = intent.getExtras().getString("ip");
+        } catch (NullPointerException e) {
+            return START_NOT_STICKY;
+        }
+        Toast.makeText(this,"Connecting to " + ip + "...", Toast.LENGTH_SHORT).show();
         Runnable connect = new connectSocket();
         SERVERIP = ip;
         new Thread(connect).start();
@@ -83,7 +84,7 @@ public class ConnectionThread extends Service {
                 try {
                     //setup the output datastream
                     mOut = new PrintWriter(new BufferedWriter(new OutputStreamWriter(mSocket.getOutputStream())), true);
-                    mOut.println("Hi!");
+                    mOut.println("Hi!"); //send handshake
                 }
                 catch (Exception e) {
                     //something went wrong with sending the message to the server.
@@ -91,11 +92,17 @@ public class ConnectionThread extends Service {
                     return;
                 }
             } catch (UnknownHostException e) {
-                System.out.println("Could not resolve hostname " + SERVERIP);
+                String message = "Could not resolve hostname " + SERVERIP;
+                System.out.println(message);
+                Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
+                toast.show();
                 return;
             } catch (IOException e) {
                 //if the connection could not be made
-                System.out.println("Could not connect to " + SERVERIP);
+                String message = "Could not connect to " + SERVERIP;
+                System.out.println(message);
+                Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
+                toast.show();
                 return;
             }
 
@@ -114,7 +121,14 @@ public class ConnectionThread extends Service {
                 {
                     //server was terminated, so we close the client as well
                     active = false;
-                    //TODO: goto MainActivity and notify user server disconnected?
+                    String message = "Server disconnected!";
+                    System.out.println(message);
+                    Intent intent = new Intent(ConnectionThread.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    //Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+                    //toast.show();
+                    //careful, toast makes shit crash :D
                 } else {
                     Intent i = new Intent("SERVER_MESSAGE");
                     i.putExtra("message", line);

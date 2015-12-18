@@ -83,11 +83,9 @@ public class MainActivity extends AppCompatActivity {
                 Bundle b = new Bundle();
                 b.putString("ip", ip);
                 intent.putExtras(b);
-                startService(intent);
+                startService(intent); //starting the service will send out the handshake
                 System.out.println("Service should be started");
-                //doBinding();
-                // TODO are we connected?
-                startActivity(new Intent(MainActivity.this, Play.class));
+                doBinding();
             } else {
 
             }
@@ -104,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
         mConnectTextView = (EditText) findViewById(R.id.connect_text);
-        mConnectTextView.setText("192.168.1.136");
+        mConnectTextView.setText("192.168.0.131");
 
         // Set up the user interaction to manually show or hide the system UI.
         mContentView.setOnClickListener(new View.OnClickListener() {
@@ -262,8 +260,13 @@ public class MainActivity extends AppCompatActivity {
                 Bundle extra = intent.getExtras();
                 String message = extra.getString("message");
                 System.out.println(message);
-                Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
-                toast.show();
+                if (message.equalsIgnoreCase("Hello!")) {
+                    //server acknowledged our handshake, so we can assume connection has been made
+                    Toast toast = Toast.makeText(getApplicationContext(), "Connected to the server!", Toast.LENGTH_LONG);
+                    toast.show();
+                    //startActivity(new Intent(MainActivity.this, Play.class));
+                    startActivity(new Intent(MainActivity.this, PlaceShipsActivity.class));
+                }
             }
         }
     }

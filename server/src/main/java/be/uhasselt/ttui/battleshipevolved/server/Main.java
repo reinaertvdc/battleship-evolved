@@ -41,7 +41,6 @@ public class Main {
             for (int i = 0; i < mPlayers.size(); i++) {
                 mPlayers.get(i).setGame(game);
             }
-            mPlayers.get(0).sendMessage("Lololol");
         } catch (IOException e) {
             System.err.println("Could not listen on port: 4004");
         }
