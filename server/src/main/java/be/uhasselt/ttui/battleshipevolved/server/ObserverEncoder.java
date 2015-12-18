@@ -33,13 +33,12 @@ public class ObserverEncoder implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        //int playerID = findOriginPlayer(o);
         if (arg instanceof CoordinateStatus) {
-            encodeCoordinateStatus((CoordinateStatus) arg);
+            sendHit(findFieldOriginPlayer(o), (CoordinateStatus) arg);
         } else if (arg instanceof ArrayList<?>) {
             for (Object obj : (ArrayList<?>) arg)
                 if (obj instanceof CoordinateStatus)
-                    encodeCoordinateStatus((CoordinateStatus) obj);
+                    sendHit(findFieldOriginPlayer(o), (CoordinateStatus) obj);
         }
         if (arg instanceof Player) {
             //next turn was called
@@ -51,7 +50,7 @@ public class ObserverEncoder implements Observer {
         }
     }
 
-    private int findOriginPlayer(Observable o) {
+    private int findFieldOriginPlayer(Observable o) {
         if (o instanceof Field) {
             Field f = (Field) o;
             ArrayList<Player> players = mGame.getPlayers();
@@ -63,6 +62,13 @@ public class ObserverEncoder implements Observer {
         return -1;
     }
 
+    private void sendHit(int player, CoordinateStatus cs) {
+        if (player >= 0 && player < mClients.size()) {
+            if (cs.getStatus() == CoordinateStatus.Status.HIT) {
+                mClients.get(player).sendMessage(encodeCoordinateStatus(cs));
+            }
+        }
+    }
 
     private String encodeCoordinateStatus(CoordinateStatus cs){
         return "CoordinateUpdate " + cs.getRow() + " " + cs.getColumn() + " " + cs.getStatus();
