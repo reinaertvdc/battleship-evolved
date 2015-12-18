@@ -100,6 +100,8 @@ public class PlayerServer extends Thread {
             handleShoot(words);
         } else if (command.equalsIgnoreCase("scan")) {
             handleScan(words);
+        } else if (command.equalsIgnoreCase("airstrike")) {
+            handleAirstrike(words);
         }
 
         else {
@@ -161,8 +163,7 @@ public class PlayerServer extends Thread {
     }
 
     /**
-     * Handles the scan commands
-     *
+     * Handles the scan command
      */
     private void handleScan(String[] words) {
         String message;
@@ -170,6 +171,21 @@ public class PlayerServer extends Thread {
         Coordinate coor = new Coordinate(0, 0);
         if (coor.setFromString(words[2])) {
             message = mGame.scan(mID, player, coor);
+        } else {
+            message = "Could not interpret " + words[2];
+        }
+        sendMessage(message);
+    }
+
+    /**
+     * Handles the airstrike command
+     */
+    private void handleAirstrike(String[] words) {
+        String message;
+        int player = Integer.parseInt(words[1]) - 1;
+        Coordinate coor = new Coordinate(0, 0);
+        if (coor.setFromString(words[2])) {
+            message = mGame.airstrike(mID, player, coor);
         } else {
             message = "Could not interpret " + words[2];
         }

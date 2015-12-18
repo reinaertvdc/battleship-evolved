@@ -84,14 +84,40 @@ public class Player {
                         }
                     }
                 }
-
             }
         }
-
         //if no radar ship is found, give the error
         return "no marineradar ship found with a radar on board";
     }
 
+    public String airstrike(Field field, Coordinate coordinate) {
+        for (int i = 0; i < mShips.size(); i++) {
+            Ship ship = mShips.get(i);
+            if (ship instanceof ShipAircraftCarrier) {
+                ShipAircraftCarrier carrier = (ShipAircraftCarrier) ship;
+
+                if (carrier.isSunk()) {
+                    return "aircraftcarrier ship has sunk";
+                }
+
+                Weapon[] weapons = carrier.getWeapons();
+                for (int j = 0; j < weapons.length; j++) {
+                    Weapon weapon = weapons[j];
+                    if (weapon instanceof WeaponAirStrike) {
+                        WeaponAirStrike weaponAirStrike = (WeaponAirStrike) weapon;
+                        try {
+                            weaponAirStrike.deploy(field, coordinate);
+                            return "success";
+                        } catch (Weapon.NotReadyException e) {
+                            return "airstrike is on cooldown";
+                        }
+                    }
+                }
+            }
+        }
+        //if no radar ship is found, give the error
+        return "no aircraftcarrier ship found with a radar on board";
+    }
 
     public Field getField() {
         return mField;

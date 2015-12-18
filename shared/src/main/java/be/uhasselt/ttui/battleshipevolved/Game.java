@@ -84,8 +84,10 @@ public class Game extends Observable {
      * @return the message with either the error or == "success"
      */
     public String shoot(int player, Coordinate coordinate) {
-        if (mPlayers.get(player).getField().shoot(coordinate))
+        if (mPlayers.get(player).getField().shoot(coordinate)) {
+
             return "hit";
+        }
         else
             return "miss";
     }
@@ -99,6 +101,17 @@ public class Game extends Observable {
      */
     public String scan(int commander, int target, Coordinate coordinate) {
         return mPlayers.get(commander).scan(mPlayers.get(target).getField(), coordinate);
+    }
+
+    /**
+     * Shoots a 1x3 barrage at the targets field.
+     * @param commander The playerID who shoots
+     * @param target the playerID of the target
+     * @param coordinate the coordinate of the outer left
+     * @return the message with either the error or == "success"
+     */
+    public String airstrike(int commander, int target, Coordinate coordinate) {
+        return mPlayers.get(commander).airstrike(mPlayers.get(target).getField(), coordinate);
     }
 
 }
