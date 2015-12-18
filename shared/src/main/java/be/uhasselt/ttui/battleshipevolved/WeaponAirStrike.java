@@ -12,7 +12,16 @@ public class WeaponAirStrike extends Weapon {
         super(COOL_DOWN, COOL_DOWN);
     }
 
+    /**
+     * Shoots the 1x3 area
+     * @param field the field to use the airstrike on
+     * @param coordinate the outer left coordinate of the airstrike
+     */
     protected void execute(Field field, Coordinate coordinate) {
-        // TODO implement method
+        Coordinate mid = new Coordinate(coordinate.getRow(), coordinate.getColumn() + 1);
+        Coordinate right = new Coordinate(coordinate.getRow(), coordinate.getColumn() + 2);
+        field.shoot(coordinate);
+        field.shoot(mid);
+        field.shoot(right);
     }
 }

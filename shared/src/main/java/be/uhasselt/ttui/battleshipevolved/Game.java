@@ -25,7 +25,7 @@ public class Game extends Observable {
         mTurn = 0;
         mBoard = new Board(mPlayers.toArray(new Player[maxPlayers]));
         this.addObserver(mBoard);
-        insertTestValues();
+        //insertTestValues();
     }
 
     public ArrayList<Player> getPlayers() {
@@ -81,19 +81,24 @@ public class Game extends Observable {
      * Shoots a player on his field at coordinate coordinate
      * @param player The player to be shot
      * @param coordinate the coordinate to shoot at
+     * @return the message with either the error or == "success"
      */
-    public boolean shoot(int player, Coordinate coordinate) {
-        return mPlayers.get(player).getField().shoot(coordinate);
+    public String shoot(int player, Coordinate coordinate) {
+        if (mPlayers.get(player).getField().shoot(coordinate))
+            return "hit";
+        else
+            return "miss";
     }
 
     /**
      * Reveals a cross on the field.
-     * @param player The player whose field is revealed
+     * @param commander The playerID who is giving the command
+     * @param target The playerID whose field is revealed
      * @param coordinate the center of the cross
-     * @return
+     * @return the message with either the error or == "success"
      */
-    public boolean scan(int player, Coordinate coordinate) {
-        return true;
+    public String scan(int commander, int target, Coordinate coordinate) {
+        return mPlayers.get(commander).scan(mPlayers.get(target).getField(), coordinate);
     }
 
 }

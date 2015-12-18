@@ -71,6 +71,8 @@ public class Field extends Observable {
     public boolean shoot(Coordinate impact) {
         int row = impact.getRow();
         int column = impact.getColumn();
+        if (row >= ROWS || column >= COLUMNS)
+            return false;
         if (!mBeenShot[row][column]) {
             mBeenShot[row][column] = true;
             if (mPositions[row][column] != null) {

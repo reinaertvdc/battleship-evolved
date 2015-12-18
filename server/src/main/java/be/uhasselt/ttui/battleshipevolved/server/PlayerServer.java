@@ -98,6 +98,8 @@ public class PlayerServer extends Thread {
             handlePlace(words);
         } else if (command.equalsIgnoreCase("shoot")) {
             handleShoot(words);
+        } else if (command.equalsIgnoreCase("scan")) {
+            handleScan(words);
         }
 
         else {
@@ -151,10 +153,23 @@ public class PlayerServer extends Thread {
         int player = Integer.parseInt(words[1]) - 1;
         Coordinate coor = new Coordinate(0, 0);
         if (coor.setFromString(words[2])) {
-            if (mGame.shoot(player, coor))
-                message = "hit";
-            else
-                message = "miss";
+            message = mGame.shoot(player, coor);
+        } else {
+            message = "Could not interpret " + words[2];
+        }
+        sendMessage(message);
+    }
+
+    /**
+     * Handles the scan commands
+     *
+     */
+    private void handleScan(String[] words) {
+        String message;
+        int player = Integer.parseInt(words[1]) - 1;
+        Coordinate coor = new Coordinate(0, 0);
+        if (coor.setFromString(words[2])) {
+            message = mGame.scan(mID, player, coor);
         } else {
             message = "Could not interpret " + words[2];
         }

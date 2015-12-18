@@ -13,6 +13,6 @@ public class WeaponShot extends Weapon {
     }
 
     protected void execute(Field field, Coordinate coordinate) {
-        // TODO implement method
+        field.shoot(coordinate);
     }
 }
