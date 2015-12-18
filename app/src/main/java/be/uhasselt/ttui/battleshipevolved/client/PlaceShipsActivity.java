@@ -5,7 +5,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Matrix;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -128,50 +130,108 @@ public class PlaceShipsActivity extends AppCompatActivity {
 
     private void createOnTouchListener(final ImageView image) {
         image.setOnTouchListener(new View.OnTouchListener() {
-            final Point initialImgPosition = getPosition(image);
-            Point previousImgPosition = initialImgPosition;
+            private static final int INVALID_POINTER_ID = -1;
+            private PointF mDragOffset;
+            private PointF mInitRotationPosPointer1;
+            private PointF mInitRotationPosPointer2;
+            private int mPointerID1 = INVALID_POINTER_ID;
+            private int mPointerID2 = INVALID_POINTER_ID;
+
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                FrameLayout.LayoutParams layoutParams =
-                        (FrameLayout.LayoutParams) image.getLayoutParams();
                 switch (event.getActionMasked()) {
-                    case MotionEvent.ACTION_POINTER_DOWN:
-                        System.out.println("Finger " + event.getActionIndex() + " down");
-                        break;
-                    case MotionEvent.ACTION_POINTER_UP:
-                        System.out.println("Finger " + event.getActionIndex() + " up");
-                        break;
-                }
-
-                /*switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        mPointerID1 = event.getPointerId(event.getActionIndex());
+                        mDragOffset = getPointerPositionRelative(event, mPointerID1);
+                        break;
+                    case MotionEvent.ACTION_POINTER_DOWN:
+                        mPointerID2 = event.getPointerId(event.getActionIndex());
+                        if (mPointerID1 != INVALID_POINTER_ID) {
+                            mInitRotationPosPointer1 =
+                                    getPointerPositionRelative(event, mPointerID1);
+                        }
+                        mInitRotationPosPointer2 = getPointerPositionRelative(event, mPointerID2);
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        Point movement = new Point((int) event.getRawX() - position.x,
-                                (int) event.getRawY() - position.y);
-                        layoutParams.leftMargin += movement.x;
-                        layoutParams.topMargin += movement.y;
-                        image.setLayoutParams(layoutParams);
-                        position.set((int) event.getRawX(), (int) event.getRawY());
+                        if (mPointerID1 != INVALID_POINTER_ID && mPointerID2 == INVALID_POINTER_ID) {
+                            image.setX(event.getRawX() - mDragOffset.x);
+                            image.setY(event.getRawY() - mDragOffset.y);
+                        } else if (mPointerID1 != INVALID_POINTER_ID) {
+                            PointF currPosPointer1 = getPointerPositionRelative(event, mPointerID1);
+                            PointF currPosPointer2 = getPointerPositionRelative(event, mPointerID2);
+                            float initRotationPosAngle =
+                                    getAngle(mInitRotationPosPointer1, mInitRotationPosPointer2);
+                            float currAngle = getAngle(currPosPointer1, currPosPointer2);
+                            float rotationAngle =
+                                    (float) Math.toDegrees(initRotationPosAngle - currAngle) % 360;
+                            if (rotationAngle < -180.f) rotationAngle += 360.0f;
+                            if (rotationAngle > 180.f) rotationAngle -= 360.0f;
+                            image.setRotation(image.getRotation() - rotationAngle);
+                        }
                         break;
-                    default:
-                        System.out.println(event.getAction());*/
-                        /*if (position.x > mSquareSize * 6) {
-                            int row = Math.min(Math.max(Math.round(position.y / mSquareSize), 7), 11);
-                            int column = Math.max(Math.round(position.y / mSquareSize), 7);
-                        }*/
-
-                        //layoutParams.leftMargin = start.x;
-                        //layoutParams.topMargin = start.y;
-                        //image.setLayoutParams(layoutParams);
-
-                        //mBoundService.sendMessage("shoot 2 E4");
-                        /*break;
-                }*/
+                    case MotionEvent.ACTION_UP:
+                        mPointerID1 = INVALID_POINTER_ID;
+                        // TODO snap in grid
+                        break;
+                    case MotionEvent.ACTION_POINTER_UP:
+                        mPointerID1 = INVALID_POINTER_ID;
+                        mPointerID2 = INVALID_POINTER_ID;
+                        float rotation = image.getRotation();
+                        image.setRotation(Math.round(rotation / 90) * 90);
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                        mPointerID1 = INVALID_POINTER_ID;
+                        mPointerID2 = INVALID_POINTER_ID;
+                        break;
+                }
                 return true;
             }
         });
-}
+    }
+
+    private PointF getCenter(PointF point1, PointF point2) {
+        return new PointF((point1.x + point2.x) / 2, (point1.y + point2.y) / 2);
+    }
+
+    private float getAngle(PointF point1, PointF point2) {
+        PointF vector = new PointF(point2.x - point1.x, point2.y - point1.y);
+        return (float) Math.atan2(vector.y, vector.x);
+    }
+
+    private PointF getPointerPositionRelative(MotionEvent event, int pointerID) {
+        float posX = event.getX(event.findPointerIndex(pointerID));
+        float posY = event.getY(event.findPointerIndex(pointerID));
+        return new PointF(posX, posY);
+    }
+
+    private void setImageSize(ImageView image, Point size) {
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) image.getLayoutParams();
+        layoutParams.width = size.x;
+        layoutParams.height = size.y;
+        image.setLayoutParams(layoutParams);
+    }
+
+    private void setImageRawPosition(ImageView image, PointF position) {
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) image.getLayoutParams();
+        layoutParams.leftMargin = (int) position.x;
+        layoutParams.topMargin = (int) position.y;
+        image.setLayoutParams(layoutParams);
+    }
+
+    private void putImgBetweenPoints(ImageView image, PointF point1, PointF point2) {
+        if (point1 == null || point2 == null) {
+            return;
+        }
+        PointF vector = new PointF(point2.x - point1.x, point2.y - point1.y);
+        double angle = Math.atan2(vector.y, vector.x) * 180.0 / Math.PI;
+        image.setRotation((float) angle);
+        setImageRawPosition(image, point1);
+    }
+
+    private Point getImageSize(ImageView image) {
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) image.getLayoutParams();
+        return new Point(layoutParams.width, layoutParams.height);
+    }
 
     private Point getPosition(ImageView image) {
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) image.getLayoutParams();
