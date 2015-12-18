@@ -6,13 +6,40 @@ public class Player {
     private Field mField;
     private ArrayList<Ship> mShips;
     private int mID;
+    private boolean mIsPlaying; //wether or not this player is still playing (either because of game-over condition or a disconnect)
 
     public Player(int id) {
         mField = new Field();
         mShips = new ArrayList<>();
         mID = id;
+        mIsPlaying = true;
     }
 
+    public boolean isPlaying() {return mIsPlaying;}
+
+    public void hasDisconnected() {mIsPlaying = false;}
+
+    /**
+     * Function to check if the player has lost the game. If it has, isPlaying() will be changed to false
+     */
+    public void checkLoseCondition() {
+        //we'll basically iterate over all the ships, and if
+        //there's no ships left (except for the decoy) he's lost
+        boolean hasShipsLeft = false;
+        for (int i = 0; i < mShips.size() && !hasShipsLeft; i++) {
+            Ship ship = mShips.get(i);
+            if (!(ship instanceof ShipDecoy)) {
+                //if the ship is not a decoy, and it is not destroyed
+                //we have a ship left, and we're still the fucking game
+                if (!ship.isSunk()) {
+                    hasShipsLeft = true;
+                }
+            }
+        }
+        if (!hasShipsLeft) {
+            mIsPlaying = false;
+        }
+    }
     /*
      * Functions to place ships
      */

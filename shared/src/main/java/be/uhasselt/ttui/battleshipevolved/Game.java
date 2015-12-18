@@ -62,21 +62,47 @@ public class Game extends Observable {
             //remove all revealed spots
             Player player = mPlayers.get(i);
             player.getField().hide();
+
+            //force the player to update wether or not they're still playing?
+            //todo: maybe this is better implemented with observers so we dont have to wait till an 'end turn' event
+            player.checkLoseCondition();
         }
 
         //refresh all cooldowns of the current player
         Player currentPlayer = mPlayers.get(mTurn);
         currentPlayer.refreshWeaponCooldowns();
 
+
         //assign the next turn
-        mTurn++;
-        if (mTurn >= mPlayers.size()) {
-            mTurn = 0;
-        }
+        mTurn = getNextPlayer();
 
         //notify all observers
         setChanged();
         notifyObservers(mPlayers.get(mTurn));
+    }
+
+    /**
+     * Functions that returns the next player
+     * @return id of the next player in turn, -1 if the game is over
+     */
+    private int getNextPlayer() {
+        int turn = mTurn;
+        Player player;
+        boolean noNextPlayer = false;
+        do {
+            turn++;
+            if (turn >= mPlayers.size()) {
+                turn = 0;
+            }
+            player = mPlayers.get(turn);
+            //we have checked all other players, so the player who played the last turn is out winner!
+            noNextPlayer = turn == mTurn;
+        } while (!player.isPlaying() && !noNextPlayer);
+
+        if (noNextPlayer)
+            return -1;
+        else
+            return turn;
     }
 
     public void insertTestValues() {
