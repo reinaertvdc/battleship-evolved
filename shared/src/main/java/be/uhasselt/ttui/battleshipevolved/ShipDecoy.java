@@ -6,13 +6,9 @@ package be.uhasselt.ttui.battleshipevolved;
  * @author Reinaert Van de Cruys
  */
 public class ShipDecoy extends Ship {
-    static {
-        NAME = "Decoy";
-        SIZE = new Coordinate(1, 1);
-    }
+    private static final Coordinate SIZE = new Coordinate(1, 1);
 
-    //This ship doesn't sink
-    public boolean isSunk() {
-        return false;
+    public ShipDecoy() {
+        super(SIZE);
     }
 }

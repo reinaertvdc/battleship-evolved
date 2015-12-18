@@ -3,15 +3,6 @@ package be.uhasselt.ttui.battleshipevolved.server;
 import be.uhasselt.ttui.battleshipevolved.Coordinate;
 import be.uhasselt.ttui.battleshipevolved.Game;
 import be.uhasselt.ttui.battleshipevolved.Player;
-import be.uhasselt.ttui.battleshipevolved.ShipAircraftCarrier;
-import be.uhasselt.ttui.battleshipevolved.ShipBattleship;
-import be.uhasselt.ttui.battleshipevolved.ShipCruiser;
-import be.uhasselt.ttui.battleshipevolved.ShipDecoy;
-import be.uhasselt.ttui.battleshipevolved.ShipDestroyer;
-import be.uhasselt.ttui.battleshipevolved.ShipMarineRadar;
-import be.uhasselt.ttui.battleshipevolved.ShipMissileCommand;
-import be.uhasselt.ttui.battleshipevolved.ShipPatrolBoat;
-
 import com.sun.org.apache.xerces.internal.xs.StringList;
 
 import java.io.DataInputStream;
@@ -133,21 +124,21 @@ public class PlayerServer extends Thread {
         //call the correct ship function
         String ship = words[1];
         String message;
-        if (words[1].equalsIgnoreCase(ShipAircraftCarrier.getName())) {
+        if (words[1].equalsIgnoreCase("aircraftcarrier")) {
             message = mPlayer.placeAircraftCarrier(coor, true);
-        } else if (ship.equalsIgnoreCase(ShipBattleship.getName())) {
+        } else if (ship.equalsIgnoreCase("battleship")) {
             message = mPlayer.placeBattleShip(coor, true);
-        } else if (ship.equalsIgnoreCase(ShipCruiser.getName())) {
+        } else if (ship.equalsIgnoreCase("cruiser")) {
             message = mPlayer.placeCruiser(coor, true);
-        } else if (ship.equalsIgnoreCase(ShipDecoy.getName())) {
+        } else if (ship.equalsIgnoreCase("decoy")) {
             message = mPlayer.placeDecoy(coor, true);
-        } else if (ship.equalsIgnoreCase(ShipDestroyer.getName())) {
+        } else if (ship.equalsIgnoreCase("destroyer")) {
             message = mPlayer.placeDestroyer(coor, true);
-        } else if (ship.equalsIgnoreCase(ShipMarineRadar.getName())) {
+        } else if (ship.equalsIgnoreCase("marineradar")) {
             message = mPlayer.placeMarineRadar(coor, true);
-        } else if (ship.equalsIgnoreCase(ShipMissileCommand.getName())) {
+        } else if (ship.equalsIgnoreCase("missilecommand")) {
             message = mPlayer.placeMissileCommand(coor, true);
-        } else if (ship.equalsIgnoreCase(ShipPatrolBoat.getName())) {
+        } else if (ship.equalsIgnoreCase("patrolboat")) {
             message = mPlayer.placePatrolBoat(coor, true);
         } else {
             message = "Could not interpret " + ship;
