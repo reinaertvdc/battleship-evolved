@@ -48,7 +48,7 @@ public class Game extends Observable {
     public String nextTurn(int commander) {
         if (isOnTurn(commander)) {
             nextTurn();
-            return "next turn called";
+            return "";
         } else {
             return "not your turn";
         }

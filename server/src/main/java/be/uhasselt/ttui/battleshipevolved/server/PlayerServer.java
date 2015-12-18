@@ -198,6 +198,8 @@ public class PlayerServer extends Thread {
      * Handles the end turn command
      */
     private void handleEndTurn() {
-        sendMessage(mGame.nextTurn(mID));
+        String message = mGame.nextTurn(mID);
+        if (!message.isEmpty())
+            sendMessage(message);
     }
 }
