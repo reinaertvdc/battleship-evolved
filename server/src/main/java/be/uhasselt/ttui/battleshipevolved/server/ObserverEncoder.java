@@ -28,6 +28,7 @@ public class ObserverEncoder implements Observer {
         for (int i = 0; i < players.size(); i++){
             players.get(i).getField().addObserver(this);
         }
+        mGame.addObserver(this);
     }
 
     @Override
@@ -39,6 +40,14 @@ public class ObserverEncoder implements Observer {
             for (Object obj : (ArrayList<?>) arg)
                 if (obj instanceof CoordinateStatus)
                     encodeCoordinateStatus((CoordinateStatus) obj);
+        }
+        if (arg instanceof Player) {
+            //next turn was called
+            for (int i = 0; i < mClients.size(); i++) {
+                Player player = (Player)arg;
+                PlayerServer server = mClients.get(i);
+                server.sendMessage("next turn for player " + player.getID());
+            }
         }
     }
 

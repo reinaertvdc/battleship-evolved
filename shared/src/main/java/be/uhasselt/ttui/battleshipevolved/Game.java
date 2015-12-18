@@ -32,6 +32,12 @@ public class Game extends Observable {
         return mPlayers;
     }
 
+    /**
+     * Returns wether or not the player is on turn
+     */
+    public boolean isOnTurn(int player) {
+        return player == mTurn;
+    }
 
     public void placementTurn() {
         Player player = mPlayers.get(mTurn);
@@ -39,6 +45,18 @@ public class Game extends Observable {
         player.placeBattleShip(co, true);
     }
 
+    public String nextTurn(int commander) {
+        if (isOnTurn(commander)) {
+            nextTurn();
+            return "next turn called";
+        } else {
+            return "not your turn";
+        }
+    }
+
+    /**
+     * The function which starts the next turn
+     */
     public void nextTurn() {
         mPlayers.get(mTurn).getField().hide();
         //TODO: Refresh cooldowns
@@ -84,7 +102,10 @@ public class Game extends Observable {
      * @return the message with either the error or == "success"
      */
     public String shoot(int commander, int target, Coordinate coordinate) {
-        return mPlayers.get(commander).shoot(mPlayers.get(target).getField(), coordinate);
+        if (isOnTurn(commander))
+            return mPlayers.get(commander).shoot(mPlayers.get(target).getField(), coordinate);
+        else
+            return "not your turn";
     }
 
     /**
@@ -95,7 +116,10 @@ public class Game extends Observable {
      * @return the message with either the error or == "success"
      */
     public String scan(int commander, int target, Coordinate coordinate) {
-        return mPlayers.get(commander).scan(mPlayers.get(target).getField(), coordinate);
+        if (isOnTurn(commander))
+            return mPlayers.get(commander).scan(mPlayers.get(target).getField(), coordinate);
+        else
+            return "not your turn";
     }
 
     /**
@@ -106,7 +130,10 @@ public class Game extends Observable {
      * @return the message with either the error or == "success"
      */
     public String airstrike(int commander, int target, Coordinate coordinate) {
-        return mPlayers.get(commander).airstrike(mPlayers.get(target).getField(), coordinate);
+        if (isOnTurn(commander))
+            return mPlayers.get(commander).airstrike(mPlayers.get(target).getField(), coordinate);
+        else
+            return "not your turn";
     }
 
 }

@@ -67,7 +67,7 @@ public class PlayerServer extends Thread {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            System.out.print("Received message \'" + line + " from player " + mID + "\n");
+            System.out.print("Received message \'" + line + "\' from player " + mID + "\n");
             if (line == null) {
                 //client disconnected
                 active = false;
@@ -102,6 +102,8 @@ public class PlayerServer extends Thread {
             handleScan(words);
         } else if (command.equalsIgnoreCase("airstrike")) {
             handleAirstrike(words);
+        } else if (message.equalsIgnoreCase("end turn")) {
+            handleEndTurn();
         }
 
         else {
@@ -190,5 +192,12 @@ public class PlayerServer extends Thread {
             message = "Could not interpret " + words[2];
         }
         sendMessage(message);
+    }
+
+    /**
+     * Handles the end turn command
+     */
+    private void handleEndTurn() {
+        sendMessage(mGame.nextTurn(mID));
     }
 }
