@@ -117,7 +117,7 @@ public class Player {
         if (foundWeapon)
             return "All shots are on cooldown";
         else
-            return "no ship found with a radar on board";
+            return "no ship found with a radar on board"; //TODO: Why the radar?
     }
 
     public String airstrike(Field field, Coordinate coordinate) {
@@ -146,7 +146,7 @@ public class Player {
             }
         }
         //if no radar ship is found, give the error
-        return "no aircraftcarrier ship found with a radar on board";
+        return "no aircraftcarrier ship found with a radar on board"; //TODO: Why the radar?
     }
 
     public Field getField() {

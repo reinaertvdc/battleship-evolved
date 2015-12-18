@@ -67,7 +67,6 @@ public class Game extends Observable {
             mPlayers.get(0).getField().shoot(new Coordinate(0, 2));
             mPlayers.get(0).getField().shoot(new Coordinate(0, 3));
             mPlayers.get(0).getField().shoot(new Coordinate(0, 4));
-            mPlayers.get(0).getField().shoot(new Coordinate(1, 0));
             mPlayers.get(0).getField().shoot(new Coordinate(2, 0));
             mPlayers.get(0).getField().reveal(new Coordinate(2, 2));
             mPlayers.get(0).getField().reveal(new Coordinate(3, 3));

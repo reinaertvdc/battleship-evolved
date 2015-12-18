@@ -35,6 +35,7 @@ public class Main {
                 System.out.println("Clients notified.");
             }
             Game game = new Game();
+            ObserverEncoder encoder = new ObserverEncoder(game, mPlayers);
             serverSocket.close();
             //give each playerthread a pointer to the game instance
             for (int i = 0; i < mPlayers.size(); i++) {
