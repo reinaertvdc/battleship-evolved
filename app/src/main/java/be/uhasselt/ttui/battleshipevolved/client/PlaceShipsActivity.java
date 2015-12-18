@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -103,17 +102,11 @@ public class PlaceShipsActivity extends AppCompatActivity {
         mContentView = findViewById(R.id.fullscreen_content);
         mLayout = (FrameLayout) findViewById(R.id.place_ships_field);
 
-<<<<<<< HEAD
         doBinding();
 
         calculateSquareSizeAndOffset();
 
         drawField();
-=======
-        mViewportSize = getViewportSize();
-        mLandscapeMode = mViewportSize.x >= mViewportSize.y;
-        mSquareSize = calculateSquareSize();
->>>>>>> origin/master
 
         loadShipSizes();
         loadShipImages();
@@ -123,26 +116,35 @@ public class PlaceShipsActivity extends AppCompatActivity {
     }
 
     private void createShipImageOnTouchListeners() {
-        createOnTouchListener(mImgShipAircraftCarrier, mImgShipAircraftCarrierPos, new Point());
-        createOnTouchListener(mImgShipBattleship, mImgShipBattleshipPos, new Point());
-        createOnTouchListener(mImgShipCruiser, mImgShipCruiserPos, new Point());
-        createOnTouchListener(mImgShipDecoy, mImgShipDecoyPos, new Point());
-        createOnTouchListener(mImgShipDestroyer, mImgShipDestroyerPos, new Point());
-        createOnTouchListener(mImgShipMarineRadar, mImgShipMarineRadarPos, new Point());
-        createOnTouchListener(mImgShipMissileCommand, mImgShipMissileCommandPos, new Point());
-        createOnTouchListener(mImgShipPatrolBoat, mImgShipPatrolBoatPos, new Point());
+        createOnTouchListener(mImgShipAircraftCarrier);
+        createOnTouchListener(mImgShipBattleship);
+        createOnTouchListener(mImgShipCruiser);
+        createOnTouchListener(mImgShipDecoy);
+        createOnTouchListener(mImgShipDestroyer);
+        createOnTouchListener(mImgShipMarineRadar);
+        createOnTouchListener(mImgShipMissileCommand);
+        createOnTouchListener(mImgShipPatrolBoat);
     }
 
-    private void createOnTouchListener(final ImageView image, final Point start,
-                                       final Point position) {
+    private void createOnTouchListener(final ImageView image) {
         image.setOnTouchListener(new View.OnTouchListener() {
+            final Point initialImgPosition = getPosition(image);
+            Point previousImgPosition = initialImgPosition;
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 FrameLayout.LayoutParams layoutParams =
                         (FrameLayout.LayoutParams) image.getLayoutParams();
-                switch (event.getAction()) {
+                switch (event.getActionMasked()) {
+                    case MotionEvent.ACTION_POINTER_DOWN:
+                        System.out.println("Finger " + event.getActionIndex() + " down");
+                        break;
+                    case MotionEvent.ACTION_POINTER_UP:
+                        System.out.println("Finger " + event.getActionIndex() + " up");
+                        break;
+                }
+
+                /*switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        position.set((int) event.getRawX(), (int) event.getRawY());
                         break;
                     case MotionEvent.ACTION_MOVE:
                         Point movement = new Point((int) event.getRawX() - position.x,
@@ -153,21 +155,27 @@ public class PlaceShipsActivity extends AppCompatActivity {
                         position.set((int) event.getRawX(), (int) event.getRawY());
                         break;
                     default:
-                        if (position.x > mSquareSize * 6) {
-                            int row = Math.min(Math.max(Math.round(position.y / mSquareSize), 7), );
+                        System.out.println(event.getAction());*/
+                        /*if (position.x > mSquareSize * 6) {
+                            int row = Math.min(Math.max(Math.round(position.y / mSquareSize), 7), 11);
                             int column = Math.max(Math.round(position.y / mSquareSize), 7);
-                        }
+                        }*/
 
                         //layoutParams.leftMargin = start.x;
                         //layoutParams.topMargin = start.y;
                         //image.setLayoutParams(layoutParams);
 
                         //mBoundService.sendMessage("shoot 2 E4");
-                        break;
-                }
+                        /*break;
+                }*/
                 return true;
             }
         });
+}
+
+    private Point getPosition(ImageView image) {
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) image.getLayoutParams();
+        return new Point(layoutParams.leftMargin, layoutParams.topMargin);
     }
 
     private void drawField() {
@@ -274,35 +282,9 @@ public class PlaceShipsActivity extends AppCompatActivity {
         } else {
             //noinspection deprecation
             viewportResolution.set(getWindowManager().getDefaultDisplay().getWidth(),
-                                   getWindowManager().getDefaultDisplay().getHeight());
+                    getWindowManager().getDefaultDisplay().getHeight());
         }
-<<<<<<< HEAD
         return viewportResolution;
-=======
-        return viewportSize;
-    }
-
-    private int calculateSquareSize() {
-        float viewportRatio;
-        if (mLandscapeMode) {
-            viewportRatio = mViewportSize.x / mViewportSize.y;
-            if (viewportRatio > NEEDED_VIEWPORT_RATIO) {
-                mLeftOffset = (int) (mViewportSize.x * (viewportRatio - NEEDED_VIEWPORT_RATIO) / 2);
-            } else {
-                mTopOffset = (int) (mViewportSize.y * (viewportRatio - NEEDED_VIEWPORT_RATIO) / 2);
-            }
-        } else {
-            viewportRatio = mViewportSize.y / mViewportSize.x;
-            if (viewportRatio > NEEDED_VIEWPORT_RATIO) {
-                mTopOffset = (int) (mViewportSize.x * (viewportRatio - NEEDED_VIEWPORT_RATIO) / 2);
-            } else {
-                mLeftOffset = (int) (mViewportSize.y * (viewportRatio - NEEDED_VIEWPORT_RATIO) / 2);
-            }
-        }
-
-        //TODO: Check line below? I randomly uncommented it because I wanted it to compile.
-        return Math.min(mViewportSize.x, mViewportSize.y); // SQUARES_IN_FIELD;
->>>>>>> origin/master
     }
 
     private void setShipImagePosition(ImageView image, Point position, int top, int left) {
