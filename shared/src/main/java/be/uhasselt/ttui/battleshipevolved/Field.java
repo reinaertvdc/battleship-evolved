@@ -71,16 +71,23 @@ public class Field extends Observable {
     public boolean shoot(Coordinate impact) {
         int row = impact.getRow();
         int column = impact.getColumn();
+        if (row >= ROWS || column >= COLUMNS)
+            return false;
         if (!mBeenShot[row][column]) {
             mBeenShot[row][column] = true;
             if (mPositions[row][column] != null) {
                 mPositions[row][column].hit();
                 updateCoor(impact);
+                setChanged();
+                notifyObservers(new SoundType(SoundType.Type.HIT));
                 if (mPositions[row][column].isSunk())
-                    notifyObservers(true);
+                    setChanged();
+                    notifyObservers(new SoundType(SoundType.Type.SUNK));
                 return true; //Ship was shot
             }
             updateCoor(impact);
+            setChanged();
+            notifyObservers(new SoundType(SoundType.Type.MISSED));
             return false; //Shot missed
         }
         return false; //Already shot here
@@ -102,6 +109,9 @@ public class Field extends Observable {
             mFieldRevealed = true;
             setChanged();
             notifyObservers(new CoordinateStatus(coor, status));
+            if (status == CoordinateStatus.Status.BOAT)
+                setChanged();
+                notifyObservers(new SoundType(SoundType.Type.SPOTTED));
         }
     }
 
@@ -143,8 +153,8 @@ public class Field extends Observable {
     private boolean checkSpace(Coordinate anchor, Coordinate otherAnchor) throws IndexOutOfBoundsException {
         int row = anchor.getRow();
         int column = anchor.getColumn();
-        int endRow = otherAnchor.getRow() + row;
-        int endColumn = otherAnchor.getColumn() + column;
+        int endRow = otherAnchor.getRow();
+        int endColumn = otherAnchor.getColumn();
         boolean overwriting = false;
 
         if (endRow > ROWS || endColumn > COLUMNS)

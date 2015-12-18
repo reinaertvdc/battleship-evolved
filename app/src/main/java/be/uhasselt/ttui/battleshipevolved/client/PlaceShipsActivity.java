@@ -103,11 +103,17 @@ public class PlaceShipsActivity extends AppCompatActivity {
         mContentView = findViewById(R.id.fullscreen_content);
         mLayout = (FrameLayout) findViewById(R.id.place_ships_field);
 
+<<<<<<< HEAD
         doBinding();
 
         calculateSquareSizeAndOffset();
 
         drawField();
+=======
+        mViewportSize = getViewportSize();
+        mLandscapeMode = mViewportSize.x >= mViewportSize.y;
+        mSquareSize = calculateSquareSize();
+>>>>>>> origin/master
 
         loadShipSizes();
         loadShipImages();
@@ -270,7 +276,33 @@ public class PlaceShipsActivity extends AppCompatActivity {
             viewportResolution.set(getWindowManager().getDefaultDisplay().getWidth(),
                                    getWindowManager().getDefaultDisplay().getHeight());
         }
+<<<<<<< HEAD
         return viewportResolution;
+=======
+        return viewportSize;
+    }
+
+    private int calculateSquareSize() {
+        float viewportRatio;
+        if (mLandscapeMode) {
+            viewportRatio = mViewportSize.x / mViewportSize.y;
+            if (viewportRatio > NEEDED_VIEWPORT_RATIO) {
+                mLeftOffset = (int) (mViewportSize.x * (viewportRatio - NEEDED_VIEWPORT_RATIO) / 2);
+            } else {
+                mTopOffset = (int) (mViewportSize.y * (viewportRatio - NEEDED_VIEWPORT_RATIO) / 2);
+            }
+        } else {
+            viewportRatio = mViewportSize.y / mViewportSize.x;
+            if (viewportRatio > NEEDED_VIEWPORT_RATIO) {
+                mTopOffset = (int) (mViewportSize.x * (viewportRatio - NEEDED_VIEWPORT_RATIO) / 2);
+            } else {
+                mLeftOffset = (int) (mViewportSize.y * (viewportRatio - NEEDED_VIEWPORT_RATIO) / 2);
+            }
+        }
+
+        //TODO: Check line below? I randomly uncommented it because I wanted it to compile.
+        return Math.min(mViewportSize.x, mViewportSize.y); // SQUARES_IN_FIELD;
+>>>>>>> origin/master
     }
 
     private void setShipImagePosition(ImageView image, Point position, int top, int left) {

@@ -10,4 +10,9 @@ public class ShipDecoy extends Ship {
         NAME = "decoy";
         SIZE = new Coordinate(1, 1);
     }
+
+    //This ship doesn't sink
+    public boolean isSunk() {
+        return false;
+    }
 }

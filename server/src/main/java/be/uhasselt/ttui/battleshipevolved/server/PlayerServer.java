@@ -45,6 +45,7 @@ public class PlayerServer extends Thread {
 
     public void sendMessage(String message) {
         mOutput.println(message);
+        System.out.println("Sent message '" + "' to client " + mID);
     }
 
     public void run() {
@@ -92,13 +93,20 @@ public class PlayerServer extends Thread {
      */
     private void interpretMessage(String message) {
         String[] words = message.split(" ");
-        System.out.println(words.length);
-        if (words[0].compareTo("place") == 0) {
+        String command = words[0];
+        if (command.equalsIgnoreCase("place")) {
             handlePlace(words);
-        } else if (words[0].compareTo("shoot") == 0) {
+        } else if (command.equalsIgnoreCase("shoot")) {
             handleShoot(words);
+        } else if (command.equalsIgnoreCase("scan")) {
+            handleScan(words);
+        } else if (command.equalsIgnoreCase("airstrike")) {
+            handleAirstrike(words);
         }
-        //enzoverder
+
+        else {
+            sendMessage("Could not interpret " + command);
+        }
     }
 
     /**
@@ -106,15 +114,36 @@ public class PlayerServer extends Thread {
      * @param words the list of words in the command
      */
     private void handlePlace(String[] words) {
-        if (words[1].compareTo("battleship") == 0) {
-            Coordinate coor = new Coordinate(0, 0);
-            if (coor.setFromString(words[2])) {
-                mPlayer.placeBattleShip(coor, true);
-            } else {
-                System.out.print("Could not interpret " + words[2]);
-                return;
-            }
-        } //enzoverder
+        //first interpret the given coordinate
+        Coordinate coor = new Coordinate(0, 0);
+        if (!coor.setFromString(words[2])) {
+            sendMessage("Could not interpret " + words[2]);
+            return;
+        }
+
+        //call the correct ship function
+        String ship = words[1];
+        String message;
+        if (words[1].equalsIgnoreCase("aircraftcarrier")) {
+            message = mPlayer.placeAircraftCarrier(coor, true);
+        } else if (ship.equalsIgnoreCase("battleship")) {
+            message = mPlayer.placeBattleShip(coor, true);
+        } else if (ship.equalsIgnoreCase("cruiser")) {
+            message = mPlayer.placeCruiser(coor, true);
+        } else if (ship.equalsIgnoreCase("decoy")) {
+            message = mPlayer.placeDecoy(coor, true);
+        } else if (ship.equalsIgnoreCase("destroyer")) {
+            message = mPlayer.placeDestroyer(coor, true);
+        } else if (ship.equalsIgnoreCase("marineradar")) {
+            message = mPlayer.placeMarineRadar(coor, true);
+        } else if (ship.equalsIgnoreCase("missilecommand")) {
+            message = mPlayer.placeMissileCommand(coor, true);
+        } else if (ship.equalsIgnoreCase("patrolboat")) {
+            message = mPlayer.placePatrolBoat(coor, true);
+        } else {
+            message = "Could not interpret " + ship;
+        }
+        sendMessage(message);
     }
 
     /**
@@ -122,13 +151,44 @@ public class PlayerServer extends Thread {
      * @param words the list of words in the command
      */
     private void handleShoot(String[] words) {
+        String message;
         int player = Integer.parseInt(words[1]) - 1;
         Coordinate coor = new Coordinate(0, 0);
         if (coor.setFromString(words[2])) {
-            mGame.shoot(player, coor);
+            message = mGame.shoot(mID, player, coor);
         } else {
-            System.out.print("Could not interpret " + words[2]);
-            return;
+            message = "Could not interpret " + words[2];
         }
+        sendMessage(message);
+    }
+
+    /**
+     * Handles the scan command
+     */
+    private void handleScan(String[] words) {
+        String message;
+        int player = Integer.parseInt(words[1]) - 1;
+        Coordinate coor = new Coordinate(0, 0);
+        if (coor.setFromString(words[2])) {
+            message = mGame.scan(mID, player, coor);
+        } else {
+            message = "Could not interpret " + words[2];
+        }
+        sendMessage(message);
+    }
+
+    /**
+     * Handles the airstrike command
+     */
+    private void handleAirstrike(String[] words) {
+        String message;
+        int player = Integer.parseInt(words[1]) - 1;
+        Coordinate coor = new Coordinate(0, 0);
+        if (coor.setFromString(words[2])) {
+            message = mGame.airstrike(mID, player, coor);
+        } else {
+            message = "Could not interpret " + words[2];
+        }
+        sendMessage(message);
     }
 }

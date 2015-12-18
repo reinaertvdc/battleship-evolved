@@ -25,7 +25,7 @@ public class Game extends Observable {
         mTurn = 0;
         mBoard = new Board(mPlayers.toArray(new Player[maxPlayers]));
         this.addObserver(mBoard);
-        insertTestValues();
+        //insertTestValues();
     }
 
     public ArrayList<Player> getPlayers() {
@@ -58,14 +58,18 @@ public class Game extends Observable {
             mPlayers.get(0).getField().deployShip(player1Boat2, new Coordinate(2, 2), false);
             Ship player2Boat1 = new ShipCruiser();
             mPlayers.get(1).getField().deployShip(player2Boat1, new Coordinate(0, 0), false);
+            Ship player3Boat1 = new ShipAircraftCarrier();
+            mPlayers.get(2).getField().deployShip(player3Boat1, new Coordinate(5, 5), false);
 
             mPlayers.get(0).getField().shoot(new Coordinate(0, 1));
-//            mPlayers.get(0).getField().shoot(new Coordinate(0, 0));
-//            mPlayers.get(0).getField().shoot(new Coordinate(1, 1));
-//            mPlayers.get(0).getField().shoot(new Coordinate(1, 0));
-//            mPlayers.get(0).getField().shoot(new Coordinate(2, 0));
-//            mPlayers.get(0).getField().reveal(new Coordinate(2, 2));
-//            mPlayers.get(0).getField().reveal(new Coordinate(3, 3));
+            mPlayers.get(0).getField().shoot(new Coordinate(1, 1));
+            mPlayers.get(0).getField().shoot(new Coordinate(0, 0));
+            mPlayers.get(0).getField().shoot(new Coordinate(0, 2));
+            mPlayers.get(0).getField().shoot(new Coordinate(0, 3));
+            mPlayers.get(0).getField().shoot(new Coordinate(0, 4));
+            mPlayers.get(0).getField().shoot(new Coordinate(2, 0));
+            mPlayers.get(0).getField().reveal(new Coordinate(2, 2));
+            mPlayers.get(0).getField().reveal(new Coordinate(3, 3));
             nextTurn();
         } catch (Exception e){
             System.out.println(e.getMessage());
@@ -74,12 +78,35 @@ public class Game extends Observable {
 
     /**
      * Shoots a player on his field at coordinate coordinate
-     * @param player The player to be shot
+     * @param commander The playerID who is giving the command
+     * @param target The playerID whose field is revealed
      * @param coordinate the coordinate to shoot at
+     * @return the message with either the error or == "success"
      */
-    public void shoot(int player, Coordinate coordinate) {
-        mPlayers.get(player).getField().shoot(coordinate);
+    public String shoot(int commander, int target, Coordinate coordinate) {
+        return mPlayers.get(commander).shoot(mPlayers.get(target).getField(), coordinate);
     }
 
+    /**
+     * Reveals a cross on the field.
+     * @param commander The playerID who is giving the command
+     * @param target The playerID whose field is revealed
+     * @param coordinate the center of the cross
+     * @return the message with either the error or == "success"
+     */
+    public String scan(int commander, int target, Coordinate coordinate) {
+        return mPlayers.get(commander).scan(mPlayers.get(target).getField(), coordinate);
+    }
+
+    /**
+     * Shoots a 1x3 barrage at the targets field.
+     * @param commander The playerID who shoots
+     * @param target the playerID of the target
+     * @param coordinate the coordinate of the outer left
+     * @return the message with either the error or == "success"
+     */
+    public String airstrike(int commander, int target, Coordinate coordinate) {
+        return mPlayers.get(commander).airstrike(mPlayers.get(target).getField(), coordinate);
+    }
 
 }

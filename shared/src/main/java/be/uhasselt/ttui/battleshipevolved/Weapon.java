@@ -42,7 +42,7 @@ public abstract class Weapon extends Observable {
     }
 
     public boolean isReady() {
-        return mCoolDown <= 0;
+        return mCurrentCoolDown <= 0;
     }
 
     public class NotReadyException extends Exception {

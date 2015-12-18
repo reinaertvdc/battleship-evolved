@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     private View mControlsView;
     private EditText mConnectTextView;
     private boolean mVisible;
-    private serverMessage messageReceiver;
 
 
     //functions for binding to the connectionThread service
@@ -88,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println("Service should be started");
                 //doBinding();
                 // TODO are we connected?
-                startActivity(new Intent(MainActivity.this, PlaceShipsActivity.class));
+                startActivity(new Intent(MainActivity.this, Play.class));
             } else {
 
             }
@@ -105,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
         mConnectTextView = (EditText) findViewById(R.id.connect_text);
-        mConnectTextView.setText("192.168.5.157");
+        mConnectTextView.setText("192.168.1.136");
 
         // Set up the user interaction to manually show or hide the system UI.
         mContentView.setOnClickListener(new View.OnClickListener() {
@@ -240,6 +239,7 @@ public class MainActivity extends AppCompatActivity {
         doUnbinding();
     }
 
+    private serverMessage messageReceiver;
     @Override
     protected void onResume() {
         super.onResume();
@@ -257,9 +257,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent)
         {
-            System.out.println("HAAALLOOO, DOES THIS WORK????");
-            System.out.println(intent.getAction());
-            System.out.println("GUESS IT DOES WORK???");
             String action = intent.getAction();
             if(action.equalsIgnoreCase("SERVER_MESSAGE")){
                 Bundle extra = intent.getExtras();
