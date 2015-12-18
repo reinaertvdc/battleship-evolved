@@ -7,7 +7,7 @@ package be.uhasselt.ttui.battleshipevolved;
  */
 public class ShipMissileCommand extends Ship {
     static {
-        NAME = "missilecommand";
+        NAME = "MissileCommand";
         SIZE = new Coordinate(2, 2);
     }
 

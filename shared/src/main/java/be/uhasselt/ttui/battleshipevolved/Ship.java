@@ -11,7 +11,7 @@ public abstract class Ship {
     protected Weapon[] mWeapons = new Weapon[0];
     private int mHitPoints = SIZE.getRow() * SIZE.getColumn();
 
-    public Coordinate getSize() {
+    public static Coordinate getSize() {
         return SIZE;
     }
 
@@ -29,7 +29,7 @@ public abstract class Ship {
         return mHitPoints <= 0;
     }
 
-    public String getName() {
+    public static String getName() {
         return NAME;
     }
 }

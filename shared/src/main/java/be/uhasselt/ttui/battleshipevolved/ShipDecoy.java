@@ -7,7 +7,7 @@ package be.uhasselt.ttui.battleshipevolved;
  */
 public class ShipDecoy extends Ship {
     static {
-        NAME = "decoy";
+        NAME = "Decoy";
         SIZE = new Coordinate(1, 1);
     }
 

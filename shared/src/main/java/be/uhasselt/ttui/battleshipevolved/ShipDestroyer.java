@@ -7,7 +7,7 @@ package be.uhasselt.ttui.battleshipevolved;
  */
 public class ShipDestroyer extends Ship {
     static {
-        NAME = "destroyer";
+        NAME = "Destroyer";
         SIZE = new Coordinate(1, 3);
     }
 
