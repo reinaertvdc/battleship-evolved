@@ -104,7 +104,9 @@ public class Player {
                     if (weapon instanceof WeaponRadar) {
                         WeaponRadar weaponRadar = (WeaponRadar) weapon;
                         try {
-                            weaponRadar.deploy(field, coordinate);
+                            Field[] fields = new Field[1];
+                            fields[0] = field;
+                            weaponRadar.deploy(fields, coordinate);
                             return "success";
                         } catch (Weapon.NotReadyException e) {
                             return "radar is on cooldown";
@@ -132,7 +134,9 @@ public class Player {
                     foundWeapon = true;
                     WeaponShot weaponShot = (WeaponShot) weapon;
                     try {
-                        weaponShot.deploy(field, coordinate);
+                        Field[] fields = new Field[1];
+                        fields[0] = field;
+                        weaponShot.deploy(fields, coordinate);
                         return "success";
                     } catch (Weapon.NotReadyException e) {
                         continue;
@@ -140,11 +144,11 @@ public class Player {
                 }
             }
         }
-        //if no radar ship is found, give the error
+        //if no ship with available cooldown is found, give the error
         if (foundWeapon)
             return "All shots are on cooldown";
         else
-            return "no ship found with a radar on board"; //TODO: Why the radar?
+            return "no ship found shots on board";
     }
 
     public String airstrike(Field field, Coordinate coordinate) {
@@ -163,7 +167,9 @@ public class Player {
                     if (weapon instanceof WeaponAirStrike) {
                         WeaponAirStrike weaponAirStrike = (WeaponAirStrike) weapon;
                         try {
-                            weaponAirStrike.deploy(field, coordinate);
+                            Field[] fields = new Field[1];
+                            fields[0] = field;
+                            weaponAirStrike.deploy(fields, coordinate);
                             return "success";
                         } catch (Weapon.NotReadyException e) {
                             return "airstrike is on cooldown";
@@ -172,8 +178,37 @@ public class Player {
                 }
             }
         }
-        //if no radar ship is found, give the error
-        return "no aircraftcarrier ship found with a radar on board"; //TODO: Why the radar?
+        //if no aircraftcarrier is found, give the error
+        return "no aircraftcarrier ship found with a airstrike on board";
+    }
+
+    public String artillery(Field[] fields, Coordinate coordinate) {
+        for (int i = 0; i < mShips.size(); i++) {
+            Ship ship = mShips.get(i);
+            if (ship instanceof ShipMissileCommand) {
+                ShipMissileCommand missileCommand = (ShipMissileCommand) ship;
+
+                if (missileCommand.isSunk()) {
+                    return "missilecommand ship has sunk";
+                }
+
+                Weapon[] weapons = missileCommand.getWeapons();
+                for (int j = 0; j < weapons.length; j++) {
+                    Weapon weapon = weapons[j];
+                    if (weapon instanceof WeaponArtillery) {
+                        WeaponArtillery weaponArtillery = (WeaponArtillery) weapon;
+                        try {
+                            weaponArtillery.deploy(fields, coordinate);
+                            return "success";
+                        } catch (Weapon.NotReadyException e) {
+                            return "artillery is on cooldown";
+                        }
+                    }
+                }
+            }
+        }
+        //if no missile command ship is found, give the error
+        return "no missilecommand ship found with artillery on board";
     }
 
     public Field getField() {

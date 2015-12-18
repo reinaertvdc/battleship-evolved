@@ -14,7 +14,8 @@ public class WeaponShot extends Weapon {
         //super(COOL_DOWN, COOL_DOWN);
     }
 
-    protected void execute(Field field, Coordinate coordinate) {
+    protected void execute(Field[] fields, Coordinate coordinate) {
+        Field field = fields[0];
         field.shoot(coordinate);
     }
 }

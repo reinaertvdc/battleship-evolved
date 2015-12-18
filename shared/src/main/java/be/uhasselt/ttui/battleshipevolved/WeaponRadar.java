@@ -17,10 +17,11 @@ public class WeaponRadar extends Weapon {
     /**
      * Reveals the 3x3 cross
      * @precondition given param coordinate exists on the field
-     * @param field the field object to reveal on
+     * @param fields the field object to reveal on
      * @param coordinate the center of the cross to be revealed
      */
-    protected void execute(Field field, Coordinate coordinate) {
+    protected void execute(Field[] fields, Coordinate coordinate) {
+        Field field = fields[0];
         //let's assume the given coordinate exists
         field.reveal(coordinate);
         //for the other coordinates, try to create them and when no indexOutOfBounds exception is thrown, we know it exists

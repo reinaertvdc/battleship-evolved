@@ -106,6 +106,8 @@ public class PlayerServer extends Thread {
             handleScan(words);
         } else if (command.equalsIgnoreCase("airstrike")) {
             handleAirstrike(words);
+        } else if (command.equalsIgnoreCase("artillery")) {
+            handleArtillery(words);
         } else if (message.equalsIgnoreCase("end turn")) {
             handleEndTurn();
         }
@@ -194,6 +196,20 @@ public class PlayerServer extends Thread {
             message = mGame.airstrike(mID, player, coor);
         } else {
             message = "Could not interpret " + words[2];
+        }
+        sendMessage(message);
+    }
+
+    /**
+     * Handles the artillery command
+     */
+    private void handleArtillery(String[] words) {
+        String message;
+        Coordinate coor = new Coordinate(0, 0);
+        if (coor.setFromString(words[1])) {
+            message = mGame.artillery(mID, coor);
+        } else {
+            message = "Could not interpret " + words[1];
         }
         sendMessage(message);
     }

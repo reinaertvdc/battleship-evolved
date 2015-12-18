@@ -55,10 +55,11 @@ public class ObserverEncoder implements Observer {
                 for (int j = 0; j < players.size(); j++)
                     if (!players.get(j).isPlaying() && mConnected[j] == true) {
                         mConnected[j] = false;
-                        server.sendMessage("player " + j + " has left the game");
+                        for (int k = 0; k < mClients.size(); k++)
+                            mClients.get(k).sendMessage("player " + (j+1) + " has left the game");
                     }
                 Player player = (Player)arg;
-                server.sendMessage("next turn for player " + player.getID());
+                server.sendMessage("next turn for player " + (player.getID()+1));
             }
         } else if (arg instanceof String) {
             String str = (String)arg;

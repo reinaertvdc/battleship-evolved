@@ -176,4 +176,23 @@ public class Game extends Observable {
             return "not your turn";
     }
 
+    /**
+     * Shoots a shot at every player's field on the same coordinate
+     * @param commander the player who shoots
+     * @param coordinate the coordinate of the shot on each field
+     * @return the message wih either the error or == "success"
+     */
+    public String artillery(int commander, Coordinate coordinate) {
+        //Create the fields array
+        Field[] fields = new Field[mPlayers.size()];
+        for (int i = 0; i < mPlayers.size(); i++) {
+            fields[i] = mPlayers.get(i).getField();
+        }
+
+        if (isOnTurn(commander))
+            return mPlayers.get(commander).artillery(fields, coordinate);
+        else
+            return "not your turn";
+    }
+
 }

@@ -9,10 +9,15 @@ public class WeaponArtillery extends Weapon {
     private static final int COOL_DOWN = 3;
 
     public WeaponArtillery() {
-        super(COOL_DOWN, COOL_DOWN);
+        /** TODO: TEMPORARY FIX */
+        super(COOL_DOWN, 0);
+        //super(COOL_DOWN, COOL_DOWN);
     }
 
-    protected void execute(Field field, Coordinate coordinate) {
-        // TODO implement method
+    protected void execute(Field[] fields, Coordinate coordinate) {
+        for (int i = 0; i < fields.length; i++) {
+            Field field = fields[i];
+            field.shoot(coordinate);
+        }
     }
 }

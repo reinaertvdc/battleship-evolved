@@ -22,16 +22,16 @@ public abstract class Weapon extends Observable {
         }
     }
 
-    public void deploy(Field field, Coordinate coordinate) throws NotReadyException {
+    public void deploy(Field[] fields, Coordinate coordinate) throws NotReadyException {
         if (!isReady()) {
             throw new NotReadyException();
         } else {
-            execute(field, coordinate);
+            execute(fields, coordinate);
             mCurrentCoolDown = mCoolDown;
         }
     }
 
-    protected abstract void execute(Field field, Coordinate coordinate);
+    protected abstract void execute(Field[] fields, Coordinate coordinate);
 
     public int getCoolDown() {
         return mCoolDown;
