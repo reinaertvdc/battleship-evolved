@@ -11,4 +11,9 @@ public class ShipDecoy extends Ship {
     public ShipDecoy() {
         super(SIZE);
     }
+
+    //This ship doesn't sink
+    public boolean isSunk() {
+        return false;
+    }
 }
