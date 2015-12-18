@@ -58,12 +58,23 @@ public class Game extends Observable {
      * The function which starts the next turn
      */
     public void nextTurn() {
-        mPlayers.get(mTurn).getField().hide();
-        //TODO: Refresh cooldowns
+        for (int i = 0; i < mPlayers.size(); i++) {
+            //remove all revealed spots
+            Player player = mPlayers.get(i);
+            player.getField().hide();
+        }
+
+        //refresh all cooldowns of the current player
+        Player currentPlayer = mPlayers.get(mTurn);
+        currentPlayer.refreshWeaponCooldowns();
+
+        //assign the next turn
         mTurn++;
         if (mTurn >= mPlayers.size()) {
             mTurn = 0;
         }
+
+        //notify all observers
         setChanged();
         notifyObservers(mPlayers.get(mTurn));
     }

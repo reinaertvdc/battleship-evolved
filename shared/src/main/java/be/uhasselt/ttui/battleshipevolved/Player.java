@@ -154,4 +154,11 @@ public class Player {
     }
 
     public int getID() {return mID;}
+
+    public void refreshWeaponCooldowns() {
+        for (int i = 0; i < mShips.size(); i++) {
+            Ship ship = mShips.get(i);
+            ship.refreshCooldowns();
+        }
+    }
 }

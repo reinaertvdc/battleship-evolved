@@ -33,4 +33,11 @@ public abstract class Ship {
     public boolean isSunk() {
         return mHitPoints <= 0;
     }
+
+    public void refreshCooldowns() {
+        for (int i = 0; i < mWeapons.length; i++) {
+            Weapon weapon = mWeapons[i];
+            weapon.coolDown();
+        }
+    }
 }
