@@ -45,7 +45,7 @@ public class PlayerServer extends Thread {
 
     public void sendMessage(String message) {
         mOutput.println(message);
-        System.out.println("Sent message '" + "' to client " + mID);
+        System.out.println("Sent message '" + message + "' to client " + mID);
     }
 
     public void run() {

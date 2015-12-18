@@ -9,11 +9,14 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Vibrator;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import be.uhasselt.ttui.battleshipevolved.Coordinate;
 
 /**
  * Created by Arno on 9/12/2015.
@@ -93,6 +96,44 @@ public class Play  extends Activity {
                 Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
                 toast.show();
             }
+        }
+    }
+
+    /**
+     * Interprets a message given by a client and calls the appropriate function
+     * @param message The message given by the client
+     */
+    private void interpretMessage(String message) {
+        String[] words = message.split(" ");
+        String command = words[0];
+        if (command.equalsIgnoreCase("CoordinateUpdate")) {
+            updateGrid(words);
+        } /*else if (command.equalsIgnoreCase("shoot")) {
+            handleShoot(words);
+        } else if (command.equalsIgnoreCase("scan")) {
+            handleScan(words);
+        } else if (command.equalsIgnoreCase("airstrike")) {
+            handleAirstrike(words);
+        } else if (message.equalsIgnoreCase("end turn")) {
+            handleEndTurn();
+        }
+
+        else {
+            sendMessage("Could not interpret " + command);
+        }*/
+    }
+    //"CoordinateUpdate " + cs.getRow() + " " + cs.getColumn() + " " + cs.getStatus();
+    private void updateGrid(String[] words){
+        try {
+            if (words[3] == "HIT") {
+                mGrid.setDamaged(Integer.parseInt(words[1]), Integer.parseInt(words[2]));
+                // Vibrate for 500 milliseconds
+                Vibrator v = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
+                v.vibrate(500);
+                //sendMessage("Succes");
+            }
+        } catch (IndexOutOfBoundsException e) {
+            //sendMessage("Could not interpret");
         }
     }
 
