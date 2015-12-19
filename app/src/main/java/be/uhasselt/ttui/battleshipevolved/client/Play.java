@@ -287,7 +287,11 @@ public class Play  extends Activity {
             String str = matches.get(i);
             ArrayList<String> words = new ArrayList<>(Arrays.asList(str.split(" ")));
             String command = words.get(0);
-            if (command.equalsIgnoreCase("shoot")) {
+            if (str.contains("end") && str.contains("turn")) {
+                //end turn!
+                matchFound = true;
+                endTurn();
+            } else if (command.equalsIgnoreCase("shoot")) {
                 words.remove(0);
                 matchFound = handleShoot(words);
             } else if (command.equalsIgnoreCase("scan")) {
@@ -441,6 +445,10 @@ public class Play  extends Activity {
     /*
      * Functions to do shit and send the appropriate messages to the server
      */
+    private void endTurn() {
+        mBoundService.sendMessage("end turn");
+    }
+
     private void shoot(int player, String coord) {
         mBoundService.sendMessage("shoot " + player + " " + coord);
     }
