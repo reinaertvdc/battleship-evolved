@@ -3,6 +3,7 @@ package be.uhasselt.ttui.battleshipevolved;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
@@ -13,7 +14,9 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
@@ -23,6 +26,7 @@ import javax.swing.border.Border;
  */
 public class Board extends JFrame implements Observer {
     private BoardField[] mFields;
+    private JLabel[] mPlayerLabels;
     private Audio mAudio;
 
     //TODO: Aangenomen dat het aantal players 4 is, moet weggewerkt worden.
@@ -34,28 +38,50 @@ public class Board extends JFrame implements Observer {
         JPanel background = new JPanel();
         mFields = new BoardField[players.length];
         JPanel grid = new JPanel(new GridBagLayout());
+        grid.setBackground(Color.BLACK);
+        mPlayerLabels = new JLabel[4];
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
+        Font font = new Font("Sans-Serif", Font.BOLD, 24);
 
         for (int i = 0; i < players.length / 2; i++) {
-            mFields[i] = new BoardField();
-            mFields[i].setPreferredSize(mFields[i].getPreferredSize());
+            JLabel playerName = new JLabel("Player " + (i + 1));
+            playerName.setForeground(Color.WHITE);
+            playerName.setFont(font);
+            playerName.setHorizontalAlignment(JLabel.CENTER);
+            mPlayerLabels[i] = playerName;
             c.gridx = i;
             c.gridy = 0;
+            grid.add(playerName, c);
+
+            mFields[i] = new BoardField();
+            c.gridx = i;
+            c.gridy = 1;
             grid.add(mFields[i], c);
             players[i].getField().addObserver(mFields[i]);
             players[i].getField().addObserver(mAudio);
         }
         for (int i = 0; i < players.length / 2; i++) {
+            JLabel playerName = new JLabel("Player " + (i + 3));
+            playerName.setForeground(Color.WHITE);
+            playerName.setFont(font);
+            playerName.setHorizontalAlignment(JLabel.CENTER);
+            mPlayerLabels[i + 2] = playerName;
+            c.gridx = i;
+            c.gridy = 2;
+            grid.add(playerName, c);
+
             mFields[i + 2] = new BoardField();
             c.gridx = 1-i;
-            c.gridy = 1;
+            c.gridy = 3;
             grid.add(mFields[i + 2], c);
             players[i + 2].getField().addObserver(mFields[i + 2]);
             players[i + 2].getField().addObserver(mAudio);
         }
         background.add(grid);
         background.setBackground(Color.black);
+        //TODO: Player 1 always starts!
+        mPlayerLabels[0].setForeground(Color.GREEN);
 
         this.getContentPane().add(background);
         this.pack();
@@ -67,11 +93,9 @@ public class Board extends JFrame implements Observer {
         if (arg instanceof Player) {
             Player p = (Player)arg;
             for (int i = 0; i < mFields.length; i++) {
-                //mFields[i].setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                mFields[i].setVisible(true);
+                mPlayerLabels[i].setForeground(Color.WHITE);
             }
-            //mFields[p.getID()].setBorder(BorderFactory.createLineBorder(Color.RED));
-            //mFields[p.getID()].setVisible(false);
+            mPlayerLabels[p.getID()].setForeground(Color.GREEN);
         }
     }
 }
