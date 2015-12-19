@@ -171,12 +171,11 @@ public class PlaceShipsActivity extends AppCompatActivity {
                         break;
                     case MotionEvent.ACTION_UP:
                         mPointerID1 = INVALID_POINTER_ID;
-                        PointF imgPos =
-                                getRotatedPosition(getImagePosition(image), mOrientation, size);
-                        if (imgPos.x >= mSquareSize * 6 + mOffsetLeft) {
-                            image.setX(mOffsetLeft + (Math.round(image.getX() / mSquareSize) - 1)
+                        PointF imagePosition = getImagePosition(image);
+                        if (isOnField(imagePosition, mOrientation, size)) {
+                            image.setX(mOffsetLeft + Math.round(imagePosition.x / mSquareSize)
                                     * mSquareSize);
-                            image.setY(mOffsetTop + Math.round(image.getY() / mSquareSize)
+                            image.setY(mOffsetTop + Math.round(imagePosition.y / mSquareSize - 0.5)
                                     * mSquareSize);
                         }
                         break;
@@ -196,6 +195,27 @@ public class PlaceShipsActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    private boolean isOnField(PointF position, int orientation, Coordinate size) {
+        position = getRotatedPosition(position, orientation, size);
+        if (orientation == 0 || orientation == 180) {
+            if (position.x >= mOffsetLeft + mSquareSize * 6 - size.getColumn() * mSquareSize &&
+                    position.x < mOffsetLeft + mSquareSize * 18 &&
+                    position.y >= mOffsetTop - size.getRow() * mSquareSize &&
+                    position.y < mOffsetTop + mSquareSize * 11) {
+                return true;
+            }
+        } else {
+            if (position.x >= mOffsetLeft + mSquareSize * 6 - size.getRow() * mSquareSize &&
+                    position.x < mOffsetLeft + mSquareSize * 18 &&
+                    position.y >= mOffsetTop - size.getColumn() * mSquareSize &&
+                    position.y < mOffsetTop + mSquareSize * 11) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private PointF getImagePosition(ImageView image) {
