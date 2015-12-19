@@ -283,18 +283,22 @@ public class Play  extends Activity {
 
     private void interpretVoiceCommand(ArrayList<String> matches) {
         boolean matchFound = false;
-        for (int i = 0; i < matches.size(); i++) {
+        for (int i = 0; i < matches.size() && !matchFound; i++) {
             String str = matches.get(i);
             ArrayList<String> words = new ArrayList<>(Arrays.asList(str.split(" ")));
             String command = words.get(0);
             if (command.equalsIgnoreCase("shoot")) {
                 words.remove(0);
-                if (handleShoot(words)) {
-                    matchFound = true;
-                    break;
-                }
-                else
-                    continue;
+                matchFound = handleShoot(words);
+            } else if (command.equalsIgnoreCase("scan")) {
+                words.remove(0);
+                matchFound = handleScan(words);
+            } else if (command.equalsIgnoreCase("airstrike")) {
+                words.remove(0);
+                matchFound = handleAirstrike(words);
+            } else if (command.equalsIgnoreCase("artillery")) {
+                words.remove(0);
+                matchFound = handleArtillery(words);
             }
         }
 
@@ -327,6 +331,66 @@ public class Play  extends Activity {
         }
 
         shoot(playerID, coord);
+        return true;
+    }
+
+    private boolean handleScan(ArrayList<String> words) {
+        //next word must equal "player"
+        if (!words.get(0).equalsIgnoreCase("player")) {
+            return false;
+        }
+
+        words.remove(0); // remove the word "player"
+        //next word is the player we want to scan
+        int playerID = interpretPlayer(words.get(0));
+        if (playerID <= 0) {
+            return false; //return false when the player is 0 or lower
+        }
+        words.remove(0); //remove the player word
+        //next word(s) are the coordinates
+        String coord = interpretCoordinates(words);
+
+        if (coord.isEmpty()) {
+            return false;
+        }
+
+        scan(playerID, coord);
+        return true;
+    }
+
+    private boolean handleAirstrike(ArrayList<String> words) {
+        //next word must equal "player"
+        if (!words.get(0).equalsIgnoreCase("player")) {
+            return false;
+        }
+
+        words.remove(0); // remove the word "player"
+        //next word is the player we want to airstrike
+        int playerID = interpretPlayer(words.get(0));
+        if (playerID <= 0) {
+            return false; //return false when the player is 0 or lower
+        }
+        words.remove(0); //remove the player word
+        //next word(s) are the coordinates
+        String coord = interpretCoordinates(words);
+
+        if (coord.isEmpty()) {
+            return false;
+        }
+
+        airstrike(playerID, coord);
+        return true;
+    }
+
+    private boolean handleArtillery(ArrayList<String> words) {
+        //next word(s) are the coordinates
+        String coord = interpretCoordinates(words);
+
+        if (coord.isEmpty()) {
+            return false;
+        }
+
+        artillery(coord);
         return true;
     }
 
@@ -379,5 +443,17 @@ public class Play  extends Activity {
      */
     private void shoot(int player, String coord) {
         mBoundService.sendMessage("shoot " + player + " " + coord);
+    }
+
+    private void scan(int player, String coord) {
+        mBoundService.sendMessage("scan " + player + " " + coord);
+    }
+
+    private void airstrike(int player, String coord) {
+        mBoundService.sendMessage("airstrike " + player + " " + coord);
+    }
+
+    private void artillery(String coord) {
+        mBoundService.sendMessage("artillery " + coord);
     }
 }
