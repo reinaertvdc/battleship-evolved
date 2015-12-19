@@ -7,7 +7,7 @@ package be.uhasselt.ttui.battleshipevolved;
  */
 public abstract class Ship {
     private Coordinate mSize;
-    private int mHitPoints;
+    protected int mHitPoints;
     protected Weapon[] mWeapons;
 
     protected Ship(Coordinate size) {

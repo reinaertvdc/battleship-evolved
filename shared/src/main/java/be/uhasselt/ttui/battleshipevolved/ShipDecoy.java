@@ -10,5 +10,6 @@ public class ShipDecoy extends Ship {
 
     public ShipDecoy() {
         super(SIZE);
+        mHitPoints = 999999;
     }
 }

@@ -124,7 +124,7 @@ public class Player {
         for (int i = 0; i < mShips.size(); i++) {
             Ship ship = mShips.get(i);
             if (ship.isSunk()) {
-                return "ship has sunk";
+                continue;
             }
 
             Weapon[] weapons = ship.getWeapons();
