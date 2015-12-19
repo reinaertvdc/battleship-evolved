@@ -26,6 +26,7 @@ import java.util.Arrays;
  * Created by Arno on 9/12/2015.
  */
 public class Play  extends Activity {
+    private TextView mTxtTurn;
     private TextView mTxtOnline;
     private TextView mTxtCooldown;
     private GridController mGrid;
@@ -39,6 +40,7 @@ public class Play  extends Activity {
         doBinding();
         setContentView(R.layout.activity_play);
         mGrid = new GridController(10, 10, (TableLayout) findViewById(R.id.gridLayout), this);
+        mTxtTurn = (TextView) findViewById(R.id.turnText);
         mTxtOnline = (TextView) findViewById(R.id.onlineText);
         mTxtCooldown = (TextView) findViewById(R.id.cooldownText);
 
@@ -105,8 +107,6 @@ public class Play  extends Activity {
                 String message = extra.getString("message");
                 System.out.println(message);
                 interpretMessage(message);
-                Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
-                toast.show();
                 if (!mIslistening)
                     mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
             }
@@ -122,21 +122,22 @@ public class Play  extends Activity {
         String command = words[0];
         if (command.equalsIgnoreCase("CoordinateUpdate")) {
             updateGrid(words);
-        } /*else if (command.equalsIgnoreCase("shoot")) {
-            handleShoot(words);
-        } else if (command.equalsIgnoreCase("scan")) {
+        } else if (command.equalsIgnoreCase("next")) {
+            updateTurn(words);
+        } /*else if (command.equalsIgnoreCase("scan")) {
             handleScan(words);
         } else if (command.equalsIgnoreCase("airstrike")) {
             handleAirstrike(words);
         } else if (message.equalsIgnoreCase("end turn")) {
             handleEndTurn();
-        }
+        }*/
 
         else {
-            sendMessage("Could not interpret " + command);
-        }*/
+            Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+            toast.show();
+        }
     }
-    //"CoordinateUpdate " + cs.getRow() + " " + cs.getColumn() + " " + cs.getStatus();
+
     private void updateGrid(String[] words){
         try {
             switch (words[3]) {
@@ -147,19 +148,24 @@ public class Play  extends Activity {
                     // Vibrate for 500 milliseconds
                     Vibrator v = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
                     v.vibrate(500);
-                    //sendMessage("Succes");
                     break;
                 case "MISSED":
                     mGrid.setWater(Integer.parseInt(words[1]), Integer.parseInt(words[2]));
-                    //sendMessage("Succes");
                     break;
                 case "BOAT":
                     mGrid.setShip(Integer.parseInt(words[1]), Integer.parseInt(words[2]));
-                    //sendMessage("Succes");
                     break;
             }
         } catch (IndexOutOfBoundsException e) {
-            //sendMessage("Could not interpret");
+            mBoundService.sendMessage("Could not interpret");
+        }
+    }
+
+    private void updateTurn(String[] words) {
+        try {
+            mTxtTurn.setText("Turn: Player " + Integer.parseInt(words[4]));
+        } catch (Exception e) {
+            mBoundService.sendMessage("Could not interpret");
         }
     }
 

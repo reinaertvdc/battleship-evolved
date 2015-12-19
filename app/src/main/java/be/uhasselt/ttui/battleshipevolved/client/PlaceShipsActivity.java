@@ -89,10 +89,6 @@ public class PlaceShipsActivity extends AppCompatActivity {
                       mImgShipDecoy, mImgShipDestroyer, mImgShipMarineRadar,
                       mImgShipMissileCommand, mImgShipPatrolBoat;
 
-    private Point mImgShipAircraftCarrierPos, mImgShipBattleshipPos, mImgShipCruiserPos,
-                  mImgShipDecoyPos, mImgShipDestroyerPos, mImgShipMarineRadarPos,
-                  mImgShipMissileCommandPos, mImgShipPatrolBoatPos;
-
     private Coordinate mShipAircraftCarrierPos, mShipBattleshipPos, mShipCruiserPos,
                        mShipDecoyPos, mShipDestroyerPos, mShipMarineRadarPos,
                        mShipMissileCommandPos, mShipPatrolBoatPos;
@@ -145,24 +141,8 @@ public class PlaceShipsActivity extends AppCompatActivity {
                 switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN:
                         mPointerID1 = event.getPointerId(event.getActionIndex());
-                        mDragOffset = getPointerPositionRelative(event, mPointerID1);
-                        if (mOrientation == 90) {
-                            float originalDragOffsetX = mDragOffset.x;
-                            mDragOffset.x =
-                                    ((size.getColumn() - size.getRow()) / 2f + size.getRow())
-                                            * mSquareSize - mDragOffset.y;
-                            mDragOffset.y = originalDragOffsetX
-                                    - (size.getColumn() - size.getRow()) / 2f * mSquareSize;
-                        } else if (mOrientation == 180) {
-                            mDragOffset.x = (size.getColumn() * mSquareSize) - mDragOffset.x;
-                            mDragOffset.y = (size.getRow() * mSquareSize) - mDragOffset.y;
-                        } else if (mOrientation == 270) {
-                            float originalDragOffsetX = mDragOffset.x;
-                            mDragOffset.x = (size.getColumn() - size.getRow()) / 2f
-                                            * mSquareSize + mDragOffset.y;
-                            mDragOffset.y =  ((size.getColumn() - size.getRow()) / 2f
-                                            + size.getRow()) * mSquareSize - originalDragOffsetX;
-                        }
+                        PointF rotatedDragOffset = getPointerPositionRelative(event, mPointerID1);
+                        mDragOffset = getUnrotatedPosition(rotatedDragOffset, mOrientation, size);
                         break;
                     case MotionEvent.ACTION_POINTER_DOWN:
                         mPointerID2 = event.getPointerId(event.getActionIndex());
@@ -185,14 +165,15 @@ public class PlaceShipsActivity extends AppCompatActivity {
                             float currAngle = getAngle(currPosPointer1, currPosPointer2);
                             float rotationAngle =
                                     (float) Math.toDegrees(initRotationPosAngle - currAngle) % 360;
-                            if (rotationAngle < -180.f) rotationAngle += 360.0f;
-                            if (rotationAngle > 180.f) rotationAngle -= 360.0f;
+                            if (rotationAngle < 0) rotationAngle += 360;
                             image.setRotation(image.getRotation() - rotationAngle);
                         }
                         break;
                     case MotionEvent.ACTION_UP:
                         mPointerID1 = INVALID_POINTER_ID;
-                        if (image.getX() >= mSquareSize * 7) {
+                        PointF imgPos =
+                                getRotatedPosition(getImagePosition(image), mOrientation, size);
+                        if (imgPos.x >= mSquareSize * 6 + mOffsetLeft) {
                             image.setX(mOffsetLeft + (Math.round(image.getX() / mSquareSize) - 1)
                                     * mSquareSize);
                             image.setY(mOffsetTop + Math.round(image.getY() / mSquareSize)
@@ -202,7 +183,8 @@ public class PlaceShipsActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_POINTER_UP:
                         mPointerID1 = INVALID_POINTER_ID;
                         mPointerID2 = INVALID_POINTER_ID;
-                        float rotation = image.getRotation();
+                        float rotation = image.getRotation() % 360;
+                        if (rotation < 0) rotation += 360;
                         mOrientation = Math.round(rotation / 90) * 90;
                         image.setRotation(mOrientation);
                         break;
@@ -214,6 +196,38 @@ public class PlaceShipsActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    private PointF getImagePosition(ImageView image) {
+        return new PointF(image.getX(), image.getY());
+    }
+
+    private PointF getRotatedPosition(PointF position, int orientation, Coordinate size) {
+        PointF rotatedPosition = new PointF(position.x, position.y);
+        if (orientation == 90 || orientation == 270) {
+            rotatedPosition.x += (size.getColumn() - size.getRow()) / 2f * mSquareSize;
+            rotatedPosition.y -= (size.getColumn() - size.getRow()) / 2f * mSquareSize;
+        }
+        return rotatedPosition;
+    }
+
+    private PointF getUnrotatedPosition(PointF position, int orientation, Coordinate size) {
+        PointF result = new PointF();
+        if (orientation == 90) {
+            result.x = ((size.getColumn() - size.getRow()) / 2f + size.getRow()) * mSquareSize
+                    - position.y;
+            result.y = position.x - (size.getColumn() - size.getRow()) / 2f * mSquareSize;
+        } else if (orientation == 180) {
+            result.x = (size.getColumn() * mSquareSize) - position.x;
+            result.y = (size.getRow() * mSquareSize) - position.y;
+        } else if (orientation == 270) {
+            result.x = (size.getColumn() - size.getRow()) / 2f * mSquareSize + position.y;
+            result.y = ((size.getColumn() - size.getRow()) / 2f + size.getRow()) * mSquareSize
+                    - position.x;
+        } else {
+            result.set(position.x, position.y);
+        }
+        return result;
     }
 
     private float getAngle(PointF point1, PointF point2) {
@@ -306,14 +320,14 @@ public class PlaceShipsActivity extends AppCompatActivity {
     }
 
     private void setShipImagePositions() {
-        mImgShipAircraftCarrierPos = new Point();
-        mImgShipBattleshipPos = new Point();
-        mImgShipCruiserPos = new Point();
-        mImgShipDestroyerPos = new Point();
-        mImgShipMarineRadarPos = new Point();
-        mImgShipPatrolBoatPos = new Point();
-        mImgShipMissileCommandPos = new Point();
-        mImgShipDecoyPos = new Point();
+        Point mImgShipAircraftCarrierPos = new Point();
+        Point mImgShipBattleshipPos = new Point();
+        Point mImgShipCruiserPos = new Point();
+        Point mImgShipDestroyerPos = new Point();
+        Point mImgShipMarineRadarPos = new Point();
+        Point mImgShipPatrolBoatPos = new Point();
+        Point mImgShipMissileCommandPos = new Point();
+        Point mImgShipDecoyPos = new Point();
         setShipImagePosition(mImgShipAircraftCarrier, mImgShipAircraftCarrierPos, 0, 0);
         setShipImagePosition(mImgShipBattleship, mImgShipBattleshipPos, 1, 0);
         setShipImagePosition(mImgShipCruiser, mImgShipCruiserPos, 2, 0);

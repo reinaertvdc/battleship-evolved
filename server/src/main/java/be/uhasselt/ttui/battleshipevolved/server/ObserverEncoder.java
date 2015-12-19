@@ -92,7 +92,8 @@ public class ObserverEncoder implements Observer {
 
     private void sendUpdate(int player, CoordinateStatus cs) {
         if (player >= 0 && player < mClients.size()) {
-            if (cs.getStatus() == CoordinateStatus.Status.HIT) {
+            if (cs.getStatus() == CoordinateStatus.Status.HIT ||
+                    cs.getStatus() == CoordinateStatus.Status.MISSED) {
                 mClients.get(player).sendMessage(encodeCoordinateStatus(cs));
             }
         }
