@@ -21,6 +21,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import be.uhasselt.ttui.battleshipevolved.Coordinate;
+import be.uhasselt.ttui.battleshipevolved.Ship;
 import be.uhasselt.ttui.battleshipevolved.ShipAircraftCarrier;
 import be.uhasselt.ttui.battleshipevolved.ShipBattleship;
 import be.uhasselt.ttui.battleshipevolved.ShipCruiser;
@@ -117,17 +118,17 @@ public class PlaceShipsActivity extends AppCompatActivity {
     }
 
     private void createShipImageOnTouchListeners() {
-        createOnTouchListener(mImgShipAircraftCarrier);
-        createOnTouchListener(mImgShipBattleship);
-        createOnTouchListener(mImgShipCruiser);
-        createOnTouchListener(mImgShipDecoy);
-        createOnTouchListener(mImgShipDestroyer);
-        createOnTouchListener(mImgShipMarineRadar);
-        createOnTouchListener(mImgShipMissileCommand);
-        createOnTouchListener(mImgShipPatrolBoat);
+        createOnTouchListener(mImgShipAircraftCarrier, mShipAircraftCarrierSize);
+        createOnTouchListener(mImgShipBattleship, mShipBattleshipSize);
+        createOnTouchListener(mImgShipCruiser, mShipCruiserSize);
+        createOnTouchListener(mImgShipDecoy, mShipDecoySize);
+        createOnTouchListener(mImgShipDestroyer, mShipDestroyerSize);
+        createOnTouchListener(mImgShipMarineRadar, mShipMarineRadarSize);
+        createOnTouchListener(mImgShipMissileCommand, mShipMissileCommandSize);
+        createOnTouchListener(mImgShipPatrolBoat, mShipPatrolBoatSize);
     }
 
-    private void createOnTouchListener(final ImageView image) {
+    private void createOnTouchListener(final ImageView image, final Coordinate size) {
         image.setOnTouchListener(new View.OnTouchListener() {
             private static final int INVALID_POINTER_ID = -1;
             private PointF mDragOffset;
@@ -135,6 +136,7 @@ public class PlaceShipsActivity extends AppCompatActivity {
             private PointF mInitRotationPosPointer2;
             private int mPointerID1 = INVALID_POINTER_ID;
             private int mPointerID2 = INVALID_POINTER_ID;
+            private int mOrientation = 0;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -142,6 +144,23 @@ public class PlaceShipsActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_DOWN:
                         mPointerID1 = event.getPointerId(event.getActionIndex());
                         mDragOffset = getPointerPositionRelative(event, mPointerID1);
+                        if (mOrientation == 90) {
+                            float originalDragOffsetX = mDragOffset.x;
+                            mDragOffset.x =
+                                    ((size.getColumn() - size.getRow()) / 2f + size.getRow())
+                                            * mSquareSize - mDragOffset.y;
+                            mDragOffset.y = originalDragOffsetX
+                                    - (size.getColumn() - size.getRow()) / 2f * mSquareSize;
+                        } else if (mOrientation == 180) {
+                            mDragOffset.x = (size.getColumn() * mSquareSize) - mDragOffset.x;
+                            mDragOffset.y = (size.getRow() * mSquareSize) - mDragOffset.y;
+                        } else if (mOrientation == 270) {
+                            float originalDragOffsetX = mDragOffset.x;
+                            mDragOffset.x = (size.getColumn() - size.getRow()) / 2f
+                                            * mSquareSize + mDragOffset.y;
+                            mDragOffset.y =  ((size.getColumn() - size.getRow()) / 2f
+                                            + size.getRow()) * mSquareSize - originalDragOffsetX;
+                        }
                         break;
                     case MotionEvent.ACTION_POINTER_DOWN:
                         mPointerID2 = event.getPointerId(event.getActionIndex());
@@ -152,7 +171,8 @@ public class PlaceShipsActivity extends AppCompatActivity {
                         mInitRotationPosPointer2 = getPointerPositionRelative(event, mPointerID2);
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        if (mPointerID1 != INVALID_POINTER_ID && mPointerID2 == INVALID_POINTER_ID) {
+                        if (mPointerID1 != INVALID_POINTER_ID &&
+                                mPointerID2 == INVALID_POINTER_ID) {
                             image.setX(event.getRawX() - mDragOffset.x);
                             image.setY(event.getRawY() - mDragOffset.y);
                         } else if (mPointerID1 != INVALID_POINTER_ID) {
@@ -171,15 +191,18 @@ public class PlaceShipsActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         mPointerID1 = INVALID_POINTER_ID;
                         if (image.getX() >= mSquareSize * 7) {
-                            image.setX(mOffsetLeft + (Math.round(image.getX() / mSquareSize) - 1) * mSquareSize);
-                            image.setY(mOffsetTop + Math.round(image.getY() / mSquareSize) * mSquareSize);
+                            image.setX(mOffsetLeft + (Math.round(image.getX() / mSquareSize) - 1)
+                                    * mSquareSize);
+                            image.setY(mOffsetTop + Math.round(image.getY() / mSquareSize)
+                                    * mSquareSize);
                         }
                         break;
                     case MotionEvent.ACTION_POINTER_UP:
                         mPointerID1 = INVALID_POINTER_ID;
                         mPointerID2 = INVALID_POINTER_ID;
                         float rotation = image.getRotation();
-                        image.setRotation(Math.round(rotation / 90) * 90);
+                        mOrientation = Math.round(rotation / 90) * 90;
+                        image.setRotation(mOrientation);
                         break;
                     case MotionEvent.ACTION_CANCEL:
                         mPointerID1 = INVALID_POINTER_ID;
