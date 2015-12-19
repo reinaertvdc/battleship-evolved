@@ -105,13 +105,8 @@ public class Play  extends Activity {
                 String message = extra.getString("message");
                 System.out.println(message);
                 interpretMessage(message);
-<<<<<<< HEAD
-=======
-                Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
-                toast.show();
                 if (!mIslistening)
                     mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
->>>>>>> origin/master
             }
         }
     }
