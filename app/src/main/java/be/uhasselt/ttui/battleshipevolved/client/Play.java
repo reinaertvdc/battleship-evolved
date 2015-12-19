@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
@@ -19,8 +20,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import be.uhasselt.ttui.battleshipevolved.Coordinate;
-
 /**
  * Created by Arno on 9/12/2015.
  */
@@ -32,6 +31,7 @@ public class Play  extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 
         messageReceiver = new serverMessage();
         doBinding();
@@ -102,6 +102,7 @@ public class Play  extends Activity {
                 Bundle extra = intent.getExtras();
                 String message = extra.getString("message");
                 System.out.println(message);
+                interpretMessage(message);
                 Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
                 toast.show();
                 if (!mIslistening)
@@ -136,12 +137,24 @@ public class Play  extends Activity {
     //"CoordinateUpdate " + cs.getRow() + " " + cs.getColumn() + " " + cs.getStatus();
     private void updateGrid(String[] words){
         try {
-            if (words[3] == "HIT") {
-                mGrid.setDamaged(Integer.parseInt(words[1]), Integer.parseInt(words[2]));
-                // Vibrate for 500 milliseconds
-                Vibrator v = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
-                v.vibrate(500);
-                //sendMessage("Succes");
+            switch (words[3]) {
+                case "FOG":
+                    break;
+                case "HIT":
+                    mGrid.setDamaged(Integer.parseInt(words[1]), Integer.parseInt(words[2]));
+                    // Vibrate for 500 milliseconds
+                    Vibrator v = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
+                    v.vibrate(500);
+                    //sendMessage("Succes");
+                    break;
+                case "MISSED":
+                    mGrid.setWater(Integer.parseInt(words[1]), Integer.parseInt(words[2]));
+                    //sendMessage("Succes");
+                    break;
+                case "BOAT":
+                    mGrid.setShip(Integer.parseInt(words[1]), Integer.parseInt(words[2]));
+                    //sendMessage("Succes");
+                    break;
             }
         } catch (IndexOutOfBoundsException e) {
             //sendMessage("Could not interpret");
