@@ -25,9 +25,9 @@ import javax.swing.JPanel;
  */
 public class BoardField extends JPanel implements Observer {
     private JPanel[][] mGrid;
-    private static int MAX = 40;
-    private static int PREF = 30;
-    private static int MIN = 25;
+    private static int MAX = 35;
+    private static int PREF = 23;
+    private static int MIN = 23;
     //private BufferedImage[] mStatusImages;
 
     public BoardField() {

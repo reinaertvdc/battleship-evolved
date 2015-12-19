@@ -14,6 +14,10 @@ public class WeaponRadar extends Weapon {
         //super(COOL_DOWN, COOL_DOWN);
     }
 
+    public String getName(){
+        return "Radar";
+    }
+
     /**
      * Reveals the 3x3 cross
      * @precondition given param coordinate exists on the field

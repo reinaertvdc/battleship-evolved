@@ -25,7 +25,7 @@ public class Game extends Observable {
         mTurn = 0;
         mBoard = new Board(mPlayers.toArray(new Player[maxPlayers]));
         this.addObserver(mBoard);
-        //insertTestValues();
+        insertTestValues();
     }
 
     public ArrayList<Player> getPlayers() {
@@ -72,6 +72,10 @@ public class Game extends Observable {
         Player currentPlayer = mPlayers.get(mTurn);
         currentPlayer.refreshWeaponCooldowns();
 
+        //notify new cooldowns to current player
+        setChanged();
+        notifyObservers(currentPlayer.getCooldowns());
+
         setChanged();
         //assign the next turn
         mTurn = getNextPlayer();
@@ -110,24 +114,20 @@ public class Game extends Observable {
 
     public void insertTestValues() {
         try {
-            Ship player1Boat1 = new ShipAircraftCarrier();
-            Ship player1Boat2 = new ShipPatrolBoat();
-            mPlayers.get(0).getField().deployShip(player1Boat1, new Coordinate(0, 0), true);
-            mPlayers.get(0).getField().deployShip(player1Boat2, new Coordinate(2, 2), false);
-            Ship player2Boat1 = new ShipCruiser();
-            mPlayers.get(1).getField().deployShip(player2Boat1, new Coordinate(0, 0), false);
-            Ship player3Boat1 = new ShipAircraftCarrier();
-            mPlayers.get(2).getField().deployShip(player3Boat1, new Coordinate(5, 5), false);
+            mPlayers.get(0).placeAircraftCarrier(new Coordinate(0, 0), true);
+            mPlayers.get(0).placePatrolBoat(new Coordinate(2, 2), false);
+            mPlayers.get(1).placeCruiser(new Coordinate(0, 0), false);
+            mPlayers.get(2).placeDestroyer(new Coordinate(5, 5), false);
 
             mPlayers.get(0).getField().shoot(new Coordinate(0, 1));
             mPlayers.get(0).getField().shoot(new Coordinate(1, 1));
             mPlayers.get(0).getField().shoot(new Coordinate(0, 0));
-            mPlayers.get(0).getField().shoot(new Coordinate(0, 2));
-            mPlayers.get(0).getField().shoot(new Coordinate(0, 3));
-            mPlayers.get(0).getField().shoot(new Coordinate(0, 4));
-            mPlayers.get(0).getField().shoot(new Coordinate(2, 0));
-            mPlayers.get(0).getField().reveal(new Coordinate(2, 2));
-            mPlayers.get(0).getField().reveal(new Coordinate(3, 3));
+//            mPlayers.get(0).getField().shoot(new Coordinate(0, 2));
+//            mPlayers.get(0).getField().shoot(new Coordinate(0, 3));
+//            mPlayers.get(0).getField().shoot(new Coordinate(0, 4));
+//            mPlayers.get(0).getField().shoot(new Coordinate(2, 0));
+//            mPlayers.get(0).getField().reveal(new Coordinate(2, 2));
+//            mPlayers.get(0).getField().reveal(new Coordinate(3, 3));
             nextTurn();
         } catch (Exception e){
             System.out.println(e.getMessage());

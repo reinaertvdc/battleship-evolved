@@ -16,6 +16,8 @@ public abstract class Weapon extends Observable {
         mCurrentCoolDown = currentCoolDown;
     }
 
+    public abstract String getName();
+
     public void coolDown() {
         if (mCurrentCoolDown > 0) {
             mCurrentCoolDown--;

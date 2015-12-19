@@ -223,4 +223,19 @@ public class Player {
             ship.refreshCooldowns();
         }
     }
+
+    public ArrayList<String> getCooldowns(){
+        ArrayList<String> cooldowns = new ArrayList<String>();
+        //Go over each ship
+        for (int i = 0; i < mShips.size(); i++) {
+            Ship ship = mShips.get(i);
+            Weapon[] weapons = ship.getWeapons();
+            //Get each of the ship weapons cooldowns
+            for (int j = 0; j < weapons.length; j++) {
+                Weapon weapon = weapons[j];
+                    cooldowns.add(weapon.getName() + " " + weapon.getCurrentCoolDown());
+                }
+            }
+        return cooldowns;
+    }
 }

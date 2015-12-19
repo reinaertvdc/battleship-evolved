@@ -14,6 +14,10 @@ public class WeaponAirStrike extends Weapon {
         //super(COOL_DOWN, COOL_DOWN);
     }
 
+    public String getName(){
+        return "Airstrike";
+    }
+
     /**
      * Shoots the 1x3 area
      * @param fields the field to use the airstrike on

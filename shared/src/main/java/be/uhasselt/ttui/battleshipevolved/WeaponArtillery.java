@@ -14,6 +14,10 @@ public class WeaponArtillery extends Weapon {
         //super(COOL_DOWN, COOL_DOWN);
     }
 
+    public String getName(){
+        return "Artillery";
+    }
+
     protected void execute(Field[] fields, Coordinate coordinate) {
         for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];

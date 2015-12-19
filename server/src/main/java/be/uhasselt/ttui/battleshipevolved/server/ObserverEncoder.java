@@ -40,11 +40,15 @@ public class ObserverEncoder implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         if (arg instanceof CoordinateStatus) {
-            sendHit(findFieldOriginPlayer(o), (CoordinateStatus) arg);
+            sendUpdate(findFieldOriginPlayer(o), (CoordinateStatus) arg);
         } else if (arg instanceof ArrayList<?>) {
-            for (Object obj : (ArrayList<?>) arg)
+            for (Object obj : (ArrayList<?>) arg) {
                 if (obj instanceof CoordinateStatus)
-                    sendHit(findFieldOriginPlayer(o), (CoordinateStatus) obj);
+                    sendUpdate(findFieldOriginPlayer(o), (CoordinateStatus) obj);
+                else if (obj instanceof String){
+                    //TODO: handle cooldowns
+                }
+            }
         }
         else if (arg instanceof Player) {
             //next turn was called
@@ -86,7 +90,7 @@ public class ObserverEncoder implements Observer {
         return -1;
     }
 
-    private void sendHit(int player, CoordinateStatus cs) {
+    private void sendUpdate(int player, CoordinateStatus cs) {
         if (player >= 0 && player < mClients.size()) {
             if (cs.getStatus() == CoordinateStatus.Status.HIT) {
                 mClients.get(player).sendMessage(encodeCoordinateStatus(cs));
