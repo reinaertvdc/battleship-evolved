@@ -25,7 +25,7 @@ public class Game extends Observable {
         mTurn = 0;
         mBoard = new Board(mPlayers.toArray(new Player[maxPlayers]));
         this.addObserver(mBoard);
-        insertTestValues();
+        //insertTestValues();
     }
 
     public ArrayList<Player> getPlayers() {
