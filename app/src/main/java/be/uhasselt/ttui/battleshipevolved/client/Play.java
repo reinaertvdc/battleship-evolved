@@ -10,6 +10,9 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +40,8 @@ public class Play  extends Activity {
         mTxtOnline = (TextView) findViewById(R.id.onlineText);
         mTxtCooldown = (TextView) findViewById(R.id.cooldownText);
 
+        initSpeechListener();
+
         //Test values:
         ArrayList<String> testOnline = new ArrayList<>();
         testOnline.add("Airstrike online");
@@ -52,6 +57,10 @@ public class Play  extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         doUnbinding();
+        if (mSpeechRecognizer != null)
+        {
+            mSpeechRecognizer.destroy();
+        }
     }
 
     public void setOnline(ArrayList<String> online) {
@@ -95,6 +104,8 @@ public class Play  extends Activity {
                 System.out.println(message);
                 Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
                 toast.show();
+                if (!mIslistening)
+                    mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
             }
         }
     }
@@ -162,4 +173,89 @@ public class Play  extends Activity {
         }
     }
     //end functions for binding
+
+    //functions for speech input
+    private SpeechRecognizer mSpeechRecognizer;
+    private Intent mSpeechRecognizerIntent;
+    private boolean mIslistening;
+
+    private void initSpeechListener() {
+        mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
+                this.getPackageName());
+
+
+        SpeechRecognitionListener listener = new SpeechRecognitionListener();
+        mSpeechRecognizer.setRecognitionListener(listener);
+    }
+
+    protected class SpeechRecognitionListener implements RecognitionListener
+    {
+
+        @Override
+        public void onBeginningOfSpeech()
+        {
+            System.out.println("onBeginningOfSpeech");
+            //Log.d(TAG, "onBeginingOfSpeech");
+        }
+
+        @Override
+        public void onBufferReceived(byte[] buffer)
+        {
+
+        }
+
+        @Override
+        public void onEndOfSpeech()
+        {
+            System.out.println("onEndOfSpeech");
+            //Log.d(TAG, "onEndOfSpeech");
+        }
+
+        @Override
+        public void onError(int error)
+        {
+            mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
+            System.out.println("Error occured while listening. Resumed Listening");
+            //Log.d(TAG, "error = " + error);
+        }
+
+        @Override
+        public void onEvent(int eventType, Bundle params)
+        {
+
+        }
+
+        @Override
+        public void onPartialResults(Bundle partialResults)
+        {
+
+        }
+
+        @Override
+        public void onReadyForSpeech(Bundle params)
+        {
+            //Log.d(TAG, "onReadyForSpeech"); //$NON-NLS-1$
+        }
+
+        @Override
+        public void onResults(Bundle results)
+        {
+            //Log.d(TAG, "onResults"); //$NON-NLS-1$
+            ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+            // matches are the return values of speech recognition engine
+            // Use these values for whatever you wish to do
+            System.out.println(matches.size() + " matches found:");
+            for (int i = 0; i < matches.size(); i++) {
+                System.out.println(matches.get(i));
+            }
+        }
+        @Override
+        public void onRmsChanged(float rmsdB)
+        {
+        }
+    }
 }

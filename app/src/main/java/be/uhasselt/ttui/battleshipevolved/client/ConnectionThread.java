@@ -4,6 +4,7 @@ package be.uhasselt.ttui.battleshipevolved.client;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
@@ -19,6 +20,7 @@ public class ConnectionThread extends Service {
     private PrintWriter mOut;
     private Socket mSocket;
     private InetAddress mServerAddr;
+    private Handler handler;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -36,6 +38,7 @@ public class ConnectionThread extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        handler = new Handler();
     }
 
     public void sendMessage(String message){
@@ -92,17 +95,25 @@ public class ConnectionThread extends Service {
                     return;
                 }
             } catch (UnknownHostException e) {
-                String message = "Could not resolve hostname " + SERVERIP;
+                final String message = "Could not resolve hostname " + SERVERIP;
                 System.out.println(message);
-                Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
-                toast.show();
+                handler.post(new Runnable() {
+                    public void run() {
+                        Toast toast = Toast.makeText(ConnectionThread.this, message, Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                });
                 return;
             } catch (IOException e) {
                 //if the connection could not be made
-                String message = "Could not connect to " + SERVERIP;
+                final String message = "Could not connect to " + SERVERIP;
                 System.out.println(message);
-                Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
-                toast.show();
+                handler.post(new Runnable() {
+                    public void run() {
+                        Toast toast = Toast.makeText(ConnectionThread.this, message, Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                });
                 return;
             }
 
@@ -121,14 +132,17 @@ public class ConnectionThread extends Service {
                 {
                     //server was terminated, so we close the client as well
                     active = false;
-                    String message = "Server disconnected!";
+                    final String message = "Server disconnected!";
                     System.out.println(message);
                     Intent intent = new Intent(ConnectionThread.this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
-                    //Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
-                    //toast.show();
-                    //careful, toast makes shit crash :D
+                    handler.post(new Runnable() {
+                        public void run() {
+                            Toast toast = Toast.makeText(ConnectionThread.this, message, Toast.LENGTH_LONG);
+                            toast.show();
+                        }
+                    });
                 } else {
                     Intent i = new Intent("SERVER_MESSAGE");
                     i.putExtra("message", line);
