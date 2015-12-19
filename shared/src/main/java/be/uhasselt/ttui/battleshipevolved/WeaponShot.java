@@ -6,7 +6,7 @@ package be.uhasselt.ttui.battleshipevolved;
  * @author Reinaert Van de Cruys
  */
 public class WeaponShot extends Weapon {
-    private static final int COOL_DOWN = 1;
+    private static final int COOL_DOWN = 0; //TEMP, original value is 1 :D
 
     public WeaponShot() {
         /** TODO: TEMPORARY FIX */

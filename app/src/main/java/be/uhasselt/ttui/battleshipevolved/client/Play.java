@@ -18,7 +18,9 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by Arno on 9/12/2015.
@@ -265,10 +267,111 @@ public class Play  extends Activity {
             for (int i = 0; i < matches.size(); i++) {
                 System.out.println(matches.get(i));
             }
+            interpretVoiceCommand(matches);
         }
         @Override
         public void onRmsChanged(float rmsdB)
         {
         }
+    }
+
+    private void interpretVoiceCommand(ArrayList<String> matches) {
+        boolean matchFound = false;
+        for (int i = 0; i < matches.size(); i++) {
+            String str = matches.get(i);
+            ArrayList<String> words = new ArrayList<>(Arrays.asList(str.split(" ")));
+            String command = words.get(0);
+            if (command.equalsIgnoreCase("shoot")) {
+                words.remove(0);
+                if (handleShoot(words)) {
+                    matchFound = true;
+                    break;
+                }
+                else
+                    continue;
+            }
+        }
+
+        if (matchFound) {
+
+        } else {
+
+        }
+
+    }
+
+    private boolean handleShoot(ArrayList<String> words) {
+        //next word must equal "player"
+        if (!words.get(0).equalsIgnoreCase("player")) {
+            return false;
+        }
+
+        words.remove(0); // remove the word "player"
+        //next word is the player we want to shoot
+        int playerID = interpretPlayer(words.get(0));
+        if (playerID <= 0) {
+            return false; //return false when the player is 0 or lower
+        }
+        words.remove(0); //remove the player word
+        //next word(s) are the coordinates
+        String coord = interpretCoordinates(words);
+
+        if (coord.isEmpty()) {
+            return false;
+        }
+
+        shoot(playerID, coord);
+        return true;
+    }
+
+    private int interpretPlayer(String player) {
+        if (player.equalsIgnoreCase("one") || player.equalsIgnoreCase("1")) {
+            return 1;
+        } else if (player.equalsIgnoreCase("two") || player.equalsIgnoreCase("to") || player.equalsIgnoreCase("2")) {
+            return 2;
+        } else if (player.equalsIgnoreCase("three") || player.equalsIgnoreCase("tree") || player.equalsIgnoreCase("3")) {
+            return 3;
+        } else if (player.equalsIgnoreCase("four") || player.equalsIgnoreCase("for") || player.equalsIgnoreCase("4")) {
+            return 4;
+        }
+        //no matching player found
+        return -1;
+    }
+
+    private String interpretCoordinates(ArrayList<String> words) {
+        //first check if the coordinate was interpreted correctly
+        String firstWord = words.get(0);
+        if (firstWord.length() == 2) {
+            if (isCoordinate(firstWord.charAt(0), firstWord.charAt(1), '0'))
+                return firstWord;
+        } else if (firstWord.length() == 3) {
+            if (isCoordinate(firstWord.charAt(0), firstWord.charAt(1), firstWord.charAt(2)))
+                return firstWord;
+        }
+
+        //other possibilities are wrong interpretations of some letters/numbers
+        return "";
+    }
+
+    /**
+     * Dirty: set c manually to '0' if theres only 2 chars in the string
+     */
+    private boolean isCoordinate(char a, char b, char c) {
+        if (a == 'A' || a == 'B' || a == 'C' || a == 'D' || a == 'E' || a == 'F' || a == 'G' || a == 'H' || a == 'I' || a == 'J') {
+            if (b == '1' || b == '2' || b == '3' || b == '4' || b == '5' || b == '6' || b == '7' || b == '8' || b == '9') {
+                if (c == '0') {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    /*
+     * Functions to do shit and send the appropriate messages to the server
+     */
+    private void shoot(int player, String coord) {
+        mBoundService.sendMessage("shoot " + player + " " + coord);
     }
 }
