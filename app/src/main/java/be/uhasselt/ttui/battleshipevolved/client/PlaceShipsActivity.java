@@ -228,8 +228,10 @@ public class PlaceShipsActivity extends AppCompatActivity {
                                 mShipOrientation[orientation]
                                         = mOrientation == 90 || mOrientation == 270;
                                 mShipIsPlaced[orientation] = true;
+                                checkIfFinished();
                             } else {
                                 mOrientation = 0;
+                                mShipOrientation[orientation] = false;
                                 image.setRotation(mOrientation);
                                 image.setX(mInitialImagePosition.x);
                                 image.setY(mInitialImagePosition.y);
@@ -244,6 +246,8 @@ public class PlaceShipsActivity extends AppCompatActivity {
                         if (rotation < 0) rotation += 360;
                         mOrientation = Math.round(rotation / 90) * 90;
                         image.setRotation(mOrientation);
+                        mShipOrientation[orientation]
+                                = mOrientation == 90 || mOrientation == 270;
                         break;
                     case MotionEvent.ACTION_CANCEL:
                         mPointerID1 = INVALID_POINTER_ID;
@@ -253,6 +257,29 @@ public class PlaceShipsActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    private void checkIfFinished() {
+        for (boolean isPlaced : mShipIsPlaced) {
+            if (!isPlaced) return;
+        }
+        onFinished();
+    }
+
+    private void onFinished() {
+        printShipPosition("Aircraft carrier", mShipAircraftCarrierPos, mShipOrientation[0]);
+        printShipPosition("Battleship", mShipBattleshipPos, mShipOrientation[1]);
+        printShipPosition("Cruiser", mShipCruiserPos, mShipOrientation[2]);
+        printShipPosition("Decoy", mShipDecoyPos, mShipOrientation[3]);
+        printShipPosition("Destroyer", mShipDestroyerPos, mShipOrientation[4]);
+        printShipPosition("Marine radar", mShipMarineRadarPos, mShipOrientation[5]);
+        printShipPosition("Missile command", mShipMissileCommandPos, mShipOrientation[6]);
+        printShipPosition("Patrol boat", mShipPatrolBoatPos, mShipOrientation[7]);
+    }
+
+    private void printShipPosition(String name, Coordinate position, boolean orientation) {
+        System.out.println(name + " placed " + (orientation ? "vertically" : "horizontally")
+                + " at [" + position.getColumn() + "," + position.getRow() + "].");
     }
 
     private boolean overlapsWithExistingShip(
