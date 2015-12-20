@@ -1,9 +1,11 @@
 package be.uhasselt.ttui.battleshipevolved.client;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
@@ -22,6 +24,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import be.uhasselt.ttui.battleshipevolved.Coordinate;
 import be.uhasselt.ttui.battleshipevolved.Field;
@@ -142,6 +145,8 @@ public class PlaceShipsActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        messageReceiver = new serverMessage();
     }
 
     private void createShipImageOnTouchListeners() {
@@ -309,7 +314,7 @@ public class PlaceShipsActivity extends AppCompatActivity {
 
     private void placeShip(String name, Coordinate position, boolean vertical) {
         mBoundService.sendMessage("place " + name + " "
-                + (char) ('A' + position.getRow()) + position.getColumn() + " "
+                + (char) ('A' + position.getRow()) + (position.getColumn() + 1) + " "
                 + (vertical ? "vertical" : "horizontal"));
     }
 
@@ -614,4 +619,37 @@ public class PlaceShipsActivity extends AppCompatActivity {
         }
     }
     //end functions for binding
+
+    public class serverMessage extends BroadcastReceiver
+    {
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            String action = intent.getAction();
+            if(action.equalsIgnoreCase("SERVER_MESSAGE")){
+                Bundle extra = intent.getExtras();
+                String message = extra.getString("message");
+                if (message.equalsIgnoreCase("all clients connected")) {
+                    //server acknowledged our handshake, so we can assume connection has been made
+                    Toast toast = Toast.makeText(getApplicationContext(), "Connected to the server!", Toast.LENGTH_LONG);
+                    toast.show();
+                    startActivity(new Intent(PlaceShipsActivity.this, Play.class));
+                    //startActivity(new Intent(MainActivity.this, PlaceShipsActivity.class));
+                }
+            }
+        }
+    }
+
+    private serverMessage messageReceiver;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(messageReceiver, new IntentFilter("SERVER_MESSAGE"));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(messageReceiver);
+    }
 }
