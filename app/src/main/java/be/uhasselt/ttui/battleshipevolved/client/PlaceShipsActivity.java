@@ -303,6 +303,8 @@ public class PlaceShipsActivity extends AppCompatActivity {
         placeShip("marineradar", mShipMarineRadarPos, mShipOrientation[5]);
         placeShip("missilecommand", mShipMissileCommandPos, mShipOrientation[6]);
         placeShip("patrolboat", mShipPatrolBoatPos, mShipOrientation[7]);
+        mBoundService.sendMessage("end placement");
+        startActivity(new Intent(PlaceShipsActivity.this, Play.class));
     }
 
     private void placeShip(String name, Coordinate position, boolean vertical) {
