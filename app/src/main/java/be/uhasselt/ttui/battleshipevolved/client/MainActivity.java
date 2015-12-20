@@ -231,6 +231,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         doUnbinding();

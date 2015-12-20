@@ -70,6 +70,10 @@ public class PlayActivity extends Activity {
     }
 
     @Override
+    public void onBackPressed() {
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         doUnbinding();
