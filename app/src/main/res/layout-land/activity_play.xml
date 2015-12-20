@@ -12,17 +12,26 @@
         android:background="@color/colorPrimary">
     </TableLayout>
     <TextView
-        android:id="@+id/turnText"
-        android:text="Loading turn."
-        android:textSize="20dp"
+        android:id="@+id/playerText"
+        android:text="Loading player."
+        android:textSize="24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/colorTitle"
         android:layout_toRightOf="@id/gridLayout"/>
+    <TextView
+        android:id="@+id/turnText"
+        android:text="Loading turn."
+        android:textSize="18dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorSubTitle"
+        android:layout_toRightOf="@id/gridLayout"
+        android:layout_below="@id/playerText"/>
     <TextView
         android:id="@+id/onlineText"
         android:text="Loading weapons."
-        android:textSize="24dp"
+        android:textSize="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorAccent"
@@ -31,7 +40,7 @@
     <TextView
         android:id="@+id/cooldownText"
         android:text="Loading cooldowns."
-        android:textSize="24dp"
+        android:textSize="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorCooldown"

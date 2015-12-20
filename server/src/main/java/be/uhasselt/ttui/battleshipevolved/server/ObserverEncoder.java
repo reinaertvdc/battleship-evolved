@@ -40,13 +40,13 @@ public class ObserverEncoder implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         if (arg instanceof CoordinateStatus) {
-            sendUpdate(findFieldOriginPlayer(o), (CoordinateStatus) arg);
+            sendUpdate(findOriginPlayer(o), (CoordinateStatus) arg);
         } else if (arg instanceof ArrayList<?>) {
             for (Object obj : (ArrayList<?>) arg) {
                 if (obj instanceof CoordinateStatus)
-                    sendUpdate(findFieldOriginPlayer(o), (CoordinateStatus) obj);
+                    sendUpdate(findOriginPlayer(o), (CoordinateStatus) obj);
                 else if (obj instanceof String){
-                    //TODO: handle cooldowns
+                    sendCooldowns(findOriginPlayer(o), (String) obj);
                 }
             }
         }
@@ -78,12 +78,17 @@ public class ObserverEncoder implements Observer {
         }
     }
 
-    private int findFieldOriginPlayer(Observable o) {
+    private int findOriginPlayer(Observable o) {
         if (o instanceof Field) {
             Field f = (Field) o;
             ArrayList<Player> players = mGame.getPlayers();
             for (int i = 0; i < players.size(); i++) {
                 if (players.get(i).getField() == f)
+                    return i;
+            }
+        } else if (o instanceof Game) {
+            for (int i = 0; i < mGame.getPlayers().size(); i++){
+                if (mGame.isOnTurn(i))
                     return i;
             }
         }
@@ -96,6 +101,12 @@ public class ObserverEncoder implements Observer {
                     cs.getStatus() == CoordinateStatus.Status.MISSED) {
                 mClients.get(player).sendMessage(encodeCoordinateStatus(cs));
             }
+        }
+    }
+
+    private void sendCooldowns(int player, String s) {
+        if (player >= 0 && player < mClients.size()) {
+                mClients.get(player).sendMessage("Cooldown " + s);
         }
     }
 

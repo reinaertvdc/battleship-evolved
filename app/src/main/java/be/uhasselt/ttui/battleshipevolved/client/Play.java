@@ -18,7 +18,6 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -30,6 +29,7 @@ public class Play  extends Activity {
     private TextView mTxtOnline;
     private TextView mTxtCooldown;
     private GridController mGrid;
+    private ArrayList<Cooldown> mCooldowns;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,18 +43,9 @@ public class Play  extends Activity {
         mTxtTurn = (TextView) findViewById(R.id.turnText);
         mTxtOnline = (TextView) findViewById(R.id.onlineText);
         mTxtCooldown = (TextView) findViewById(R.id.cooldownText);
+        mCooldowns = new ArrayList<Cooldown>();
 
         initSpeechListener();
-
-        //Test values:
-        ArrayList<String> testOnline = new ArrayList<>();
-        testOnline.add("Airstrike online");
-        testOnline.add("Radar online");
-        setOnline(testOnline);
-        ArrayList<String> testCooldown = new ArrayList<>();
-        testCooldown.add("Missile 1 turn");
-        testCooldown.add("Bomb 2 turns");
-        setCooldowns(testCooldown);
     }
 
     @Override
@@ -124,9 +115,9 @@ public class Play  extends Activity {
             updateGrid(words);
         } else if (command.equalsIgnoreCase("next")) {
             updateTurn(words);
-        } /*else if (command.equalsIgnoreCase("scan")) {
-            handleScan(words);
-        } else if (command.equalsIgnoreCase("airstrike")) {
+        } else if (command.equalsIgnoreCase("Cooldown")) {
+            addCooldown(words);
+        } /*else if (command.equalsIgnoreCase("airstrike")) {
             handleAirstrike(words);
         } else if (message.equalsIgnoreCase("end turn")) {
             handleEndTurn();
@@ -163,10 +154,77 @@ public class Play  extends Activity {
 
     private void updateTurn(String[] words) {
         try {
-            mTxtTurn.setText("Turn: Player " + Integer.parseInt(words[4]));
+            int id = Integer.parseInt(words[4]);
+            mTxtTurn.setText("Turn: Player " + id);
+            if (id == 3);//mBoundService.SERVERIP)
         } catch (Exception e) {
             mBoundService.sendMessage("Could not interpret");
         }
+    }
+
+    private void addCooldown(String[] words) {
+        mCooldowns.add(new Cooldown(words));
+        updateCooldownTxt();
+    }
+
+    private void clearCooldowns(){
+        mCooldowns.clear();
+    }
+
+    private void updateCooldownTxt() {
+        int bombOnline = 0;
+        int bombCooldown = 0;
+        String online = "";
+        String offline = "";
+        for (int i = 0; i < mCooldowns.size(); i++){
+            Cooldown current = mCooldowns.get(i);
+            if (current.getCooldown() == 0) {
+                if (current.getWeapon().equals("Bomb")) {
+                    bombOnline++;
+                } else {
+                    online += current.getWeapon() + "\n";
+                }
+            } else {
+                if (current.getWeapon().equals("Bomb")) {
+                    bombCooldown++;
+                } else {
+                    offline += current.getWeapon() + " " + current.getCooldown() + "\n";
+                }
+            }
+        }
+        if (bombOnline == 1) {
+            online += "" + bombOnline + " Bomb\n";
+        } else if (bombOnline > 1) {
+            online += "" + bombOnline + " Bombs\n";
+        }
+        if (bombCooldown == 1) {
+            offline += "" + bombCooldown + " Bomb 1\n"; //Bomb expected to have a cooldown of maximum 1 turn
+        } else if (bombCooldown > 1) {
+            offline += "" + bombCooldown + " Bombs 1\n";
+        }
+        mTxtOnline.setText(online);
+        mTxtCooldown.setText(offline);
+    }
+
+    private class Cooldown{
+        private String mWeapon;
+        private int mCooldown;
+        public Cooldown(String weapon, int cooldown){
+            mWeapon = weapon;
+            mCooldown = cooldown;
+        }
+
+        public Cooldown(String[] string){
+            try {
+                mWeapon = string[1];
+                mCooldown = Integer.parseInt(string[2]);
+            } catch (Exception e) {
+                mBoundService.sendMessage("Could not interpret cooldown.");
+            }
+        }
+
+        public String getWeapon() {return mWeapon;}
+        public int getCooldown() {return mCooldown;}
     }
 
     //functions for binding to the connectionThread service
