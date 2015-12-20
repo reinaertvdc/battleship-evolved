@@ -123,6 +123,9 @@ public class Field extends Observable {
             refreshField();
     }
 
+    /**
+     * Gives away all boat positions
+     */
     public ArrayList<Coordinate> giveAllBoatsPos() {
         ArrayList<Coordinate> coordinates = new ArrayList<Coordinate>();
         for (int i = 0; i < ROWS; i++) {
