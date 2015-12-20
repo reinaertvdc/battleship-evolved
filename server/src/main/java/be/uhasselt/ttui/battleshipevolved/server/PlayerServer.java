@@ -115,6 +115,8 @@ public class PlayerServer extends Thread {
             handleEndTurn();
         } else if (message.equalsIgnoreCase("Send cooldowns")) {
             sendCooldowns();
+        } else if (message.equalsIgnoreCase("Send turn")) {
+            sendCooldowns();
         }
 
         else {
@@ -238,12 +240,27 @@ public class PlayerServer extends Thread {
     }
 
     /**
-     * Send cooldowns to a specific player
+     * Send cooldowns
      */
     private void sendCooldowns() {
         ArrayList<String> cooldowns = mPlayer.getCooldowns();
         for (int i = 0; i < cooldowns.size(); i++){
             sendMessage("Cooldown " + cooldowns.get(i));
+        }
+    }
+
+    /**
+     * Send turn
+     */
+    private void sendTurn(){
+        ArrayList<Player> players = mGame.getPlayers();
+        for (int i = 0; i < players.size(); i++){
+            if (mGame.isOnTurn(players.get(i).getID())){
+                if (i == mPlayer.getID())
+                    sendMessage("your turn");
+                else
+                    sendMessage("next turn for player " + (players.get(i).getID()));
+            }
         }
     }
 }

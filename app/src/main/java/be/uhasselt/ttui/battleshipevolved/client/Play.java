@@ -50,6 +50,8 @@ public class Play  extends Activity {
         mTxtOnline = (TextView) findViewById(R.id.onlineText);
         mTxtCooldown = (TextView) findViewById(R.id.cooldownText);
         mCooldowns = new ArrayList<Cooldown>();
+        mBoundService.sendMessage("Send cooldowns");
+        mBoundService.sendMessage("Send turn");
 
         initSpeechListener();
     }
