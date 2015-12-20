@@ -75,6 +75,14 @@ public class ObserverEncoder implements Observer {
                     server.shutdown();
                 }
             }
+        } else if (arg instanceof Boolean) {
+            //all players are ready, so the game can start!
+            for (int i = 0; i < mClients.size(); i++) {
+                PlayerServer server = mClients.get(i);
+                server.sendMessage("game start");
+                if (mGame.isOnTurn(i))
+                    server.sendMessage("your turn");
+            }
         }
     }
 

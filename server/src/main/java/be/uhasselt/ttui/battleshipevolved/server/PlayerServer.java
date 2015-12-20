@@ -34,7 +34,7 @@ public class PlayerServer extends Thread {
         mGame = game;
         //set the players variable
         mPlayer = game.getPlayers().get(mID);
-        sendMessage("game start");
+        sendMessage("all clients connected");
     }
 
     public PlayerServer(Socket socket, int id) {
@@ -104,6 +104,9 @@ public class PlayerServer extends Thread {
             sendMessage("Hello!");
         } else if (command.equalsIgnoreCase("place")) {
             handlePlace(words);
+        } else if (message.equalsIgnoreCase("end placement")) {
+            mGame.setPlayerReady(mID);
+            sendMessage("OK");
         } else if (command.equalsIgnoreCase("shoot")) {
             handleShoot(words);
         } else if (command.equalsIgnoreCase("scan")) {

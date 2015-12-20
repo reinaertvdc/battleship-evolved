@@ -10,16 +10,18 @@ import java.util.Observable;
 public class Game extends Observable {
     private final static int maxPlayers = 4;
     private ArrayList<Player> mPlayers;
+    private boolean[] mPlayersReady;
     private int mTurn;
     private Board mBoard;
 
     public Game() {
-
         //create 4 players and init
         mPlayers = new ArrayList<>();
+        mPlayersReady = new boolean[maxPlayers];
         for (int i = 0; i < maxPlayers; i++) {
             Player player = new Player(i);
             mPlayers.add(player);
+            mPlayersReady[i] = false;
         }
         //set the turn to player 1
         mTurn = 0;
@@ -42,6 +44,19 @@ public class Game extends Observable {
         Player player = mPlayers.get(mTurn);
         Coordinate co = new Coordinate(0,0);
         player.placeBattleShip(co, true);
+    }
+
+    public void setPlayerReady(int PlayerID) {
+        mPlayersReady[PlayerID] = true;
+        boolean allPlayersReady = true;
+        for (int i = 0; i < mPlayers.size() && allPlayersReady; i++)
+            allPlayersReady = mPlayersReady[i];
+
+        if (allPlayersReady) {
+            setChanged();
+            notifyObservers(new Boolean(true));
+        }
+
     }
 
     public String nextTurn(int commander) {

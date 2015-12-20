@@ -263,8 +263,8 @@ public class MainActivity extends AppCompatActivity {
                     //server acknowledged our handshake, so we can assume connection has been made
                     Toast toast = Toast.makeText(getApplicationContext(), "Connected to the server!", Toast.LENGTH_LONG);
                     toast.show();
-                    startActivity(new Intent(MainActivity.this, Play.class));
-                    //startActivity(new Intent(MainActivity.this, PlaceShipsActivity.class));
+                    //startActivity(new Intent(MainActivity.this, Play.class));
+                    startActivity(new Intent(MainActivity.this, PlaceShipsActivity.class));
                 }
             }
         }
