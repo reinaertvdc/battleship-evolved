@@ -118,6 +118,8 @@ public class PlayerServer extends Thread {
             sendCooldowns();
         } else if (message.equalsIgnoreCase("Send turn")) {
             sendCooldowns();
+        } else if (message.equalsIgnoreCase("Send positions")) {
+            sendPositions();
         }
 
         else {
@@ -247,6 +249,16 @@ public class PlayerServer extends Thread {
         ArrayList<String> cooldowns = mPlayer.getCooldowns();
         for (int i = 0; i < cooldowns.size(); i++){
             sendMessage("Cooldown " + cooldowns.get(i));
+        }
+    }
+
+    /**
+     * Send ship positions
+     */
+    private void sendPositions() {
+        ArrayList<Coordinate> coors = mPlayer.getField().giveAllBoatsPos();
+        for (int i = 0; i < coors.size(); i++) {
+            sendMessage("Position " + coors.get(i).getRow() + " " + coors.get(i).getColumn());
         }
     }
 

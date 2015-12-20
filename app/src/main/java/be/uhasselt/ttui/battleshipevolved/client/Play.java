@@ -54,7 +54,9 @@ public class Play  extends Activity {
         /*
          * NULL objects?
         mBoundService.sendMessage("Send cooldowns");
-        mBoundService.sendMessage("Send turn");*/
+        mBoundService.sendMessage("Send turn");
+        mBoundService.sendMessage("Send positions");
+        */
 
         initSpeechListener();
     }
@@ -135,6 +137,8 @@ public class Play  extends Activity {
             mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
         } else if (command.equalsIgnoreCase("cooldown")) {
             addCooldown(words);
+        } else if (command.equalsIgnoreCase("position")) {
+            addPosition(words);
         }
 
 
@@ -191,6 +195,14 @@ public class Play  extends Activity {
     private void addCooldown(String[] words) {
         mCooldowns.add(new Cooldown(words));
         updateCooldownTxt();
+    }
+
+    private void addPosition(String[] words) {
+        try {
+            mGrid.setShip(Integer.parseInt(words[1]), Integer.parseInt(words[2]));
+        } catch (Exception e) {
+
+        }
     }
 
     private void clearCooldowns(){
