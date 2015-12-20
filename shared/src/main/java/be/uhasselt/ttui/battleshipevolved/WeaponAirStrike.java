@@ -6,12 +6,10 @@ package be.uhasselt.ttui.battleshipevolved;
  * @author Reinaert Van de Cruys
  */
 public class WeaponAirStrike extends Weapon {
-    private static final int COOL_DOWN = 3;
+    private static final int COOL_DOWN = 5;
 
     public WeaponAirStrike() {
-        /** TODO: TEMPORARY FIX */
-        super(COOL_DOWN, 0);
-        //super(COOL_DOWN, COOL_DOWN);
+        super(COOL_DOWN);
     }
 
     public String getName(){

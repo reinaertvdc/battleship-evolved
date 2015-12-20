@@ -11,9 +11,9 @@ public abstract class Weapon extends Observable {
     private int mCoolDown;
     private int mCurrentCoolDown;
 
-    protected Weapon(int coolDown, int currentCoolDown) {
+    protected Weapon(int coolDown) {
         mCoolDown = coolDown;
-        mCurrentCoolDown = currentCoolDown;
+        mCurrentCoolDown = (int) Math.round(Math.random() * coolDown);
     }
 
     public abstract String getName();

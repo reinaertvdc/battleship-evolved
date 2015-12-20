@@ -120,7 +120,7 @@ public class PlayerServer extends Thread {
         } else if (message.equalsIgnoreCase("Send cooldowns")) {
             sendCooldowns();
         } else if (message.equalsIgnoreCase("Send turn")) {
-            sendCooldowns();
+            sendTurn();
         } else if (message.equalsIgnoreCase("Send positions")) {
             sendPositions();
         }

@@ -38,21 +38,24 @@ public class Field extends Observable {
      * @post Visibility is not changed.
      */
     public void deployShip(Ship boat, Coordinate anchor, boolean liesHorizontal) throws InvalidShipPlacementException {
+        int columnSize, rowSize;
+        if (liesHorizontal) {
+            columnSize = boat.getSize().getColumn();
+            rowSize = boat.getSize().getRow();
+        } else {
+            columnSize = boat.getSize().getRow();
+            rowSize = boat.getSize().getColumn();
+        }
+
         int row = anchor.getRow();
         int column = anchor.getColumn();
-        int endRow = boat.getSize().getRow() + row;
-        int endColumn = boat.getSize().getColumn() + column;
-
-        if (!liesHorizontal) {
-            int temp = endRow;
-            endRow = endColumn;
-            endColumn = temp;
-        }
+        int endRow = rowSize + row - 1;
+        int endColumn = columnSize + column - 1;
 
         try {
             if (checkSpace(anchor, new Coordinate(endRow, endColumn))) //New Coordinate because of the possible direction switch
-                for (int i = row; i < endRow; i++) {
-                    for (int j = column; j < endColumn; j++) {
+                for (int i = row; i <= endRow; i++) {
+                    for (int j = column; j <= endColumn; j++) {
                         mPositions[i][j] = boat;
                     }
                 }
@@ -175,8 +178,8 @@ public class Field extends Observable {
         if (endRow > ROWS || endColumn > COLUMNS)
             throw new IndexOutOfBoundsException();
 
-        for (int i = row; i < endRow && !overwriting; i++) {
-            for (int j = column; j < endColumn && !overwriting; j++) {
+        for (int i = row; i <= endRow && !overwriting; i++) {
+            for (int j = column; j <= endColumn && !overwriting; j++) {
                 if (mPositions[i][j] != null)
                     overwriting = true;
             }

@@ -133,8 +133,6 @@ public class PlayActivity extends Activity {
         String command = words[0];
         if (message.equalsIgnoreCase("your turn")) {
             myTurn();
-            if (!mIslistening)
-                mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
         } else if (message.equalsIgnoreCase("game start")) {
             mBoundService.sendMessage("Send cooldowns");
             mBoundService.sendMessage("Send turn");
@@ -403,20 +401,24 @@ public class PlayActivity extends Activity {
             String str = matches.get(i);
             ArrayList<String> words = new ArrayList<>(Arrays.asList(str.split(" ")));
             String command = words.get(0);
-            if ((str.contains("end") || str.contains("and")) && str.contains("turn")) {
+            if ((str.contains("end") || str.contains("and")) && (str.contains("turn") || str.contains("stern")) || str.contains("entering") || str.contains("anthem")) {
                 //end turn!
                 matchFound = true;
                 endTurn();
-            } else if (command.equalsIgnoreCase("shoot") || command.equalsIgnoreCase("shoots")) {
+            } else if (command.equalsIgnoreCase("shoot") || command.equalsIgnoreCase("shoots") || command.equalsIgnoreCase("shoes") || command.equalsIgnoreCase("should")) {
                 words.remove(0);
                 matchFound = handleShoot(words);
-            } else if (command.equalsIgnoreCase("scan")) {
+            } else if (command.equalsIgnoreCase("scan") || command.equalsIgnoreCase("skin")) {
                 words.remove(0);
                 matchFound = handleScan(words);
-            } else if (command.equalsIgnoreCase("airstrike")) {
+            } else if (command.equalsIgnoreCase("airstrike") || command.equalsIgnoreCase("inside")) {
                 words.remove(0);
                 matchFound = handleAirstrike(words);
-            } else if (command.equalsIgnoreCase("artillery")) {
+            } else if (command.equalsIgnoreCase("air")) {
+                words.remove(0);
+                words.remove(0);
+                matchFound = handleAirstrike(words);
+            } else if (command.equalsIgnoreCase("artillery") || command.equalsIgnoreCase("activity") || command.equalsIgnoreCase("ability") || command.equalsIgnoreCase("hostility") || command.equalsIgnoreCase("octillery")) {
                 words.remove(0);
                 matchFound = handleArtillery(words);
             }
@@ -426,16 +428,22 @@ public class PlayActivity extends Activity {
             System.out.println("We found a match!");
         } else {
             System.out.println("Could not find a match, listening again");
-            mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
+            //mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
         }
 
     }
 
+    private boolean wordEqualsPlayer(String str) {
+        return (str.equalsIgnoreCase("player") || str.equalsIgnoreCase("play") || str.equalsIgnoreCase("playing") || str.equalsIgnoreCase("players") || str.equalsIgnoreCase("place") || str.equalsIgnoreCase("played") || str.equalsIgnoreCase("layer"));
+    }
+
     private boolean handleShoot(ArrayList<String> words) {
-        //next word must equal "player"
-        if (!words.get(0).equalsIgnoreCase("player")) {
+        if (words.size() <= 0)
             return false;
-        }
+
+        //next word must equal "player"
+        if (!wordEqualsPlayer(words.get(0)))
+            return false;
 
         words.remove(0); // remove the word "player"
         //next word is the player we want to shoot
@@ -457,9 +465,11 @@ public class PlayActivity extends Activity {
 
     private boolean handleScan(ArrayList<String> words) {
         //next word must equal "player" or "play"
-        if (!(words.get(0).equalsIgnoreCase("player") || words.get(0).equalsIgnoreCase("play"))) {
+        if (words.size() <= 0)
             return false;
-        }
+
+        if (!wordEqualsPlayer(words.get(0)))
+            return false;
 
         words.remove(0); // remove the word "player"
         //next word is the player we want to scan
@@ -481,9 +491,11 @@ public class PlayActivity extends Activity {
 
     private boolean handleAirstrike(ArrayList<String> words) {
         //next word must equal "player"
-        if (!words.get(0).equalsIgnoreCase("player")) {
+        if (words.size() <= 0)
             return false;
-        }
+
+        if (!wordEqualsPlayer(words.get(0)))
+            return false;
 
         words.remove(0); // remove the word "player"
         //next word is the player we want to airstrike
@@ -516,7 +528,7 @@ public class PlayActivity extends Activity {
     }
 
     private int interpretPlayer(String player) {
-        if (player.equalsIgnoreCase("one") || player.equalsIgnoreCase("1")) {
+        if (player.equalsIgnoreCase("one") || player.equalsIgnoreCase("1") || player.equalsIgnoreCase("won")) {
             return 1;
         } else if (player.equalsIgnoreCase("two") || player.equalsIgnoreCase("to") || player.equalsIgnoreCase("2")) {
             return 2;
@@ -573,7 +585,10 @@ public class PlayActivity extends Activity {
     private String try1WordExceptions(String word) {
         if (word.equalsIgnoreCase("before"))
             return "B4";
-
+        else if (word.equalsIgnoreCase("hi5"))
+            return "H5";
+        else if (word.equalsIgnoreCase("mp3"))
+            return "B3";
 
         return "";
     }
@@ -599,7 +614,7 @@ public class PlayActivity extends Activity {
             out = out.concat("F");
         else if (firstWord.equalsIgnoreCase("G") || firstWord.equalsIgnoreCase("gee"))
             out = out.concat("G");
-        else if (firstWord.equalsIgnoreCase("H") || firstWord.equalsIgnoreCase("age"))
+        else if (firstWord.equalsIgnoreCase("H") || firstWord.equalsIgnoreCase("age") || firstWord.equalsIgnoreCase("page"))
             out = out.concat("H");
         else if (firstWord.equalsIgnoreCase("I") || firstWord.equalsIgnoreCase("eye"))
             out = out.concat("I");
@@ -609,7 +624,7 @@ public class PlayActivity extends Activity {
             return "";
 
         //the second word
-        if (secondWord.equalsIgnoreCase("1") || secondWord.equalsIgnoreCase("one"))
+        if (secondWord.equalsIgnoreCase("1") || secondWord.equalsIgnoreCase("one") || secondWord.equalsIgnoreCase("won"))
             return out.concat("1");
         else if (secondWord.equalsIgnoreCase("2") || secondWord.equalsIgnoreCase("two") || secondWord.equalsIgnoreCase("to") || secondWord.equalsIgnoreCase("too"))
             return out.concat("2");
@@ -637,7 +652,7 @@ public class PlayActivity extends Activity {
      * Dirty: set c manually to '0' if theres only 2 chars in the string
      */
     private boolean isCoordinate(char a, char b, char c) {
-        if (a == 'A' || a == 'B' || a == 'C' || a == 'D' || a == 'E' || a == 'F' || a == 'G' || a == 'H' || a == 'I' || a == 'J') {
+        if (a == 'A' || a == 'B' || a == 'C' || a == 'D' || a == 'E' || a == 'F' || a == 'G' || a == 'H' || a == 'I' || a == 'J' || a == 'a' || a == 'b' || a == 'c' || a == 'd' || a == 'e' || a == 'f' || a == 'g' || a == 'h' || a == 'i' || a == 'j') {
             if (b == '1' || b == '2' || b == '3' || b == '4' || b == '5' || b == '6' || b == '7' || b == '8' || b == '9') {
                 if (c == '0') {
                     return true;
