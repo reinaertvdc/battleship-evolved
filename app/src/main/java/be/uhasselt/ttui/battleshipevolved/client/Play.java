@@ -121,6 +121,7 @@ public class Play  extends Activity {
         String[] words = message.split(" ");
         String command = words[0];
         if (message.equalsIgnoreCase("your turn")) {
+            myTurn();
             if (!mIslistening)
                 mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
         } else if (message.equalsIgnoreCase("game start")) {
@@ -128,8 +129,6 @@ public class Play  extends Activity {
             mBoundService.sendMessage("Send turn");
         } else if (command.equalsIgnoreCase("CoordinateUpdate")) {
             updateGrid(words);
-        } else if (command.equalsIgnoreCase("your")) {
-            myTurn();
         } else if (command.equalsIgnoreCase("next")) {
             updateTurn(words);
         } else if (command.equalsIgnoreCase("success")) {
