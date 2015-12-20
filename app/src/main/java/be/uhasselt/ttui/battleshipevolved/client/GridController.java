@@ -2,8 +2,6 @@ package be.uhasselt.ttui.battleshipevolved.client;
 
 import android.app.Activity;
 import android.view.Gravity;
-import android.widget.AbsListView;
-import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -18,11 +16,11 @@ public class GridController {
     private TextView mGrid[][];
     private Activity mParent;
 
-    public GridController(int rows, int columns, TableLayout grid, Play play) {
+    public GridController(int rows, int columns, TableLayout grid, PlayActivity playActivity) {
         mRows = rows;
         mColumns = columns;
         mGridLayout = grid;
-        mParent = play;
+        mParent = playActivity;
         mGrid = new TextView[mRows][mColumns];
         createGrid();
     }

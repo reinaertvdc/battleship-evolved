@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +25,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import be.uhasselt.ttui.battleshipevolved.Coordinate;
 import be.uhasselt.ttui.battleshipevolved.Field;
@@ -50,6 +50,8 @@ public class PlaceShipsActivity extends AppCompatActivity {
     private final Handler mHideHandler = new Handler();
     private View mContentView;
     private FrameLayout mLayout;
+    private PowerManager.WakeLock mWL;
+
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -113,6 +115,9 @@ public class PlaceShipsActivity extends AppCompatActivity {
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
         setContentView(R.layout.activity_place_ships);
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        mWL = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My Tag");
+        mWL.acquire();
         mContentView = findViewById(R.id.fullscreen_content);
         mLayout = (FrameLayout) findViewById(R.id.place_ships_field);
         mOffsetTop = 0;
@@ -323,7 +328,7 @@ public class PlaceShipsActivity extends AppCompatActivity {
         placeShip("missilecommand", mShipMissileCommandPos, mShipOrientation[6]);
         placeShip("patrolboat", mShipPatrolBoatPos, mShipOrientation[7]);
         mBoundService.sendMessage("end placement");
-        startActivity(new Intent(PlaceShipsActivity.this, Play.class));
+        startActivity(new Intent(PlaceShipsActivity.this, PlayActivity.class));
     }
 
     private void placeShip(String name, Coordinate position, boolean vertical) {
@@ -587,6 +592,7 @@ public class PlaceShipsActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         doUnbinding();
+        mWL.release();
     }
 
     @Override
