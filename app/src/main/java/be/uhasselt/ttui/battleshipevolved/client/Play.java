@@ -227,7 +227,7 @@ public class Play  extends Activity {
                 if (current.getWeapon().equals("Bomb")) {
                     bombCooldown++;
                 } else {
-                    offline += current.getWeapon() + " " + current.getCooldown() + "\n";
+                    offline += current.getWeapon() + " " + current.getCooldown() + "turn(s)\n";
                 }
             }
         }
@@ -237,9 +237,9 @@ public class Play  extends Activity {
             online += "" + bombOnline + " Bombs\n";
         }
         if (bombCooldown == 1) {
-            offline += "" + bombCooldown + " Bomb 1\n"; //Bomb expected to have a cooldown of maximum 1 turn
+            offline += "" + bombCooldown + " Bomb 1 turn\n"; //Bomb expected to have a cooldown of maximum 1 turn
         } else if (bombCooldown > 1) {
-            offline += "" + bombCooldown + " Bombs 1\n";
+            offline += "" + bombCooldown + " Bombs 1 turn\n";
         }
         mTxtOnline.setText(online);
         mTxtCooldown.setText(offline);
