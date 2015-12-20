@@ -129,6 +129,7 @@ public class Play  extends Activity {
         } else if (message.equalsIgnoreCase("game start")) {
             mBoundService.sendMessage("Send cooldowns");
             mBoundService.sendMessage("Send turn");
+            mBoundService.sendMessage("Send positions");
         } else if (command.equalsIgnoreCase("CoordinateUpdate")) {
             updateGrid(words);
         } else if (command.equalsIgnoreCase("next")) {
