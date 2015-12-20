@@ -23,7 +23,6 @@ import android.widget.ImageView;
 
 import be.uhasselt.ttui.battleshipevolved.Coordinate;
 import be.uhasselt.ttui.battleshipevolved.Field;
-import be.uhasselt.ttui.battleshipevolved.Ship;
 import be.uhasselt.ttui.battleshipevolved.ShipAircraftCarrier;
 import be.uhasselt.ttui.battleshipevolved.ShipBattleship;
 import be.uhasselt.ttui.battleshipevolved.ShipCruiser;
@@ -80,7 +79,7 @@ public class PlaceShipsActivity extends AppCompatActivity {
             (float) NEEDED_VIEWPORT_COLUMNS / NEEDED_VIEWPORT_ROWS;
 
     private int mSquareSize;
-    private int mOffsetTop = 0, mOffsetLeft = 0;
+    private int mOffsetTop, mOffsetLeft;
 
     private Coordinate mShipAircraftCarrierSize, mShipBattleshipSize, mShipCruiserSize,
                        mShipDecoySize, mShipDestroyerSize, mShipMarineRadarSize,
@@ -96,6 +95,8 @@ public class PlaceShipsActivity extends AppCompatActivity {
 
     private boolean[] mShipOrientation;
 
+    private boolean[] mShipIsPlaced;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,7 +105,10 @@ public class PlaceShipsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_place_ships);
         mContentView = findViewById(R.id.fullscreen_content);
         mLayout = (FrameLayout) findViewById(R.id.place_ships_field);
+        mOffsetTop = 0;
+        mOffsetLeft = 0;
         mShipOrientation = new boolean[8];
+        mShipIsPlaced = new boolean[]{false, false, false, false, false, false, false, false};
 
         doBinding();
 
@@ -201,9 +205,10 @@ public class PlaceShipsActivity extends AppCompatActivity {
                             Coordinate fieldPosition =
                                     getPositionOnField(imagePosition, mOrientation, size);
                             if (fieldPosition != null &&
-                                    isWithinField(fieldPosition, size, mOrientation)) {
+                                    isWithinField(fieldPosition, size, mOrientation) &&
+                                    !overlapsWithExistingShip(fieldPosition, size, orientation)) {
                                 if ((mOrientation == 90 || mOrientation == 270) &&
-                                        size.getColumn() % 2 == 0) {
+                                        size.getColumn() % 2 == 0 && size.getRow() == 1) {
                                     image.setX(mOffsetLeft
                                             + Math.round((imagePosition.x - mOffsetLeft)
                                             / mSquareSize + 0.5) * mSquareSize
@@ -223,12 +228,15 @@ public class PlaceShipsActivity extends AppCompatActivity {
                                 position.set(fieldPosition);
                                 mShipOrientation[orientation]
                                         = mOrientation == 90 || mOrientation == 270;
-
+                                mShipIsPlaced[orientation] = true;
+                                checkIfFinished();
                             } else {
                                 mOrientation = 0;
+                                mShipOrientation[orientation] = false;
                                 image.setRotation(mOrientation);
                                 image.setX(mInitialImagePosition.x);
                                 image.setY(mInitialImagePosition.y);
+                                mShipIsPlaced[orientation] = false;
                             }
                         }
                         break;
@@ -239,6 +247,8 @@ public class PlaceShipsActivity extends AppCompatActivity {
                         if (rotation < 0) rotation += 360;
                         mOrientation = Math.round(rotation / 90) * 90;
                         image.setRotation(mOrientation);
+                        mShipOrientation[orientation]
+                                = mOrientation == 90 || mOrientation == 270;
                         break;
                     case MotionEvent.ACTION_CANCEL:
                         mPointerID1 = INVALID_POINTER_ID;
@@ -248,6 +258,72 @@ public class PlaceShipsActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    private void checkIfFinished() {
+        for (boolean isPlaced : mShipIsPlaced) {
+            if (!isPlaced) return;
+        }
+        onFinished();
+    }
+
+    private void onFinished() {
+        printShipPosition("Aircraft carrier", mShipAircraftCarrierPos, mShipOrientation[0]);
+        printShipPosition("Battleship", mShipBattleshipPos, mShipOrientation[1]);
+        printShipPosition("Cruiser", mShipCruiserPos, mShipOrientation[2]);
+        printShipPosition("Decoy", mShipDecoyPos, mShipOrientation[3]);
+        printShipPosition("Destroyer", mShipDestroyerPos, mShipOrientation[4]);
+        printShipPosition("Marine radar", mShipMarineRadarPos, mShipOrientation[5]);
+        printShipPosition("Missile command", mShipMissileCommandPos, mShipOrientation[6]);
+        printShipPosition("Patrol boat", mShipPatrolBoatPos, mShipOrientation[7]);
+    }
+
+    private void printShipPosition(String name, Coordinate position, boolean orientation) {
+        System.out.println(name + " placed " + (orientation ? "vertically" : "horizontally")
+                + " at [" + position.getColumn() + "," + position.getRow() + "].");
+    }
+
+    private boolean overlapsWithExistingShip(
+            Coordinate position, Coordinate size, int orientation) {
+        return overlapsWithShip(mShipAircraftCarrierPos, mShipAircraftCarrierSize, 0,
+                position, size, orientation) ||
+                overlapsWithShip(mShipBattleshipPos, mShipBattleshipSize, 1,
+                        position, size, orientation) ||
+                overlapsWithShip(mShipCruiserPos, mShipCruiserSize, 2,
+                        position, size, orientation) ||
+                overlapsWithShip(mShipDecoyPos, mShipDecoySize, 3,
+                        position, size, orientation) ||
+                overlapsWithShip(mShipDestroyerPos, mShipDestroyerSize, 4,
+                        position, size, orientation) ||
+                overlapsWithShip(mShipMarineRadarPos, mShipMarineRadarSize, 5,
+                        position, size, orientation) ||
+                overlapsWithShip(mShipMissileCommandPos, mShipMissileCommandSize, 6,
+                        position, size, orientation) ||
+                overlapsWithShip(mShipPatrolBoatPos, mShipPatrolBoatSize, 7,
+                        position, size, orientation);
+    }
+
+    private boolean overlapsWithShip(
+            Coordinate shipPosition, Coordinate shipSize, int shipOrientation,
+            Coordinate position, Coordinate size, int orientation) {
+        if (!mShipIsPlaced[shipOrientation] || shipOrientation == orientation) {
+            return false;
+        } else {
+            int shipWidthMin = shipPosition.getColumn();
+            int shipWidthMax = shipPosition.getColumn() + (mShipOrientation[shipOrientation]
+                    ? shipSize.getRow() : shipSize.getColumn()) - 1;
+            int shipHeightMin = shipPosition.getRow();
+            int shipHeightMax = shipPosition.getRow() + (mShipOrientation[shipOrientation]
+                    ? shipSize.getColumn() : shipSize.getRow()) - 1;
+            int widthMin = position.getColumn();
+            int widthMax = position.getColumn() + (mShipOrientation[orientation]
+                    ? size.getRow() : size.getColumn()) - 1;
+            int heightMin = position.getRow();
+            int heightMax = position.getRow() + (mShipOrientation[orientation]
+                    ? size.getColumn() : size.getRow()) - 1;
+            return !(shipWidthMin > widthMax || shipWidthMax < widthMin ||
+                    shipHeightMin > heightMax || shipHeightMax < heightMin);
+        }
     }
 
     private boolean isWithinField(Coordinate position, Coordinate size, int orientation) {
@@ -288,7 +364,6 @@ public class PlaceShipsActivity extends AppCompatActivity {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -359,17 +434,15 @@ public class PlaceShipsActivity extends AppCompatActivity {
 
     private void calculateSquareSizeAndOffset() {
         Point viewportResolution = getViewportResolution();
-        System.out.println(viewportResolution);
-        float viewportRatio = (float) viewportResolution.x / viewportResolution.y;
-        System.out.println(viewportRatio);
+        float viewportRatio = viewportResolution.x / (float) viewportResolution.y;
         if (viewportRatio > NEEDED_VIEWPORT_RATIO) {
-            System.out.println("1");
-            mSquareSize = viewportResolution.y / NEEDED_VIEWPORT_ROWS;
-            mOffsetLeft = (int)(viewportResolution.x * (viewportRatio - NEEDED_VIEWPORT_RATIO) / 2);
+            mSquareSize = Math.round(viewportResolution.y / (float)NEEDED_VIEWPORT_ROWS);
+            mOffsetLeft +=
+                    Math.round(viewportResolution.x * (viewportRatio - NEEDED_VIEWPORT_RATIO) / 2f);
         } else {
-            System.out.println("2");
-            mSquareSize = viewportResolution.x / NEEDED_VIEWPORT_COLUMNS;
-            mOffsetTop = (int)(viewportResolution.y * (NEEDED_VIEWPORT_RATIO - viewportRatio) / 2);
+            mSquareSize = Math.round(viewportResolution.x / (float)NEEDED_VIEWPORT_COLUMNS);
+            mOffsetTop +=
+                    Math.round(viewportResolution.y * (NEEDED_VIEWPORT_RATIO - viewportRatio) / 2f);
         }
     }
 
@@ -446,8 +519,7 @@ public class PlaceShipsActivity extends AppCompatActivity {
 
     private void setShipImagePosition(ImageView image, Point position, int top, int left) {
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) image.getLayoutParams();
-        layoutParams.leftMargin =
-                mOffsetLeft + Math.round((mSquareSize * left * 1.5f) + mSquareSize / 2);
+        layoutParams.leftMargin = mOffsetLeft + Math.round((mSquareSize * left * 1.5f));
         layoutParams.topMargin =
                 mOffsetTop + Math.round((mSquareSize * top * 1.5f) + mSquareSize / 2);
         position.set(layoutParams.leftMargin, layoutParams.topMargin);

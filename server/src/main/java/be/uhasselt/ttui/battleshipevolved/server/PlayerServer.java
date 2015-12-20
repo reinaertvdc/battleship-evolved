@@ -132,25 +132,34 @@ public class PlayerServer extends Thread {
             return;
         }
 
+        //determine vertical or horizontal position
+        boolean isHorizontal;
+        if (words[3].equalsIgnoreCase("horizontal"))
+            isHorizontal = true;
+        else if (words[3].equalsIgnoreCase("vertical")) {
+            isHorizontal = false;
+        } else
+            return;
+
         //call the correct ship function
         String ship = words[1];
         String message;
         if (words[1].equalsIgnoreCase("aircraftcarrier")) {
-            message = mPlayer.placeAircraftCarrier(coor, true);
+            message = mPlayer.placeAircraftCarrier(coor, isHorizontal);
         } else if (ship.equalsIgnoreCase("battleship")) {
-            message = mPlayer.placeBattleShip(coor, true);
+            message = mPlayer.placeBattleShip(coor, isHorizontal);
         } else if (ship.equalsIgnoreCase("cruiser")) {
-            message = mPlayer.placeCruiser(coor, true);
+            message = mPlayer.placeCruiser(coor, isHorizontal);
         } else if (ship.equalsIgnoreCase("decoy")) {
-            message = mPlayer.placeDecoy(coor, true);
+            message = mPlayer.placeDecoy(coor, isHorizontal);
         } else if (ship.equalsIgnoreCase("destroyer")) {
-            message = mPlayer.placeDestroyer(coor, true);
+            message = mPlayer.placeDestroyer(coor, isHorizontal);
         } else if (ship.equalsIgnoreCase("marineradar")) {
-            message = mPlayer.placeMarineRadar(coor, true);
+            message = mPlayer.placeMarineRadar(coor, isHorizontal);
         } else if (ship.equalsIgnoreCase("missilecommand")) {
-            message = mPlayer.placeMissileCommand(coor, true);
+            message = mPlayer.placeMissileCommand(coor, isHorizontal);
         } else if (ship.equalsIgnoreCase("patrolboat")) {
-            message = mPlayer.placePatrolBoat(coor, true);
+            message = mPlayer.placePatrolBoat(coor, isHorizontal);
         } else {
             message = "Could not interpret " + ship;
         }

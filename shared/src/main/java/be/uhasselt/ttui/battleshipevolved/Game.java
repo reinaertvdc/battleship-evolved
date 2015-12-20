@@ -25,7 +25,6 @@ public class Game extends Observable {
         mTurn = 0;
         mBoard = new Board(mPlayers.toArray(new Player[maxPlayers]));
         this.addObserver(mBoard);
-        //insertTestValues();
     }
 
     public ArrayList<Player> getPlayers() {
@@ -114,21 +113,32 @@ public class Game extends Observable {
 
     public void insertTestValues() {
         try {
-            mPlayers.get(0).placeAircraftCarrier(new Coordinate(0, 0), true);
-            mPlayers.get(0).placePatrolBoat(new Coordinate(2, 2), false);
-            mPlayers.get(1).placeCruiser(new Coordinate(0, 0), false);
-            mPlayers.get(2).placeDestroyer(new Coordinate(5, 5), false);
+//            mPlayers.get(0).placeAircraftCarrier(new Coordinate(0, 0), true);
+//            mPlayers.get(0).placePatrolBoat(new Coordinate(2, 2), false);
+//            mPlayers.get(1).placeCruiser(new Coordinate(0, 0), false);
+//            mPlayers.get(2).placeDestroyer(new Coordinate(5, 5), false);
 
-            mPlayers.get(0).getField().shoot(new Coordinate(0, 1));
-            mPlayers.get(0).getField().shoot(new Coordinate(1, 1));
-            mPlayers.get(0).getField().shoot(new Coordinate(0, 0));
+//            mPlayers.get(0).getField().shoot(new Coordinate(0, 1));
+//            mPlayers.get(0).getField().shoot(new Coordinate(1, 1));
+//            mPlayers.get(0).getField().shoot(new Coordinate(0, 0));
 //            mPlayers.get(0).getField().shoot(new Coordinate(0, 2));
 //            mPlayers.get(0).getField().shoot(new Coordinate(0, 3));
 //            mPlayers.get(0).getField().shoot(new Coordinate(0, 4));
 //            mPlayers.get(0).getField().shoot(new Coordinate(2, 0));
 //            mPlayers.get(0).getField().reveal(new Coordinate(2, 2));
 //            mPlayers.get(0).getField().reveal(new Coordinate(3, 3));
-            nextTurn();
+
+            /* JELCO testdata HEHEHEHEHEHE */
+            for (int i = 0; i < mPlayers.size(); i++) {
+                mPlayers.get(i).placeBattleShip(new Coordinate(0, 0), true);
+                mPlayers.get(i).placePatrolBoat(new Coordinate(1, 0), true);
+                mPlayers.get(i).placeMarineRadar(new Coordinate(2, 0), true);
+                mPlayers.get(i).placeMissileCommand(new Coordinate(3, 0), true);
+                mPlayers.get(i).placeDestroyer(new Coordinate(4, 0), true);
+                mPlayers.get(i).placeAircraftCarrier(new Coordinate(6, 0), true);
+                mPlayers.get(i).placeDecoy(new Coordinate(7,0), true);
+            }
+
         } catch (Exception e){
             System.out.println(e.getMessage());
         }
