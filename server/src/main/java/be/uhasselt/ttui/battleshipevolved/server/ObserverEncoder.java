@@ -45,9 +45,6 @@ public class ObserverEncoder implements Observer {
             for (Object obj : (ArrayList<?>) arg) {
                 if (obj instanceof CoordinateStatus)
                     sendUpdate(findOriginPlayer(o), (CoordinateStatus) obj);
-                else if (obj instanceof String){
-                    sendCooldowns(findOriginPlayer(o), (String) obj);
-                }
             }
         }
         else if (arg instanceof Player) {
@@ -89,11 +86,6 @@ public class ObserverEncoder implements Observer {
                 if (players.get(i).getField() == f)
                     return i;
             }
-        } else if (o instanceof Game) {
-            for (int i = 0; i < mGame.getPlayers().size(); i++){
-                if (mGame.isOnTurn(i))
-                    return i;
-            }
         }
         return -1;
     }
@@ -104,12 +96,6 @@ public class ObserverEncoder implements Observer {
                     cs.getStatus() == CoordinateStatus.Status.MISSED) {
                 mClients.get(player).sendMessage(encodeCoordinateStatus(cs));
             }
-        }
-    }
-
-    private void sendCooldowns(int player, String s) {
-        if (player >= 0 && player < mClients.size()) {
-                mClients.get(player).sendMessage("Cooldown " + s);
         }
     }
 

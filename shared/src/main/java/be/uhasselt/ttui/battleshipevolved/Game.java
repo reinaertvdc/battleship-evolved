@@ -71,10 +71,6 @@ public class Game extends Observable {
         Player currentPlayer = mPlayers.get(mTurn);
         currentPlayer.refreshWeaponCooldowns();
 
-        //notify new cooldowns to current player
-        setChanged();
-        notifyObservers(currentPlayer.getCooldowns());
-
         setChanged();
         //assign the next turn
         mTurn = getNextPlayer();
