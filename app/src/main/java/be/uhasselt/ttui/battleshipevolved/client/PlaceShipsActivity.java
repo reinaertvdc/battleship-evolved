@@ -169,6 +169,7 @@ public class PlaceShipsActivity extends AppCompatActivity {
                         if (mInitialImagePosition == null) {
                             mInitialImagePosition = getImagePosition(image);
                         }
+                        mShipIsPlaced[orientation] = false;
                         mPointerID1 = event.getPointerId(event.getActionIndex());
                         PointF rotatedDragOffset = getPointerPositionRelative(event, mPointerID1);
                         mDragOffset = getUnrotatedPosition(rotatedDragOffset, mOrientation, size);
@@ -217,7 +218,7 @@ public class PlaceShipsActivity extends AppCompatActivity {
                                             + Math.round((imagePosition.y - mOffsetTop)
                                             / mSquareSize + 0.5) * mSquareSize
                                             - Math.round(mSquareSize * 0.5));
-                                }else {
+                                } else {
                                     image.setX(mOffsetLeft
                                             + Math.round((imagePosition.x - mOffsetLeft)
                                             / mSquareSize) * mSquareSize);
