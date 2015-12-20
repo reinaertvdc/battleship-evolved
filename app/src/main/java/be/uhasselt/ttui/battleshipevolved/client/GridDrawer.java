@@ -73,6 +73,11 @@ public class GridDrawer {
         loadShipImages();
         adjustShipImageSizes();
         setShipImagePositions();
+
+        setImageLeft(mParent.findViewById(R.id.turnText), mSquareSize * 13);
+        setImageLeft(mParent.findViewById(R.id.speechButton), mSquareSize * 13);
+        setImageLeft(mParent.findViewById(R.id.onlineText), mSquareSize * 13);
+        setImageLeft(mParent.findViewById(R.id.cooldownText), mSquareSize * 13);
     }
 
     private void adjustShipImageSizes() {
@@ -95,6 +100,16 @@ public class GridDrawer {
         Point mImgShipPatrolBoatPos = new Point();
         Point mImgShipMissileCommandPos = new Point();
         Point mImgShipDecoyPos = new Point();
+
+        mGridLayout.removeView(mImgShipAircraftCarrier);
+        mGridLayout.removeView(mImgShipBattleship);
+        mGridLayout.removeView(mImgShipCruiser);
+        mGridLayout.removeView(mImgShipDestroyer);
+        mGridLayout.removeView(mImgShipMarineRadar);
+        mGridLayout.removeView(mImgShipPatrolBoat);
+        mGridLayout.removeView(mImgShipMissileCommand);
+        mGridLayout.removeView(mImgShipDecoy);
+
         setShipImagePosition(mImgShipAircraftCarrier, mImgShipAircraftCarrierPos, 0, 0);
         setShipImagePosition(mImgShipBattleship, mImgShipBattleshipPos, 1, 0);
         setShipImagePosition(mImgShipCruiser, mImgShipCruiserPos, 2, 0);
@@ -192,6 +207,12 @@ public class GridDrawer {
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) image.getLayoutParams();
         layoutParams.leftMargin = mOffsetLeft + left;
         layoutParams.topMargin = mOffsetTop + top;
+        image.setLayoutParams(layoutParams);
+    }
+
+    private void setImageLeft(View image, int left) {
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) image.getLayoutParams();
+        layoutParams.leftMargin = mOffsetLeft + left;
         image.setLayoutParams(layoutParams);
     }
 

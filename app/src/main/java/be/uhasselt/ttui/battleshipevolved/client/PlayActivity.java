@@ -56,8 +56,6 @@ public class PlayActivity extends Activity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_play);
         mGrid = new GridDrawer(10, 10, (FrameLayout) findViewById(R.id.play_layout), this);
-        mGrid.setDamaged(2, 2);
-        mGrid.setWater(5, 8);
         mBtnSpeech = (Button) findViewById(R.id.speechButton);
         mBtnSpeech.setOnClickListener(mListenListener);
         mTxtTurn = (TextView) findViewById(R.id.turnText);
