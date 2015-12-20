@@ -51,7 +51,7 @@ public class Field extends Observable {
         int column = anchor.getColumn();
         int endRow = rowSize + row - 1;
         int endColumn = columnSize + column - 1;
-        
+
         try {
             if (checkSpace(anchor, new Coordinate(endRow, endColumn))) //New Coordinate because of the possible direction switch
                 for (int i = row; i <= endRow; i++) {
