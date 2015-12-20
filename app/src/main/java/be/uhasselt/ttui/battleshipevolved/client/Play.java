@@ -14,6 +14,7 @@ import android.os.Vibrator;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -125,13 +126,16 @@ public class Play  extends Activity {
             updateGrid(words);
         } else if (command.equalsIgnoreCase("next")) {
             updateTurn(words);
-        } /*else if (command.equalsIgnoreCase("scan")) {
+        } else if (command.equalsIgnoreCase("success")) {
+            mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
+        }/*else if (command.equalsIgnoreCase("scan")) {
             handleScan(words);
         } else if (command.equalsIgnoreCase("airstrike")) {
             handleAirstrike(words);
         } else if (message.equalsIgnoreCase("end turn")) {
             handleEndTurn();
         }*/
+
 
         else {
             Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
@@ -201,11 +205,21 @@ public class Play  extends Activity {
     private Intent mSpeechRecognizerIntent;
     private boolean mIslistening;
 
+    private View.OnClickListener mListenListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            if (mIslistening)
+                mSpeechRecognizer.stopListening();
+            mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
+        }
+    };
+
+
     private void initSpeechListener() {
         mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                //RecognizerIntent.LANGUAGE_MODEL_FREE_FORM); //fuck free form
+                RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
         mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
                 this.getPackageName());
 
@@ -240,8 +254,8 @@ public class Play  extends Activity {
         @Override
         public void onError(int error)
         {
-            mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
-            System.out.println("Error occured while listening. Resumed Listening");
+            System.out.println("Error occured while listening.");
+            //mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
             //Log.d(TAG, "error = " + error);
         }
 
@@ -254,7 +268,7 @@ public class Play  extends Activity {
         @Override
         public void onPartialResults(Bundle partialResults)
         {
-
+            System.out.println("onPartialResults");
         }
 
         @Override
@@ -288,11 +302,11 @@ public class Play  extends Activity {
             String str = matches.get(i);
             ArrayList<String> words = new ArrayList<>(Arrays.asList(str.split(" ")));
             String command = words.get(0);
-            if (str.contains("end") && str.contains("turn")) {
+            if ((str.contains("end") || str.contains("and")) && str.contains("turn")) {
                 //end turn!
                 matchFound = true;
                 endTurn();
-            } else if (command.equalsIgnoreCase("shoot")) {
+            } else if (command.equalsIgnoreCase("shoot") || command.equalsIgnoreCase("shoots")) {
                 words.remove(0);
                 matchFound = handleShoot(words);
             } else if (command.equalsIgnoreCase("scan")) {
@@ -308,8 +322,9 @@ public class Play  extends Activity {
         }
 
         if (matchFound) {
-
+            System.out.println("We found a match!");
         } else {
+            System.out.println("Could not find a match, listening again");
             mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
         }
 
@@ -340,8 +355,8 @@ public class Play  extends Activity {
     }
 
     private boolean handleScan(ArrayList<String> words) {
-        //next word must equal "player"
-        if (!words.get(0).equalsIgnoreCase("player")) {
+        //next word must equal "player" or "play"
+        if (!(words.get(0).equalsIgnoreCase("player") || words.get(0).equalsIgnoreCase("play"))) {
             return false;
         }
 
@@ -431,15 +446,88 @@ public class Play  extends Activity {
                 return firstWord;
         }
 
-        //other possibilities are wrong interpretations of some letters/numbers
-        if (words.size() < 2)
-            return "";
-        String secondWord = words.get(1);
-        //a tree
-        if (firstWord.equalsIgnoreCase("a") && secondWord.equalsIgnoreCase("tree")) {
-            return "A3";
-        }
+        //some exception with 1 word
+        String reply = try1WordExceptions(firstWord);
+        if (!reply.isEmpty())
+            return reply;
 
+        //We'll need two words to interpret the coordinate
+        if (words.size() < 2) {
+            return "";
+        }
+        String secondWord = words.get(1);
+
+        reply = tryWords(firstWord, secondWord);
+        if (!reply.isEmpty())
+            return reply;
+
+        //other possibilities are wrong interpretations of some letters/numbers
+        reply = try2WordExceptions(firstWord, secondWord);
+        if (!reply.isEmpty())
+            return reply;
+
+        return "";
+    }
+
+    private String try1WordExceptions(String word) {
+        if (word.equalsIgnoreCase("before"))
+            return "B4";
+
+
+        return "";
+    }
+
+    private String try2WordExceptions(String firstWord, String secondWord) {
+        return "";
+    }
+
+    private String tryWords(String firstWord, String secondWord) {
+        String out = "";
+        //test the first word
+        if (firstWord.equalsIgnoreCase("A") || firstWord.equalsIgnoreCase("8") || firstWord.equalsIgnoreCase("eight"))
+            out = out.concat("A");
+        else if (firstWord.equalsIgnoreCase("B") || firstWord.equalsIgnoreCase("be") || firstWord.equalsIgnoreCase("bee"))
+            out = out.concat("B");
+        else if (firstWord.equalsIgnoreCase("C") || firstWord.equalsIgnoreCase("see"))
+            out = out.concat("C");
+        else if (firstWord.equalsIgnoreCase("D") || firstWord.equalsIgnoreCase("the"))
+            out = out.concat("D");
+        else if (firstWord.equalsIgnoreCase("E"))
+            out = out.concat("E");
+        else if (firstWord.equalsIgnoreCase("F"))
+            out = out.concat("F");
+        else if (firstWord.equalsIgnoreCase("G") || firstWord.equalsIgnoreCase("gee"))
+            out = out.concat("G");
+        else if (firstWord.equalsIgnoreCase("H") || firstWord.equalsIgnoreCase("age"))
+            out = out.concat("H");
+        else if (firstWord.equalsIgnoreCase("I") || firstWord.equalsIgnoreCase("eye"))
+            out = out.concat("I");
+        else if (firstWord.equalsIgnoreCase("J") || firstWord.equalsIgnoreCase("jay"))
+            out = out.concat("J");
+        else
+            return "";
+
+        //the second word
+        if (secondWord.equalsIgnoreCase("1") || secondWord.equalsIgnoreCase("one"))
+            return out.concat("1");
+        else if (secondWord.equalsIgnoreCase("2") || secondWord.equalsIgnoreCase("two") || secondWord.equalsIgnoreCase("to"))
+            return out.concat("2");
+        else if (secondWord.equalsIgnoreCase("3") || secondWord.equalsIgnoreCase("three") || secondWord.equalsIgnoreCase("tree"))
+            return out.concat("3");
+        else if (secondWord.equalsIgnoreCase("4") || secondWord.equalsIgnoreCase("four") || secondWord.equalsIgnoreCase("for"))
+            return out.concat("4");
+        else if (secondWord.equalsIgnoreCase("5") || secondWord.equalsIgnoreCase("five"))
+            return out.concat("5");
+        else if (secondWord.equalsIgnoreCase("6") || secondWord.equalsIgnoreCase("six") || secondWord.equalsIgnoreCase("sex"))
+            return out.concat("6");
+        else if (secondWord.equalsIgnoreCase("7") || secondWord.equalsIgnoreCase("seven"))
+            return out.concat("7");
+        else if (secondWord.equalsIgnoreCase("8") || secondWord.equalsIgnoreCase("eight") || secondWord.equalsIgnoreCase("ate"))
+            return out.concat("8");
+        else if (secondWord.equalsIgnoreCase("9") || secondWord.equalsIgnoreCase("nine"))
+            return out.concat("9");
+        else if (secondWord.equalsIgnoreCase("10") || secondWord.equalsIgnoreCase("ten") || secondWord.equalsIgnoreCase("then"))
+            return out.concat("10");
 
         return "";
     }
