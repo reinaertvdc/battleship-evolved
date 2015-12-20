@@ -47,6 +47,8 @@ public class Coordinate {
 
         if (row >= 'A' && row <= 'J') {
             mRow = row - 'A';
+        } else if (row >= 'a' && row <= 'j') {
+            mRow = row - 'a';
         }
         else return false;
         if (column >= '0' && column <= '9') {

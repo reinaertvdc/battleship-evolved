@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         mContentView = findViewById(R.id.fullscreen_content);
         mConnectTextView = (EditText) findViewById(R.id.connect_text);
         //mConnectTextView.setText("192.168.1.158");
-        mConnectTextView.setText("192.168.1.116");
+        mConnectTextView.setText("192.168.1.112");
 
         // Set up the user interaction to manually show or hide the system UI.
         mContentView.setOnClickListener(new View.OnClickListener() {
@@ -117,11 +117,6 @@ public class MainActivity extends AppCompatActivity {
         });
         Button button = (Button)findViewById(R.id.connect_button);
         button.setOnClickListener(mConnectListener);
-
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
-        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
 
         //create the listener to the ConnectionThread
         messageReceiver = new serverMessage();
