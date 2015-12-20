@@ -20,7 +20,8 @@
         android:layout_height="wrap_content"
         android:textColor="@color/colorPrimaryDark"
         android:visibility="invisible"
-        android:layout_below="@id/turnText"/>
+        android:layout_below="@id/turnText"
+        android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
     <TextView
         android:id="@+id/onlineText"
         android:text=""
