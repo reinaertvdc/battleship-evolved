@@ -23,7 +23,6 @@ import android.widget.ImageView;
 
 import be.uhasselt.ttui.battleshipevolved.Coordinate;
 import be.uhasselt.ttui.battleshipevolved.Field;
-import be.uhasselt.ttui.battleshipevolved.Ship;
 import be.uhasselt.ttui.battleshipevolved.ShipAircraftCarrier;
 import be.uhasselt.ttui.battleshipevolved.ShipBattleship;
 import be.uhasselt.ttui.battleshipevolved.ShipCruiser;
@@ -80,7 +79,7 @@ public class PlaceShipsActivity extends AppCompatActivity {
             (float) NEEDED_VIEWPORT_COLUMNS / NEEDED_VIEWPORT_ROWS;
 
     private int mSquareSize;
-    private int mOffsetTop = 0, mOffsetLeft = 0;
+    private int mOffsetTop, mOffsetLeft;
 
     private Coordinate mShipAircraftCarrierSize, mShipBattleshipSize, mShipCruiserSize,
                        mShipDecoySize, mShipDestroyerSize, mShipMarineRadarSize,
@@ -106,6 +105,8 @@ public class PlaceShipsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_place_ships);
         mContentView = findViewById(R.id.fullscreen_content);
         mLayout = (FrameLayout) findViewById(R.id.place_ships_field);
+        mOffsetTop = 0;
+        mOffsetLeft = 0;
         mShipOrientation = new boolean[8];
         mShipIsPlaced = new boolean[]{false, false, false, false, false, false, false, false};
 
@@ -207,7 +208,7 @@ public class PlaceShipsActivity extends AppCompatActivity {
                                     isWithinField(fieldPosition, size, mOrientation) &&
                                     !overlapsWithExistingShip(fieldPosition, size, orientation)) {
                                 if ((mOrientation == 90 || mOrientation == 270) &&
-                                        size.getColumn() % 2 == 0) {
+                                        size.getColumn() % 2 == 0 && size.getRow() == 1) {
                                     image.setX(mOffsetLeft
                                             + Math.round((imagePosition.x - mOffsetLeft)
                                             / mSquareSize + 0.5) * mSquareSize
@@ -363,7 +364,6 @@ public class PlaceShipsActivity extends AppCompatActivity {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -434,17 +434,15 @@ public class PlaceShipsActivity extends AppCompatActivity {
 
     private void calculateSquareSizeAndOffset() {
         Point viewportResolution = getViewportResolution();
-        System.out.println(viewportResolution);
-        float viewportRatio = (float) viewportResolution.x / viewportResolution.y;
-        System.out.println(viewportRatio);
+        float viewportRatio = viewportResolution.x / (float) viewportResolution.y;
         if (viewportRatio > NEEDED_VIEWPORT_RATIO) {
-            System.out.println("1");
-            mSquareSize = viewportResolution.y / NEEDED_VIEWPORT_ROWS;
-            mOffsetLeft = (int)(viewportResolution.x * (viewportRatio - NEEDED_VIEWPORT_RATIO) / 2);
+            mSquareSize = Math.round(viewportResolution.y / (float)NEEDED_VIEWPORT_ROWS);
+            mOffsetLeft +=
+                    Math.round(viewportResolution.x * (viewportRatio - NEEDED_VIEWPORT_RATIO) / 2f);
         } else {
-            System.out.println("2");
-            mSquareSize = viewportResolution.x / NEEDED_VIEWPORT_COLUMNS;
-            mOffsetTop = (int)(viewportResolution.y * (NEEDED_VIEWPORT_RATIO - viewportRatio) / 2);
+            mSquareSize = Math.round(viewportResolution.x / (float)NEEDED_VIEWPORT_COLUMNS);
+            mOffsetTop +=
+                    Math.round(viewportResolution.y * (NEEDED_VIEWPORT_RATIO - viewportRatio) / 2f);
         }
     }
 
@@ -521,8 +519,7 @@ public class PlaceShipsActivity extends AppCompatActivity {
 
     private void setShipImagePosition(ImageView image, Point position, int top, int left) {
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) image.getLayoutParams();
-        layoutParams.leftMargin =
-                mOffsetLeft + Math.round((mSquareSize * left * 1.5f) + mSquareSize / 2);
+        layoutParams.leftMargin = mOffsetLeft + Math.round((mSquareSize * left * 1.5f));
         layoutParams.topMargin =
                 mOffsetTop + Math.round((mSquareSize * top * 1.5f) + mSquareSize / 2);
         position.set(layoutParams.leftMargin, layoutParams.topMargin);
