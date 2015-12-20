@@ -94,6 +94,8 @@ public class PlaceShipsActivity extends AppCompatActivity {
                        mShipDecoyPos, mShipDestroyerPos, mShipMarineRadarPos,
                        mShipMissileCommandPos, mShipPatrolBoatPos;
 
+    private boolean[] mShipOrientation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +104,7 @@ public class PlaceShipsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_place_ships);
         mContentView = findViewById(R.id.fullscreen_content);
         mLayout = (FrameLayout) findViewById(R.id.place_ships_field);
+        mShipOrientation = new boolean[8];
 
         doBinding();
 
@@ -117,17 +120,34 @@ public class PlaceShipsActivity extends AppCompatActivity {
     }
 
     private void createShipImageOnTouchListeners() {
-        createOnTouchListener(mImgShipAircraftCarrier, mShipAircraftCarrierSize);
-        createOnTouchListener(mImgShipBattleship, mShipBattleshipSize);
-        createOnTouchListener(mImgShipCruiser, mShipCruiserSize);
-        createOnTouchListener(mImgShipDecoy, mShipDecoySize);
-        createOnTouchListener(mImgShipDestroyer, mShipDestroyerSize);
-        createOnTouchListener(mImgShipMarineRadar, mShipMarineRadarSize);
-        createOnTouchListener(mImgShipMissileCommand, mShipMissileCommandSize);
-        createOnTouchListener(mImgShipPatrolBoat, mShipPatrolBoatSize);
+        mShipAircraftCarrierPos = new Coordinate(0, 0);
+        mShipBattleshipPos = new Coordinate(0, 0);
+        mShipCruiserPos = new Coordinate(0, 0);
+        mShipDecoyPos = new Coordinate(0, 0);
+        mShipDestroyerPos = new Coordinate(0, 0);
+        mShipMarineRadarPos = new Coordinate(0, 0);
+        mShipMissileCommandPos = new Coordinate(0, 0);
+        mShipPatrolBoatPos = new Coordinate(0, 0);
+        createOnTouchListener(mImgShipAircraftCarrier, mShipAircraftCarrierSize,
+                mShipAircraftCarrierPos, 0);
+        createOnTouchListener(mImgShipBattleship, mShipBattleshipSize,
+                mShipBattleshipPos, 1);
+        createOnTouchListener(mImgShipCruiser, mShipCruiserSize,
+                mShipCruiserPos, 2);
+        createOnTouchListener(mImgShipDecoy, mShipDecoySize,
+                mShipDecoyPos, 3);
+        createOnTouchListener(mImgShipDestroyer, mShipDestroyerSize,
+                mShipDestroyerPos, 4);
+        createOnTouchListener(mImgShipMarineRadar, mShipMarineRadarSize,
+                mShipMarineRadarPos, 5);
+        createOnTouchListener(mImgShipMissileCommand, mShipMissileCommandSize,
+                mShipMissileCommandPos, 6);
+        createOnTouchListener(mImgShipPatrolBoat, mShipPatrolBoatSize,
+                mShipPatrolBoatPos, 7);
     }
 
-    private void createOnTouchListener(final ImageView image, final Coordinate size) {
+    private void createOnTouchListener(final ImageView image, final Coordinate size,
+                                       final Coordinate position, final int orientation) {
         image.setOnTouchListener(new View.OnTouchListener() {
             private static final int INVALID_POINTER_ID = -1;
             private PointF mInitialImagePosition = null;
@@ -200,6 +220,10 @@ public class PlaceShipsActivity extends AppCompatActivity {
                                             + Math.round((imagePosition.y - mOffsetTop)
                                             / mSquareSize) * mSquareSize);
                                 }
+                                position.set(fieldPosition);
+                                mShipOrientation[orientation]
+                                        = mOrientation == 90 || mOrientation == 270;
+
                             } else {
                                 mOrientation = 0;
                                 image.setRotation(mOrientation);

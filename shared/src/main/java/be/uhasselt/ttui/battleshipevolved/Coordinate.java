@@ -26,6 +26,11 @@ public class Coordinate {
             throw new IndexOutOfBoundsException();
     }
 
+    public void set(Coordinate other) {
+        mRow = other.mRow;
+        mColumn = other.mColumn;
+    }
+
     public int getRow() {
         return mRow;
     }
