@@ -15,6 +15,7 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,21 +27,26 @@ import java.util.Arrays;
  * Created by Arno on 9/12/2015.
  */
 public class Play  extends Activity {
+    private Button mBtnSpeech;
     private TextView mTxtTurn;
     private TextView mTxtOnline;
     private TextView mTxtCooldown;
     private GridController mGrid;
     private ArrayList<Cooldown> mCooldowns;
+    private boolean itsmyturn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 
+        itsmyturn = false;
         messageReceiver = new serverMessage();
         doBinding();
         setContentView(R.layout.activity_play);
         mGrid = new GridController(10, 10, (TableLayout) findViewById(R.id.gridLayout), this);
+        mBtnSpeech = (Button) findViewById(R.id.speechButton);
+        mBtnSpeech.setOnClickListener(mListenListener);
         mTxtTurn = (TextView) findViewById(R.id.turnText);
         mTxtOnline = (TextView) findViewById(R.id.onlineText);
         mTxtCooldown = (TextView) findViewById(R.id.cooldownText);
@@ -115,6 +121,8 @@ public class Play  extends Activity {
                 mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
         } else if (command.equalsIgnoreCase("CoordinateUpdate")) {
             updateGrid(words);
+        } else if (command.equalsIgnoreCase("your")) {
+            myTurn();
         } else if (command.equalsIgnoreCase("next")) {
             updateTurn(words);
         } else if (command.equalsIgnoreCase("success")) {
@@ -157,10 +165,21 @@ public class Play  extends Activity {
         try {
             int id = Integer.parseInt(words[4]);
             mTxtTurn.setText("Turn: Player " + id);
-            if (id == 3);//mBoundService.SERVERIP)
+            if (itsmyturn) {
+                itsmyturn = false;
+                mBtnSpeech.setVisibility(View.INVISIBLE);
+                clearCooldowns();
+                mBoundService.sendMessage("Send cooldowns");
+            }
         } catch (Exception e) {
-            mBoundService.sendMessage("Could not interpret");
+            mBoundService.sendMessage("Could not interpret turn");
         }
+    }
+
+    private void myTurn(){
+        mTxtTurn.setText("Your turn");
+        itsmyturn = true;
+        mBtnSpeech.setVisibility(View.VISIBLE);
     }
 
     private void addCooldown(String[] words) {
