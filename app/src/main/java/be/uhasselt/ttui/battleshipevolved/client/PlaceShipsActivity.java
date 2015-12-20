@@ -244,10 +244,11 @@ public class PlaceShipsActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_POINTER_UP:
                         mPointerID1 = INVALID_POINTER_ID;
                         mPointerID2 = INVALID_POINTER_ID;
-                        float rotation = image.getRotation() % 360;
-                        if (rotation < 0) rotation += 360;
-                        mOrientation = Math.round(rotation / 90) * 90;
+                        float rotation = image.getRotation();
+                        while (rotation < 0) rotation += 360;
+                        mOrientation = (Math.round(rotation / 90) * 90) % 360;
                         image.setRotation(mOrientation);
+                        System.out.println(mOrientation);
                         mShipOrientation[orientation]
                                 = mOrientation == 90 || mOrientation == 270;
                         break;
