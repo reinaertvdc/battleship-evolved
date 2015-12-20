@@ -13,7 +13,7 @@
     </TableLayout>
     <TextView
         android:id="@+id/turnText"
-        android:text="Loading turn."
+        android:text="Waiting for other players"
         android:textSize="24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
         android:layout_below="@id/turnText"/>
     <TextView
         android:id="@+id/onlineText"
-        android:text="Loading weapons."
+        android:text=""
         android:textSize="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
         android:layout_below="@id/speechButton"/>
     <TextView
         android:id="@+id/cooldownText"
-        android:text="Loading cooldowns."
+        android:text=""
         android:textSize="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
