@@ -134,7 +134,7 @@ public class Play  extends Activity {
         } else if (command.equalsIgnoreCase("next")) {
             updateTurn(words);
         } else if (command.equalsIgnoreCase("success")) {
-            mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
+            //mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
         } else if (command.equalsIgnoreCase("cooldown")) {
             addCooldown(words);
         } else if (command.equalsIgnoreCase("position")) {

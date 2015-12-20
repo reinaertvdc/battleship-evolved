@@ -34,16 +34,10 @@ public class Game extends Observable {
     }
 
     /**
-     * Returns wether or not the player is on turn
+     * Returns whether or not the player is on turn
      */
     public boolean isOnTurn(int player) {
         return player == mTurn;
-    }
-
-    public void placementTurn() {
-        Player player = mPlayers.get(mTurn);
-        Coordinate co = new Coordinate(0,0);
-        player.placeBattleShip(co, true);
     }
 
     public void setPlayerReady(int PlayerID) {
@@ -122,13 +116,13 @@ public class Game extends Observable {
             return turn;
     }
 
-    public void insertTestValues() {
-        try {
+//    public void insertTestValues() {
+//        try {
 //            mPlayers.get(0).placeAircraftCarrier(new Coordinate(0, 0), true);
 //            mPlayers.get(0).placePatrolBoat(new Coordinate(2, 2), false);
 //            mPlayers.get(1).placeCruiser(new Coordinate(0, 0), false);
 //            mPlayers.get(2).placeDestroyer(new Coordinate(5, 5), false);
-
+//
 //            mPlayers.get(0).getField().shoot(new Coordinate(0, 1));
 //            mPlayers.get(0).getField().shoot(new Coordinate(1, 1));
 //            mPlayers.get(0).getField().shoot(new Coordinate(0, 0));
@@ -138,22 +132,22 @@ public class Game extends Observable {
 //            mPlayers.get(0).getField().shoot(new Coordinate(2, 0));
 //            mPlayers.get(0).getField().reveal(new Coordinate(2, 2));
 //            mPlayers.get(0).getField().reveal(new Coordinate(3, 3));
-
-            /* JELCO testdata HEHEHEHEHEHE */
-            for (int i = 0; i < mPlayers.size(); i++) {
-                mPlayers.get(i).placeBattleShip(new Coordinate(0, 0), true);
-                mPlayers.get(i).placePatrolBoat(new Coordinate(1, 0), true);
-                mPlayers.get(i).placeMarineRadar(new Coordinate(2, 0), true);
-                mPlayers.get(i).placeMissileCommand(new Coordinate(3, 0), true);
-                mPlayers.get(i).placeDestroyer(new Coordinate(4, 0), true);
-                mPlayers.get(i).placeAircraftCarrier(new Coordinate(6, 0), true);
-                mPlayers.get(i).placeDecoy(new Coordinate(7,0), true);
-            }
-
-        } catch (Exception e){
-            System.out.println(e.getMessage());
-        }
-    }
+//
+//            /* JELCO testdata HEHEHEHEHEHE */
+//            for (int i = 0; i < mPlayers.size(); i++) {
+//                mPlayers.get(i).placeBattleShip(new Coordinate(0, 0), true);
+//                mPlayers.get(i).placePatrolBoat(new Coordinate(1, 0), true);
+//                mPlayers.get(i).placeMarineRadar(new Coordinate(2, 0), true);
+//                mPlayers.get(i).placeMissileCommand(new Coordinate(3, 0), true);
+//                mPlayers.get(i).placeDestroyer(new Coordinate(4, 0), true);
+//                mPlayers.get(i).placeAircraftCarrier(new Coordinate(6, 0), true);
+//                mPlayers.get(i).placeDecoy(new Coordinate(7,0), true);
+//            }
+//
+//        } catch (Exception e){
+//            System.out.println(e.getMessage());
+//        }
+//    }
 
     /**
      * Shoots a player on his field at coordinate coordinate

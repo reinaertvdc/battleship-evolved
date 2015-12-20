@@ -36,7 +36,6 @@ public class Main {
             }
             Game game = new Game();
             ObserverEncoder encoder = new ObserverEncoder(game, mPlayers);
-            game.insertTestValues();//TODO: REMOVE ME!
             serverSocket.close();
             //give each playerthread a pointer to the game instance
             for (int i = 0; i < mPlayers.size(); i++) {
