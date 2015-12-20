@@ -86,8 +86,6 @@ public class MainActivity extends AppCompatActivity {
                 startService(intent); //starting the service will send out the handshake
                 System.out.println("Service should be started");
                 doBinding();
-            } else {
-
             }
         }
     };
@@ -102,7 +100,8 @@ public class MainActivity extends AppCompatActivity {
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
         mConnectTextView = (EditText) findViewById(R.id.connect_text);
-        mConnectTextView.setText("192.168.1.158");
+        //mConnectTextView.setText("192.168.1.158");
+        mConnectTextView.setText("192.168.1.8");
 
         // Set up the user interaction to manually show or hide the system UI.
         mContentView.setOnClickListener(new View.OnClickListener() {

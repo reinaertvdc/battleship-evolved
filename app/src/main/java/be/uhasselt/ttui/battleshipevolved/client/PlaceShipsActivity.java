@@ -169,6 +169,7 @@ public class PlaceShipsActivity extends AppCompatActivity {
                         if (mInitialImagePosition == null) {
                             mInitialImagePosition = getImagePosition(image);
                         }
+                        mShipIsPlaced[orientation] = false;
                         mPointerID1 = event.getPointerId(event.getActionIndex());
                         PointF rotatedDragOffset = getPointerPositionRelative(event, mPointerID1);
                         mDragOffset = getUnrotatedPosition(rotatedDragOffset, mOrientation, size);
@@ -217,7 +218,7 @@ public class PlaceShipsActivity extends AppCompatActivity {
                                             + Math.round((imagePosition.y - mOffsetTop)
                                             / mSquareSize + 0.5) * mSquareSize
                                             - Math.round(mSquareSize * 0.5));
-                                }else {
+                                } else {
                                     image.setX(mOffsetLeft
                                             + Math.round((imagePosition.x - mOffsetLeft)
                                             / mSquareSize) * mSquareSize);
@@ -243,10 +244,11 @@ public class PlaceShipsActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_POINTER_UP:
                         mPointerID1 = INVALID_POINTER_ID;
                         mPointerID2 = INVALID_POINTER_ID;
-                        float rotation = image.getRotation() % 360;
-                        if (rotation < 0) rotation += 360;
-                        mOrientation = Math.round(rotation / 90) * 90;
+                        float rotation = image.getRotation();
+                        while (rotation < 0) rotation += 360;
+                        mOrientation = (Math.round(rotation / 90) * 90) % 360;
                         image.setRotation(mOrientation);
+                        System.out.println(mOrientation);
                         mShipOrientation[orientation]
                                 = mOrientation == 90 || mOrientation == 270;
                         break;
@@ -268,19 +270,20 @@ public class PlaceShipsActivity extends AppCompatActivity {
     }
 
     private void onFinished() {
-        printShipPosition("Aircraft carrier", mShipAircraftCarrierPos, mShipOrientation[0]);
-        printShipPosition("Battleship", mShipBattleshipPos, mShipOrientation[1]);
-        printShipPosition("Cruiser", mShipCruiserPos, mShipOrientation[2]);
-        printShipPosition("Decoy", mShipDecoyPos, mShipOrientation[3]);
-        printShipPosition("Destroyer", mShipDestroyerPos, mShipOrientation[4]);
-        printShipPosition("Marine radar", mShipMarineRadarPos, mShipOrientation[5]);
-        printShipPosition("Missile command", mShipMissileCommandPos, mShipOrientation[6]);
-        printShipPosition("Patrol boat", mShipPatrolBoatPos, mShipOrientation[7]);
+        placeShip("aircraftcarrier", mShipAircraftCarrierPos, mShipOrientation[0]);
+        placeShip("battleship", mShipBattleshipPos, mShipOrientation[1]);
+        placeShip("cruiser", mShipCruiserPos, mShipOrientation[2]);
+        placeShip("decoy", mShipDecoyPos, mShipOrientation[3]);
+        placeShip("destroyer", mShipDestroyerPos, mShipOrientation[4]);
+        placeShip("marineradar", mShipMarineRadarPos, mShipOrientation[5]);
+        placeShip("missilecommand", mShipMissileCommandPos, mShipOrientation[6]);
+        placeShip("patrolboat", mShipPatrolBoatPos, mShipOrientation[7]);
     }
 
-    private void printShipPosition(String name, Coordinate position, boolean orientation) {
-        System.out.println(name + " placed " + (orientation ? "vertically" : "horizontally")
-                + " at [" + position.getColumn() + "," + position.getRow() + "].");
+    private void placeShip(String name, Coordinate position, boolean vertical) {
+        mBoundService.sendMessage("place " + name + " "
+                + (char) ('A' + position.getRow()) + position.getColumn() + " "
+                + (vertical ? "vertical" : "horizontal"));
     }
 
     private boolean overlapsWithExistingShip(

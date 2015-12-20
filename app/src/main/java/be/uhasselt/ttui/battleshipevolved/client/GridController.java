@@ -63,7 +63,7 @@ public class GridController {
             number.setGravity(Gravity.CENTER);
             number.setWidth(50); //TODO: unfix size
             number.setHeight(50);
-            number.setText(j + "");
+            number.setText((j + 1) + "");
             number.setTextColor(mParent.getResources().getColor(R.color.colorCoordinate));
             numberRow.addView(number);
         }
