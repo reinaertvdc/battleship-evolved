@@ -34,6 +34,7 @@ public class PlayerServer extends Thread {
         mGame = game;
         //set the players variable
         mPlayer = game.getPlayers().get(mID);
+        sendMessage("game start");
     }
 
     public PlayerServer(Socket socket, int id) {

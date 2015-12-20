@@ -51,8 +51,10 @@ public class Play  extends Activity {
         mTxtOnline = (TextView) findViewById(R.id.onlineText);
         mTxtCooldown = (TextView) findViewById(R.id.cooldownText);
         mCooldowns = new ArrayList<Cooldown>();
+        /*
+         * NULL objects?
         mBoundService.sendMessage("Send cooldowns");
-        mBoundService.sendMessage("Send turn");
+        mBoundService.sendMessage("Send turn");*/
 
         initSpeechListener();
     }
@@ -121,6 +123,9 @@ public class Play  extends Activity {
         if (message.equalsIgnoreCase("your turn")) {
             if (!mIslistening)
                 mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
+        } else if (message.equalsIgnoreCase("game start")) {
+            mBoundService.sendMessage("Send cooldowns");
+            mBoundService.sendMessage("Send turn");
         } else if (command.equalsIgnoreCase("CoordinateUpdate")) {
             updateGrid(words);
         } else if (command.equalsIgnoreCase("your")) {
