@@ -13,7 +13,7 @@ public class WeaponRadar extends Weapon {
     }
 
     public String getName(){
-        return "Radar";
+        return "Scan";
     }
 
     /**

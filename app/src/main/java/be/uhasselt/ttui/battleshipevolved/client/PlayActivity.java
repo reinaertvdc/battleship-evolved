@@ -142,7 +142,8 @@ public class PlayActivity extends Activity {
         } else if (command.equalsIgnoreCase("next")) {
             updateTurn(words);
         } else if (command.equalsIgnoreCase("success")) {
-            //mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
+            clearCooldowns();
+            mBoundService.sendMessage("Send cooldowns");
         } else if (command.equalsIgnoreCase("cooldown")) {
             addCooldown(words);
         } else if (command.equalsIgnoreCase("position")) {
@@ -234,7 +235,7 @@ public class PlayActivity extends Activity {
                 if (current.getWeapon().equals("Bomb")) {
                     bombCooldown++;
                 } else {
-                    offline += current.getWeapon() + " " + current.getCooldown() + "turn(s)\n";
+                    offline += current.getWeapon() + " " + current.getCooldown() + " turn(s)\n";
                 }
             }
         }
@@ -244,9 +245,9 @@ public class PlayActivity extends Activity {
             online += "" + bombOnline + " Bombs\n";
         }
         if (bombCooldown == 1) {
-            offline += "" + bombCooldown + " Bomb 1 turn\n"; //Bomb expected to have a cooldown of maximum 1 turn
+            offline += "" + bombCooldown + " Bomb 1 turn(s)\n"; //Bomb expected to have a cooldown of maximum 1 turn
         } else if (bombCooldown > 1) {
-            offline += "" + bombCooldown + " Bombs 1 turn\n";
+            offline += "" + bombCooldown + " Bombs 1 turn(s)\n";
         }
         mTxtOnline.setText(online);
         mTxtCooldown.setText(offline);
