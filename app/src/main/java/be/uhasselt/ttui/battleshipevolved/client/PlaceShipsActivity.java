@@ -22,6 +22,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import be.uhasselt.ttui.battleshipevolved.Coordinate;
+import be.uhasselt.ttui.battleshipevolved.Field;
 import be.uhasselt.ttui.battleshipevolved.Ship;
 import be.uhasselt.ttui.battleshipevolved.ShipAircraftCarrier;
 import be.uhasselt.ttui.battleshipevolved.ShipBattleship;
@@ -129,6 +130,7 @@ public class PlaceShipsActivity extends AppCompatActivity {
     private void createOnTouchListener(final ImageView image, final Coordinate size) {
         image.setOnTouchListener(new View.OnTouchListener() {
             private static final int INVALID_POINTER_ID = -1;
+            private PointF mInitialImagePosition = null;
             private PointF mDragOffset;
             private PointF mInitRotationPosPointer1;
             private PointF mInitRotationPosPointer2;
@@ -140,6 +142,9 @@ public class PlaceShipsActivity extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN:
+                        if (mInitialImagePosition == null) {
+                            mInitialImagePosition = getImagePosition(image);
+                        }
                         mPointerID1 = event.getPointerId(event.getActionIndex());
                         PointF rotatedDragOffset = getPointerPositionRelative(event, mPointerID1);
                         mDragOffset = getUnrotatedPosition(rotatedDragOffset, mOrientation, size);
@@ -173,10 +178,21 @@ public class PlaceShipsActivity extends AppCompatActivity {
                         mPointerID1 = INVALID_POINTER_ID;
                         PointF imagePosition = getImagePosition(image);
                         if (isOnField(imagePosition, mOrientation, size)) {
-                            image.setX(mOffsetLeft + Math.round(imagePosition.x / mSquareSize)
-                                    * mSquareSize);
-                            image.setY(mOffsetTop + Math.round(imagePosition.y / mSquareSize - 0.5)
-                                    * mSquareSize);
+                            Coordinate fieldPosition =
+                                    getPositionOnField(imagePosition, mOrientation, size);
+                            if (fieldPosition != null &&
+                                    isWithinField(fieldPosition, size, mOrientation)) {
+                                image.setX(mOffsetLeft + Math.round(imagePosition.x / mSquareSize)
+                                        * mSquareSize);
+                                image.setY(
+                                        mOffsetTop + Math.round(imagePosition.y / mSquareSize - 0.5)
+                                                * mSquareSize);
+                            } else {
+                                mOrientation = 0;
+                                image.setRotation(mOrientation);
+                                image.setX(mInitialImagePosition.x);
+                                image.setY(mInitialImagePosition.y);
+                            }
                         }
                         break;
                     case MotionEvent.ACTION_POINTER_UP:
@@ -195,6 +211,27 @@ public class PlaceShipsActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    private boolean isWithinField(Coordinate position, Coordinate size, int orientation) {
+        if (orientation == 0 || orientation == 180) {
+            return position.getColumn() + size.getColumn() <= Field.COLUMNS &&
+                    position.getRow() + size.getRow() <= Field.ROWS;
+        } else {
+            return position.getColumn() + size.getRow() <= Field.COLUMNS &&
+                    position.getRow() + size.getColumn() <= Field.ROWS;
+        }
+    }
+
+    private Coordinate getPositionOnField(PointF imagePosition, int orientation, Coordinate size) {
+        PointF rotatedPosition = getRotatedPosition(imagePosition, orientation, size);
+        int column = Math.round((rotatedPosition.x - mOffsetLeft) / mSquareSize) - 7;
+        int row = Math.round((rotatedPosition.y - mOffsetTop) / mSquareSize) - 1;
+        try {
+            return new Coordinate(row, column);
+        } catch(Exception e) {
+            return null;
+        }
     }
 
     private boolean isOnField(PointF position, int orientation, Coordinate size) {

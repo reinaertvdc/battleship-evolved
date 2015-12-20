@@ -9,7 +9,7 @@ public class Coordinate {
     private int mColumn;
 
     public Coordinate(int row, int column) {
-        if (row < 0 || row > Field.ROWS || column < 0 || column > Field.COLUMNS )
+        if (row < 0 || row >= Field.ROWS || column < 0 || column >= Field.COLUMNS )
             throw new IndexOutOfBoundsException();
         mRow = row;
         mColumn = column;
