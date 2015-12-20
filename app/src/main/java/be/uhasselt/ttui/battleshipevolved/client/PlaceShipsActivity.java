@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
@@ -18,6 +19,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -97,6 +99,8 @@ public class PlaceShipsActivity extends AppCompatActivity {
 
     private boolean[] mShipIsPlaced;
 
+    private Button mFinish;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,6 +125,23 @@ public class PlaceShipsActivity extends AppCompatActivity {
         adjustShipImageSizes();
         setShipImagePositions();
         createShipImageOnTouchListeners();
+
+        mFinish = new Button(this);
+        FrameLayout.LayoutParams layoutParams =
+                new FrameLayout.LayoutParams(mSquareSize * 5, mSquareSize * 2);
+        layoutParams.leftMargin = mOffsetLeft + mSquareSize / 2;
+        layoutParams.topMargin = mOffsetTop + mSquareSize * 5;
+        mFinish.setLayoutParams(layoutParams);
+        mFinish.setBackgroundColor(Color.rgb(0, 128, 0));
+        mFinish.setText("Ready");
+        mFinish.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View view, MotionEvent event) {
+                if (event.getActionMasked() == MotionEvent.ACTION_UP) {
+                    onFinished();
+                }
+                return true;
+            }
+        });
     }
 
     private void createShipImageOnTouchListeners() {
@@ -166,6 +187,7 @@ public class PlaceShipsActivity extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN:
+                        mLayout.removeView(mFinish);
                         if (mInitialImagePosition == null) {
                             mInitialImagePosition = getImagePosition(image);
                         }
@@ -264,9 +286,12 @@ public class PlaceShipsActivity extends AppCompatActivity {
 
     private void checkIfFinished() {
         for (boolean isPlaced : mShipIsPlaced) {
-            if (!isPlaced) return;
+            if (!isPlaced) {
+                mLayout.removeView(mFinish);
+                return;
+            }
         }
-        onFinished();
+        mLayout.addView(mFinish);
     }
 
     private void onFinished() {
