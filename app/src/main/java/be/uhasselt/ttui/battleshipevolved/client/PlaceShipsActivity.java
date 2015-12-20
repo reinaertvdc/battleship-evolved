@@ -20,11 +20,13 @@ import android.os.PowerManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import be.uhasselt.ttui.battleshipevolved.Coordinate;
 import be.uhasselt.ttui.battleshipevolved.Field;
@@ -467,19 +469,27 @@ public class PlaceShipsActivity extends AppCompatActivity {
     private void drawField() {
         Drawable fieldTileImg =
                 ContextCompat.getDrawable(getApplicationContext(), R.drawable.field_tile);
-        Drawable edgeTileImg =
-                ContextCompat.getDrawable(getApplicationContext(), R.drawable.edge_tile);
 
         for (int i = 0; i < NEEDED_VIEWPORT_ROWS; i++) {
             for (int j = 6; j < NEEDED_VIEWPORT_COLUMNS; j++) {
-                ImageView fieldTile = new ImageView(this);
-                fieldTile.setLayoutParams(new FrameLayout.LayoutParams(mSquareSize, mSquareSize));
-                if (i == 0 || i == NEEDED_VIEWPORT_ROWS - 1 ||
-                        j == 6 || j == NEEDED_VIEWPORT_COLUMNS - 1) {
-                    fieldTile.setImageDrawable(edgeTileImg);
+                View fieldTile;
+                if (i == 0 || i == 11 || j == 6 || j == 17) {
+                    fieldTile = new TextView(this);
+                    fieldTile.setBackgroundColor(0xFF000000);
+                    ((TextView)fieldTile).setGravity(Gravity.CENTER);
+                    if ((i != 0 && i != 11) || (j != 6 && j != 17)) {
+                        if (i == 0 || i == 11) {
+                            ((TextView) fieldTile).setText("" + (j - 6));
+                        } else {
+                            ((TextView) fieldTile).setText("" + (char)('A' + i - 1));
+                        }
+                    }
+                    ((TextView)fieldTile).setTextColor(0xFFFFFFFF);
                 } else {
-                    fieldTile.setImageDrawable(fieldTileImg);
+                    fieldTile = new ImageView(this);
+                    ((ImageView)fieldTile).setImageDrawable(fieldTileImg);
                 }
+                fieldTile.setLayoutParams(new FrameLayout.LayoutParams(mSquareSize, mSquareSize));
                 setImagePosition(fieldTile, mSquareSize * j, mSquareSize * i);
                 mLayout.addView(fieldTile);
             }
@@ -581,7 +591,7 @@ public class PlaceShipsActivity extends AppCompatActivity {
         image.bringToFront();
     }
 
-    private void setImagePosition(ImageView image, int left, int top) {
+    private void setImagePosition(View image, int left, int top) {
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) image.getLayoutParams();
         layoutParams.leftMargin = mOffsetLeft + left;
         layoutParams.topMargin = mOffsetTop + top;

@@ -17,6 +17,7 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,7 +33,7 @@ public class PlayActivity extends Activity {
     private TextView mTxtTurn;
     private TextView mTxtOnline;
     private TextView mTxtCooldown;
-    private GridController mGrid;
+    private GridDrawer mGrid;
     private ArrayList<Cooldown> mCooldowns;
     private boolean itsmyturn;
     private PowerManager.WakeLock mWL;
@@ -49,7 +50,9 @@ public class PlayActivity extends Activity {
         messageReceiver = new serverMessage();
         doBinding();
         setContentView(R.layout.activity_play);
-        mGrid = new GridController(10, 10, (TableLayout) findViewById(R.id.gridLayout), this);
+        mGrid = new GridDrawer(10, 10, (FrameLayout) findViewById(R.id.play_layout), this);
+        mGrid.setDamaged(2, 2);
+        mGrid.setWater(5, 8);
         mBtnSpeech = (Button) findViewById(R.id.speechButton);
         mBtnSpeech.setOnClickListener(mListenListener);
         mTxtTurn = (TextView) findViewById(R.id.turnText);
@@ -170,7 +173,7 @@ public class PlayActivity extends Activity {
                     mGrid.setWater(Integer.parseInt(words[1]), Integer.parseInt(words[2]));
                     break;
                 case "BOAT":
-                    mGrid.setShip(Integer.parseInt(words[1]), Integer.parseInt(words[2]));
+                    // TODO mGrid.setShip(Integer.parseInt(words[1]), Integer.parseInt(words[2]));
                     break;
             }
         } catch (IndexOutOfBoundsException e) {
@@ -206,7 +209,7 @@ public class PlayActivity extends Activity {
 
     private void addPosition(String[] words) {
         try {
-            mGrid.setShip(Integer.parseInt(words[1]), Integer.parseInt(words[2]));
+            // TODO mGrid.setShip(Integer.parseInt(words[1]), Integer.parseInt(words[2]));
         } catch (Exception e) {
 
         }

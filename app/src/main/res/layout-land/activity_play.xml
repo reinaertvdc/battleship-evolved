@@ -1,24 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/play_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary">
 
-    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/gridLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
-        android:background="@color/colorPrimary">
-    </TableLayout>
     <TextView
         android:id="@+id/turnText"
         android:text="Waiting for other players"
         android:textSize="24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorTitle"
-        android:layout_toRightOf="@id/gridLayout"/>
+        android:textColor="@color/colorTitle"/>
     <Button
         android:id="@+id/speechButton"
         android:text="Press to command"
@@ -27,7 +20,6 @@
         android:layout_height="wrap_content"
         android:textColor="@color/colorPrimaryDark"
         android:visibility="invisible"
-        android:layout_toRightOf="@id/gridLayout"
         android:layout_below="@id/turnText"/>
     <TextView
         android:id="@+id/onlineText"
@@ -36,7 +28,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorAccent"
-        android:layout_toRightOf="@id/gridLayout"
         android:layout_below="@id/speechButton"/>
     <TextView
         android:id="@+id/cooldownText"
@@ -45,6 +36,53 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorCooldown"
-        android:layout_toRightOf="@id/gridLayout"
         android:layout_below="@id/onlineText"/>
-</RelativeLayout>
+
+    <ImageView
+        android:id="@+id/ship_aircraft_carrier"
+        android:src="@drawable/ship_aircraft_carrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/ship_battleship"
+        android:src="@drawable/ship_battleship"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/ship_cruiser"
+        android:src="@drawable/ship_cruiser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/ship_decoy"
+        android:src="@drawable/ship_decoy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/ship_destroyer"
+        android:src="@drawable/ship_destroyer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/ship_marine_radar"
+        android:src="@drawable/ship_marine_radar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/ship_missile_command"
+        android:src="@drawable/ship_missile_command"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/ship_patrol_boat"
+        android:src="@drawable/ship_patrol_boat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</FrameLayout>
