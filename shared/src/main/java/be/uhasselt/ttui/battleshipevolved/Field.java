@@ -123,6 +123,18 @@ public class Field extends Observable {
             refreshField();
     }
 
+    public ArrayList<Coordinate> giveAllBoatsPos() {
+        ArrayList<Coordinate> coordinates = new ArrayList<Coordinate>();
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLUMNS; j++) {
+                if (mPositions[i][j] != null){
+                    coordinates.add(new Coordinate(i, j));
+                }
+            }
+        }
+        return coordinates;
+    }
+
     /**
      * Refreshes the entire field
      * @post mFieldRevealed = false
