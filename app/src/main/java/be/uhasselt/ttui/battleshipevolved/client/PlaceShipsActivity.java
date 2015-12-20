@@ -314,7 +314,7 @@ public class PlaceShipsActivity extends AppCompatActivity {
 
     private void placeShip(String name, Coordinate position, boolean vertical) {
         mBoundService.sendMessage("place " + name + " "
-                + (char) ('A' + position.getRow()) + position.getColumn() + " "
+                + (char) ('A' + position.getRow()) + (position.getColumn() + 1) + " "
                 + (vertical ? "vertical" : "horizontal"));
     }
 
