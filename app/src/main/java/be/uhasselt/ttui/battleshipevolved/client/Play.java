@@ -580,7 +580,7 @@ public class Play  extends Activity {
             out = out.concat("A");
         else if (firstWord.equalsIgnoreCase("B") || firstWord.equalsIgnoreCase("be") || firstWord.equalsIgnoreCase("bee"))
             out = out.concat("B");
-        else if (firstWord.equalsIgnoreCase("C") || firstWord.equalsIgnoreCase("see"))
+        else if (firstWord.equalsIgnoreCase("C") || firstWord.equalsIgnoreCase("see") || firstWord.equalsIgnoreCase("sea"))
             out = out.concat("C");
         else if (firstWord.equalsIgnoreCase("D") || firstWord.equalsIgnoreCase("the"))
             out = out.concat("D");
@@ -602,7 +602,7 @@ public class Play  extends Activity {
         //the second word
         if (secondWord.equalsIgnoreCase("1") || secondWord.equalsIgnoreCase("one"))
             return out.concat("1");
-        else if (secondWord.equalsIgnoreCase("2") || secondWord.equalsIgnoreCase("two") || secondWord.equalsIgnoreCase("to"))
+        else if (secondWord.equalsIgnoreCase("2") || secondWord.equalsIgnoreCase("two") || secondWord.equalsIgnoreCase("to") || secondWord.equalsIgnoreCase("too"))
             return out.concat("2");
         else if (secondWord.equalsIgnoreCase("3") || secondWord.equalsIgnoreCase("three") || secondWord.equalsIgnoreCase("tree"))
             return out.concat("3");
@@ -618,7 +618,7 @@ public class Play  extends Activity {
             return out.concat("8");
         else if (secondWord.equalsIgnoreCase("9") || secondWord.equalsIgnoreCase("nine"))
             return out.concat("9");
-        else if (secondWord.equalsIgnoreCase("10") || secondWord.equalsIgnoreCase("ten") || secondWord.equalsIgnoreCase("then"))
+        else if (secondWord.equalsIgnoreCase("10") || secondWord.equalsIgnoreCase("ten") || secondWord.equalsIgnoreCase("then") || secondWord.equalsIgnoreCase("than") || secondWord.equalsIgnoreCase("den"))
             return out.concat("10");
 
         return "";
