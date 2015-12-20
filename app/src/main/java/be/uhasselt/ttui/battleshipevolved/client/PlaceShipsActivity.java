@@ -268,19 +268,20 @@ public class PlaceShipsActivity extends AppCompatActivity {
     }
 
     private void onFinished() {
-        printShipPosition("Aircraft carrier", mShipAircraftCarrierPos, mShipOrientation[0]);
-        printShipPosition("Battleship", mShipBattleshipPos, mShipOrientation[1]);
-        printShipPosition("Cruiser", mShipCruiserPos, mShipOrientation[2]);
-        printShipPosition("Decoy", mShipDecoyPos, mShipOrientation[3]);
-        printShipPosition("Destroyer", mShipDestroyerPos, mShipOrientation[4]);
-        printShipPosition("Marine radar", mShipMarineRadarPos, mShipOrientation[5]);
-        printShipPosition("Missile command", mShipMissileCommandPos, mShipOrientation[6]);
-        printShipPosition("Patrol boat", mShipPatrolBoatPos, mShipOrientation[7]);
+        placeShip("aircraftcarrier", mShipAircraftCarrierPos, mShipOrientation[0]);
+        placeShip("battleship", mShipBattleshipPos, mShipOrientation[1]);
+        placeShip("cruiser", mShipCruiserPos, mShipOrientation[2]);
+        placeShip("decoy", mShipDecoyPos, mShipOrientation[3]);
+        placeShip("destroyer", mShipDestroyerPos, mShipOrientation[4]);
+        placeShip("marineradar", mShipMarineRadarPos, mShipOrientation[5]);
+        placeShip("missilecommand", mShipMissileCommandPos, mShipOrientation[6]);
+        placeShip("patrolboat", mShipPatrolBoatPos, mShipOrientation[7]);
     }
 
-    private void printShipPosition(String name, Coordinate position, boolean orientation) {
-        System.out.println(name + " placed " + (orientation ? "vertically" : "horizontally")
-                + " at [" + position.getColumn() + "," + position.getRow() + "].");
+    private void placeShip(String name, Coordinate position, boolean vertical) {
+        mBoundService.sendMessage("place " + name + " "
+                + (char) ('A' + position.getRow()) + position.getColumn() + " "
+                + (vertical ? "vertical" : "horizontal"));
     }
 
     private boolean overlapsWithExistingShip(
