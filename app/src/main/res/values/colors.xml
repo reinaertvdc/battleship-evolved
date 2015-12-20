@@ -3,7 +3,8 @@
     <color name="colorPrimary">#361d74</color>
     <color name="colorPrimaryDark">#1b0d46</color>
     <color name="colorAccent">#e6ff00</color>
-    <color name="colorCooldown">#929c49</color>
+    <color name="colorOnline">#26ff00</color>
+    <color name="colorCooldown">#d42000</color>
     <color name="colorTitle">#ffffff</color>
     <color name="colorSubTitle">#bbbbbb</color>
     <color name="colorShip">#000000</color>
