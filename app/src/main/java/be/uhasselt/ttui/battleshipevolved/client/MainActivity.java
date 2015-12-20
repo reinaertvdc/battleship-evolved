@@ -3,6 +3,7 @@ package be.uhasselt.ttui.battleshipevolved.client;
 import android.annotation.SuppressLint;
 import android.content.*;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private View mControlsView;
     private EditText mConnectTextView;
     private boolean mVisible;
+    private PowerManager.WakeLock mWL;
 
 
     //functions for binding to the connectionThread service
@@ -95,6 +97,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        mWL = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My Tag");
+        mWL.acquire();
 
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
@@ -234,6 +239,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         doUnbinding();
+        mWL.release();
     }
 
     private serverMessage messageReceiver;
@@ -263,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
                     //server acknowledged our handshake, so we can assume connection has been made
                     Toast toast = Toast.makeText(getApplicationContext(), "Connected to the server!", Toast.LENGTH_LONG);
                     toast.show();
-                    //startActivity(new Intent(MainActivity.this, Play.class));
+                    //startActivity(new Intent(MainActivity.this, PlayActivity.class));
                     startActivity(new Intent(MainActivity.this, PlaceShipsActivity.class));
                 }
             }

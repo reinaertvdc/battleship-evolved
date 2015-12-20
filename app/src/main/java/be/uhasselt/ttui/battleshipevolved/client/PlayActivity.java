@@ -10,6 +10,7 @@ import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.os.Vibrator;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
@@ -26,7 +27,7 @@ import java.util.Arrays;
 /**
  * Created by Arno on 9/12/2015.
  */
-public class Play  extends Activity {
+public class PlayActivity extends Activity {
     private Button mBtnSpeech;
     private TextView mTxtTurn;
     private TextView mTxtOnline;
@@ -34,12 +35,16 @@ public class Play  extends Activity {
     private GridController mGrid;
     private ArrayList<Cooldown> mCooldowns;
     private boolean itsmyturn;
+    private PowerManager.WakeLock mWL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        mWL = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My Tag");
+        mWL.acquire();
         itsmyturn = false;
         messageReceiver = new serverMessage();
         doBinding();
@@ -65,6 +70,7 @@ public class Play  extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         doUnbinding();
+        mWL.release();
         if (mSpeechRecognizer != null)
         {
             mSpeechRecognizer.destroy();
