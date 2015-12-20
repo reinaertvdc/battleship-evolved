@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
-    tools:context="be.uhasselt.ttui.battleshipevolved.client.PlaceShipsActivity">
+    tools:context="be.uhasselt.ttui.battleshipevolved.client.PlaceShipsActivity"
+    android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,

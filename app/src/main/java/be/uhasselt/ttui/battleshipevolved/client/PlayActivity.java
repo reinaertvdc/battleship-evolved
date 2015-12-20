@@ -16,6 +16,8 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TableLayout;
@@ -49,6 +51,9 @@ public class PlayActivity extends Activity {
         itsmyturn = false;
         messageReceiver = new serverMessage();
         doBinding();
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_play);
         mGrid = new GridDrawer(10, 10, (FrameLayout) findViewById(R.id.play_layout), this);
         mGrid.setDamaged(2, 2);
