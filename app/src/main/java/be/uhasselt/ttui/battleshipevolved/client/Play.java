@@ -107,8 +107,6 @@ public class Play  extends Activity {
                 String message = extra.getString("message");
                 System.out.println(message);
                 interpretMessage(message);
-                if (!mIslistening)
-                    mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
             }
         }
     }
@@ -120,7 +118,10 @@ public class Play  extends Activity {
     private void interpretMessage(String message) {
         String[] words = message.split(" ");
         String command = words[0];
-        if (command.equalsIgnoreCase("CoordinateUpdate")) {
+        if (message.equalsIgnoreCase("your turn")) {
+            if (!mIslistening)
+                mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
+        } else if (command.equalsIgnoreCase("CoordinateUpdate")) {
             updateGrid(words);
         } else if (command.equalsIgnoreCase("next")) {
             updateTurn(words);
@@ -309,7 +310,7 @@ public class Play  extends Activity {
         if (matchFound) {
 
         } else {
-
+            mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
         }
 
     }
@@ -414,7 +415,14 @@ public class Play  extends Activity {
 
     private String interpretCoordinates(ArrayList<String> words) {
         //first check if the coordinate was interpreted correctly
+        if (words.size() == 0)
+            return "";
         String firstWord = words.get(0);
+        //if the word is "on", we'll just skip it
+        if (firstWord.equalsIgnoreCase("on")) {
+            words.remove(0);
+            firstWord = words.get(0);
+        }
         if (firstWord.length() == 2) {
             if (isCoordinate(firstWord.charAt(0), firstWord.charAt(1), '0'))
                 return firstWord;
@@ -424,6 +432,15 @@ public class Play  extends Activity {
         }
 
         //other possibilities are wrong interpretations of some letters/numbers
+        if (words.size() < 2)
+            return "";
+        String secondWord = words.get(1);
+        //a tree
+        if (firstWord.equalsIgnoreCase("a") && secondWord.equalsIgnoreCase("tree")) {
+            return "A3";
+        }
+
+
         return "";
     }
 

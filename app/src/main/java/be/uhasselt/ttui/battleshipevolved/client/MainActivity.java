@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
         mConnectTextView = (EditText) findViewById(R.id.connect_text);
-        mConnectTextView.setText("192.168.1.58");
+        mConnectTextView.setText("192.168.0.131");
 
         // Set up the user interaction to manually show or hide the system UI.
         mContentView.setOnClickListener(new View.OnClickListener() {

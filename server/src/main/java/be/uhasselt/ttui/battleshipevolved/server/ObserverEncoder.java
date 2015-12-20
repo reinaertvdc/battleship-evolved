@@ -63,7 +63,10 @@ public class ObserverEncoder implements Observer {
                             mClients.get(k).sendMessage("player " + (j+1) + " has left the game");
                     }
                 Player player = (Player)arg;
-                server.sendMessage("next turn for player " + (player.getID()+1));
+                if (player.getID() == i)
+                    server.sendMessage("your turn");
+                else
+                    server.sendMessage("next turn for player " + (player.getID()+1));
             }
         } else if (arg instanceof String) {
             String str = (String)arg;
