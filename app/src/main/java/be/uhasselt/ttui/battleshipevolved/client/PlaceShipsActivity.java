@@ -104,6 +104,9 @@ public class PlaceShipsActivity extends AppCompatActivity {
 
     private Button mFinish;
 
+    private boolean mAllClientsConnected;
+    private boolean mReady;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,6 +119,8 @@ public class PlaceShipsActivity extends AppCompatActivity {
         mOffsetLeft = 0;
         mShipOrientation = new boolean[8];
         mShipIsPlaced = new boolean[]{false, false, false, false, false, false, false, false};
+        mAllClientsConnected = false;
+        mReady = false;
 
         doBinding();
 
@@ -190,6 +195,9 @@ public class PlaceShipsActivity extends AppCompatActivity {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                if (mReady) {
+                    return true;
+                }
                 switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN:
                         mLayout.removeView(mFinish);
@@ -300,6 +308,12 @@ public class PlaceShipsActivity extends AppCompatActivity {
     }
 
     private void onFinished() {
+        mReady = true;
+        if (!mAllClientsConnected) {
+            mFinish.setBackgroundColor(Color.rgb(64, 64, 64));
+            mFinish.setText("Waiting for other players...");
+            return;
+        }
         placeShip("aircraftcarrier", mShipAircraftCarrierPos, mShipOrientation[0]);
         placeShip("battleship", mShipBattleshipPos, mShipOrientation[1]);
         placeShip("cruiser", mShipCruiserPos, mShipOrientation[2]);
@@ -630,11 +644,10 @@ public class PlaceShipsActivity extends AppCompatActivity {
                 Bundle extra = intent.getExtras();
                 String message = extra.getString("message");
                 if (message.equalsIgnoreCase("all clients connected")) {
-                    //server acknowledged our handshake, so we can assume connection has been made
-                    Toast toast = Toast.makeText(getApplicationContext(), "Connected to the server!", Toast.LENGTH_LONG);
-                    toast.show();
-                    startActivity(new Intent(PlaceShipsActivity.this, Play.class));
-                    //startActivity(new Intent(MainActivity.this, PlaceShipsActivity.class));
+                    mAllClientsConnected = true;
+                    if (mReady) {
+                        onFinished();
+                    }
                 }
             }
         }
