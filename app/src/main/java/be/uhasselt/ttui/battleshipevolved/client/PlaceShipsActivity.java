@@ -182,11 +182,24 @@ public class PlaceShipsActivity extends AppCompatActivity {
                                     getPositionOnField(imagePosition, mOrientation, size);
                             if (fieldPosition != null &&
                                     isWithinField(fieldPosition, size, mOrientation)) {
-                                image.setX(mOffsetLeft + Math.round(imagePosition.x / mSquareSize)
-                                        * mSquareSize);
-                                image.setY(
-                                        mOffsetTop + Math.round(imagePosition.y / mSquareSize - 0.5)
-                                                * mSquareSize);
+                                if ((mOrientation == 90 || mOrientation == 270) &&
+                                        size.getColumn() % 2 == 0) {
+                                    image.setX(mOffsetLeft
+                                            + Math.round((imagePosition.x - mOffsetLeft)
+                                            / mSquareSize + 0.5) * mSquareSize
+                                            - Math.round(mSquareSize * 0.5));
+                                    image.setY(mOffsetTop
+                                            + Math.round((imagePosition.y - mOffsetTop)
+                                            / mSquareSize + 0.5) * mSquareSize
+                                            - Math.round(mSquareSize * 0.5));
+                                }else {
+                                    image.setX(mOffsetLeft
+                                            + Math.round((imagePosition.x - mOffsetLeft)
+                                            / mSquareSize) * mSquareSize);
+                                    image.setY(mOffsetTop
+                                            + Math.round((imagePosition.y - mOffsetTop)
+                                            / mSquareSize) * mSquareSize);
+                                }
                             } else {
                                 mOrientation = 0;
                                 image.setRotation(mOrientation);
