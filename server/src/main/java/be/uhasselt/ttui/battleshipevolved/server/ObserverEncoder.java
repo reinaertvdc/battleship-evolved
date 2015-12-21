@@ -77,6 +77,14 @@ public class ObserverEncoder implements Observer {
             }
         } else if (arg instanceof Boolean) {
             //all players are ready, so the game can start!
+
+            /*
+             * small hack, have a short delay before starting the game to compensate for network delay
+             */
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {}
+            
             for (int i = 0; i < mClients.size(); i++) {
                 PlayerServer server = mClients.get(i);
                 server.sendMessage("game start");
