@@ -19,24 +19,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorPrimaryDark"
-        android:visibility="invisible"
-        android:layout_below="@id/turnText" />
+        android:visibility="invisible" />
     <TextView
         android:id="@+id/onlineText"
         android:text=""
         android:textSize="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorOnline"
-        android:layout_below="@id/speechButton"/>
+        android:textColor="@color/colorOnline"/>
     <TextView
         android:id="@+id/cooldownText"
         android:text=""
         android:textSize="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorCooldown"
-        android:layout_below="@id/onlineText"/>
+        android:textColor="@color/colorCooldown"/>
 
     <ImageView
         android:id="@+id/ship_aircraft_carrier"

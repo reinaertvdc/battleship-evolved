@@ -149,7 +149,7 @@ public class PlayActivity extends Activity {
             updateGrid(words);
         } else if (command.equalsIgnoreCase("next")) {
             updateTurn(words);
-        } else if (command.equalsIgnoreCase("success")) {
+        } else if (command.equalsIgnoreCase("arrived")) {
             clearCooldowns();
             mBoundService.sendMessage("Send cooldowns");
         } else if (command.equalsIgnoreCase("cooldown")) {
@@ -262,8 +262,8 @@ public class PlayActivity extends Activity {
             offline += "" + bombCooldown + " Bombs 1 turn(s)\n";
         }
         if (bombUsed == 1) {
-            offline += "" + bombUsed + " Bomb 2 turn(s)\n"; //Bomb expected to have a cooldown of maximum 2 turn
-        } else if (bombCooldown > 1) {
+            offline += "" + bombUsed + " Bomb 2 turn(s)\n"; //Bomb expected to have a cooldown of maximum 2 turns
+        } else if (bombUsed > 1) {
             offline += "" + bombUsed + " Bombs 2 turn(s)\n";
         }
 

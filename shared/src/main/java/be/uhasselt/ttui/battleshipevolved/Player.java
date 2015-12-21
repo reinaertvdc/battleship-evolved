@@ -107,9 +107,9 @@ public class Player {
                             Field[] fields = new Field[1];
                             fields[0] = field;
                             weaponRadar.deploy(fields, coordinate);
-                            return "success";
+                            return "arrived";
                         } catch (Weapon.NotReadyException e) {
-                            return "radar is on cooldown";
+                            return "scan is on cooldown";
                         }
                     }
                 }
@@ -137,7 +137,7 @@ public class Player {
                         Field[] fields = new Field[1];
                         fields[0] = field;
                         weaponShot.deploy(fields, coordinate);
-                        return "success";
+                        return "arrived";
                     } catch (Weapon.NotReadyException e) {
                         continue;
                     }
@@ -170,7 +170,7 @@ public class Player {
                             Field[] fields = new Field[1];
                             fields[0] = field;
                             weaponAirStrike.deploy(fields, coordinate);
-                            return "success";
+                            return "arrived";
                         } catch (Weapon.NotReadyException e) {
                             return "airstrike is on cooldown";
                         }
@@ -199,7 +199,7 @@ public class Player {
                         WeaponArtillery weaponArtillery = (WeaponArtillery) weapon;
                         try {
                             weaponArtillery.deploy(fields, coordinate);
-                            return "success";
+                            return "arrived";
                         } catch (Weapon.NotReadyException e) {
                             return "artillery is on cooldown";
                         }
