@@ -42,8 +42,6 @@ public class GridDrawer {
             mImgShipDecoy, mImgShipDestroyer, mImgShipMarineRadar,
             mImgShipMissileCommand, mImgShipPatrolBoat;
 
-    private boolean[] mShipOrientation;
-
     private int mRows;
     private int mColumns;
     private FrameLayout mGridLayout;
@@ -68,10 +66,10 @@ public class GridDrawer {
         adjustShipImageSizes();
         setShipImagePositions();
 
-        setImageLeft(mParent.findViewById(R.id.turnText), mSquareSize * 13);
-        setImageLeft(mParent.findViewById(R.id.speechButton), mSquareSize * 13);
-        setImageLeft(mParent.findViewById(R.id.onlineText), mSquareSize * 13);
-        setImageLeft(mParent.findViewById(R.id.cooldownText), mSquareSize * 13);
+        setImagePosition(mParent.findViewById(R.id.turnText), Math.round(mSquareSize * 12.5f), mOffsetTop);
+        setImagePosition(mParent.findViewById(R.id.speechButton), Math.round(mSquareSize * 12.5f), mOffsetTop + (mSquareSize * 3));
+        setImagePosition(mParent.findViewById(R.id.onlineText), Math.round(mSquareSize * 12.5f), mOffsetTop + (mSquareSize * 5));
+        setImagePosition(mParent.findViewById(R.id.cooldownText), Math.round(mSquareSize * 12.5f), mOffsetTop + (mSquareSize * 9));
     }
 
     private void adjustShipImageSizes() {
@@ -203,19 +201,13 @@ public class GridDrawer {
         image.setLayoutParams(layoutParams);
     }
 
-    private void setImageLeft(View image, int left) {
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) image.getLayoutParams();
-        layoutParams.leftMargin = mOffsetLeft + left;
-        image.setLayoutParams(layoutParams);
-    }
-
     private void calculateSquareSizeAndOffset() {
         Point viewportResolution = getViewportResolution();
         float viewportRatio = viewportResolution.x / (float) viewportResolution.y;
         if (viewportRatio > NEEDED_VIEWPORT_RATIO) {
             mSquareSize = Math.round(viewportResolution.y / (float)NEEDED_VIEWPORT_ROWS);
-            mOffsetLeft +=
-                    Math.round(viewportResolution.x * (viewportRatio - NEEDED_VIEWPORT_RATIO) / 2f);
+            //mOffsetLeft +=
+            //        Math.round(viewportResolution.x * (viewportRatio - NEEDED_VIEWPORT_RATIO) / 2f);
         } else {
             mSquareSize = Math.round(viewportResolution.x / (float)NEEDED_VIEWPORT_COLUMNS);
             mOffsetTop +=

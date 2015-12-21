@@ -316,11 +316,11 @@ public class PlaceShipsActivity extends AppCompatActivity {
 
     private void onFinished() {
         mReady = true;
-        if (!mAllClientsConnected) {
+        /*if (!mAllClientsConnected) {
             mFinish.setBackgroundColor(Color.rgb(64, 64, 64));
             mFinish.setText("Waiting for other players...");
             return;
-        }
+        }*/
         placeShip("aircraftcarrier", mShipAircraftCarrierPos, mShipOrientation[0]);
         placeShip("battleship", mShipBattleshipPos, mShipOrientation[1]);
         placeShip("cruiser", mShipCruiserPos, mShipOrientation[2]);
