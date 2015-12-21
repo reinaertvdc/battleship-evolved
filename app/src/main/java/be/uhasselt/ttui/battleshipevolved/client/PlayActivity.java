@@ -86,22 +86,22 @@ public class PlayActivity extends Activity {
             mSpeechRecognizer.destroy();
         }
     }
-
-    public void setOnline(ArrayList<String> online) {
-        String text = "";
-        for (int i  = 0; i < online.size(); i++){
-            text += online.get(i) + "\n";
-        }
-        mTxtOnline.setText(text);
-    }
-
-    public void setCooldowns(ArrayList<String> cooldowns) {
-        String text = "";
-        for (int i  = 0; i < cooldowns.size(); i++){
-            text += cooldowns.get(i) + "\n";
-        }
-        mTxtCooldown.setText(text);
-    }
+//
+//    public void setOnline(ArrayList<String> online) {
+//        String text = "";
+//        for (int i  = 0; i < online.size(); i++){
+//            text += online.get(i) + "\n";
+//        }
+//        mTxtOnline.setText(text);
+//    }
+//
+//    public void setCooldowns(ArrayList<String> cooldowns) {
+//        String text = "";
+//        for (int i  = 0; i < cooldowns.size(); i++){
+//            text += cooldowns.get(i) + "\n";
+//        }
+//        mTxtCooldown.setText(text);
+//    }
 
     private serverMessage messageReceiver;
     @Override
@@ -228,6 +228,7 @@ public class PlayActivity extends Activity {
     private void updateCooldownTxt() {
         int bombOnline = 0;
         int bombCooldown = 0;
+        int bombUsed = 0;
         String online = "";
         String offline = "";
         for (int i = 0; i < mCooldowns.size(); i++){
@@ -240,7 +241,10 @@ public class PlayActivity extends Activity {
                 }
             } else {
                 if (current.getWeapon().equals("Bomb")) {
-                    bombCooldown++;
+                    if (current.getCooldown() == 1)
+                        bombCooldown++;
+                    else
+                        bombUsed++;
                 } else {
                     offline += current.getWeapon() + " " + current.getCooldown() + " turn(s)\n";
                 }
@@ -256,6 +260,12 @@ public class PlayActivity extends Activity {
         } else if (bombCooldown > 1) {
             offline += "" + bombCooldown + " Bombs 1 turn(s)\n";
         }
+        if (bombUsed == 1) {
+            offline += "" + bombUsed + " Bomb 2 turn(s)\n"; //Bomb expected to have a cooldown of maximum 2 turn
+        } else if (bombCooldown > 1) {
+            offline += "" + bombUsed + " Bombs 2 turn(s)\n";
+        }
+
         mTxtOnline.setText(online);
         mTxtCooldown.setText(offline);
     }
