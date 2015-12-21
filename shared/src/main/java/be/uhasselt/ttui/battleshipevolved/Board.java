@@ -67,7 +67,7 @@ public class Board extends JFrame implements Observer {
             playerName.setFont(font);
             playerName.setHorizontalAlignment(JLabel.CENTER);
             mPlayerLabels[i + 2] = playerName;
-            c.gridx = i;
+            c.gridx = 1-i;
             c.gridy = 2;
             grid.add(playerName, c);
 

@@ -1,17 +1,15 @@
 package be.uhasselt.ttui.battleshipevolved.client;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import be.uhasselt.ttui.battleshipevolved.Coordinate;
@@ -44,12 +42,6 @@ public class GridDrawer {
             mImgShipDecoy, mImgShipDestroyer, mImgShipMarineRadar,
             mImgShipMissileCommand, mImgShipPatrolBoat;
 
-    private Coordinate mShipAircraftCarrierPos, mShipBattleshipPos, mShipCruiserPos,
-            mShipDecoyPos, mShipDestroyerPos, mShipMarineRadarPos,
-            mShipMissileCommandPos, mShipPatrolBoatPos;
-
-    private boolean[] mShipOrientation;
-
     private int mRows;
     private int mColumns;
     private FrameLayout mGridLayout;
@@ -74,10 +66,10 @@ public class GridDrawer {
         adjustShipImageSizes();
         setShipImagePositions();
 
-        setImageLeft(mParent.findViewById(R.id.turnText), mSquareSize * 13);
-        setImageLeft(mParent.findViewById(R.id.speechButton), mSquareSize * 13);
-        setImageLeft(mParent.findViewById(R.id.onlineText), mSquareSize * 13);
-        setImageLeft(mParent.findViewById(R.id.cooldownText), mSquareSize * 13);
+        setImagePosition(mParent.findViewById(R.id.turnText), Math.round(mSquareSize * 12.5f), mOffsetTop);
+        setImagePosition(mParent.findViewById(R.id.speechButton), Math.round(mSquareSize * 12.5f), mOffsetTop + (mSquareSize * 3));
+        setImagePosition(mParent.findViewById(R.id.onlineText), Math.round(mSquareSize * 12.5f), mOffsetTop + (mSquareSize * 5));
+        setImagePosition(mParent.findViewById(R.id.cooldownText), Math.round(mSquareSize * 12.5f), mOffsetTop + (mSquareSize * 9));
     }
 
     private void adjustShipImageSizes() {
@@ -92,42 +84,39 @@ public class GridDrawer {
     }
 
     private void setShipImagePositions() {
-        Point mImgShipAircraftCarrierPos = new Point();
-        Point mImgShipBattleshipPos = new Point();
-        Point mImgShipCruiserPos = new Point();
-        Point mImgShipDestroyerPos = new Point();
-        Point mImgShipMarineRadarPos = new Point();
-        Point mImgShipPatrolBoatPos = new Point();
-        Point mImgShipMissileCommandPos = new Point();
-        Point mImgShipDecoyPos = new Point();
+        Bundle bundle = mParent.getIntent().getExtras();
 
-        mGridLayout.removeView(mImgShipAircraftCarrier);
-        mGridLayout.removeView(mImgShipBattleship);
-        mGridLayout.removeView(mImgShipCruiser);
-        mGridLayout.removeView(mImgShipDestroyer);
-        mGridLayout.removeView(mImgShipMarineRadar);
-        mGridLayout.removeView(mImgShipPatrolBoat);
-        mGridLayout.removeView(mImgShipMissileCommand);
-        mGridLayout.removeView(mImgShipDecoy);
-
-        setShipImagePosition(mImgShipAircraftCarrier, mImgShipAircraftCarrierPos, 0, 0);
-        setShipImagePosition(mImgShipBattleship, mImgShipBattleshipPos, 1, 0);
-        setShipImagePosition(mImgShipCruiser, mImgShipCruiserPos, 2, 0);
-        setShipImagePosition(mImgShipDestroyer, mImgShipDestroyerPos, 3, 0);
-        setShipImagePosition(mImgShipMarineRadar, mImgShipMarineRadarPos, 4, 0);
-        setShipImagePosition(mImgShipPatrolBoat, mImgShipPatrolBoatPos, 5, 0);
-        setShipImagePosition(mImgShipMissileCommand, mImgShipMissileCommandPos, 6, 0);
-        setShipImagePosition(mImgShipDecoy, mImgShipDecoyPos, 6, 2);
+        setShipImagePosition(mImgShipAircraftCarrier, bundle, "aircraftcarrier");
+        setShipImagePosition(mImgShipBattleship, bundle, "battleship");
+        setShipImagePosition(mImgShipCruiser, bundle, "cruiser");
+        setShipImagePosition(mImgShipDestroyer, bundle, "destroyer");
+        setShipImagePosition(mImgShipMarineRadar, bundle, "marineradar");
+        setShipImagePosition(mImgShipPatrolBoat, bundle, "patrolboat");
+        setShipImagePosition(mImgShipMissileCommand, bundle, "missilecommand");
+        setShipImagePosition(mImgShipDecoy, bundle, "decoy");
     }
 
-    private void setShipImagePosition(ImageView image, Point position, int top, int left) {
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) image.getLayoutParams();
-        layoutParams.leftMargin = mOffsetLeft + Math.round((mSquareSize * left * 1.5f));
-        layoutParams.topMargin =
-                mOffsetTop + Math.round((mSquareSize * top * 1.5f) + mSquareSize / 2);
-        position.set(layoutParams.leftMargin, layoutParams.topMargin);
-        image.setLayoutParams(layoutParams);
-        image.bringToFront();
+    private void setShipImagePosition(View ship, Bundle bundle, String name) {
+        int width = bundle.getInt(name + "_width");
+        int height = bundle.getInt(name + "_height");
+        int left = bundle.getInt(name + "_left");
+        int top = bundle.getInt(name + "_top");
+        boolean vertical = bundle.getBoolean(name + "_vertical");
+
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) ship.getLayoutParams();
+        layoutParams.leftMargin = mOffsetLeft + Math.round((mSquareSize * left)) + mSquareSize;
+        layoutParams.topMargin = mOffsetTop + Math.round((mSquareSize * top)) + mSquareSize;
+        if (vertical) {
+            ship.setRotation(90);
+            layoutParams.leftMargin -= (width - height) / 2 * mSquareSize;
+            layoutParams.topMargin += (width - height) / 2 * mSquareSize;
+            if (width % 2 == 0 && height % 2 != 0) {
+                layoutParams.leftMargin -= 0.5 * mSquareSize;
+                layoutParams.topMargin += 0.5 * mSquareSize;
+            }
+        }
+        ship.setLayoutParams(layoutParams);
+        ship.bringToFront();
     }
 
     private void loadShipImages() {
@@ -188,6 +177,7 @@ public class GridDrawer {
                 ContextCompat.getDrawable(mParent.getApplicationContext(), R.drawable.hit_tile);
         try {
             mGrid[column][row].setImageDrawable(hitTile);
+            mGrid[column][row].bringToFront();
         } catch (IndexOutOfBoundsException e) {
             System.err.println("Out of grid bounds.");
         }
@@ -198,6 +188,7 @@ public class GridDrawer {
                 ContextCompat.getDrawable(mParent.getApplicationContext(), R.drawable.water_tile);
         try {
             mGrid[column][row].setImageDrawable(waterTile);
+            mGrid[column][row].bringToFront();
         } catch (IndexOutOfBoundsException e) {
             System.err.println("Out of grid bounds.");
         }
@@ -210,19 +201,13 @@ public class GridDrawer {
         image.setLayoutParams(layoutParams);
     }
 
-    private void setImageLeft(View image, int left) {
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) image.getLayoutParams();
-        layoutParams.leftMargin = mOffsetLeft + left;
-        image.setLayoutParams(layoutParams);
-    }
-
     private void calculateSquareSizeAndOffset() {
         Point viewportResolution = getViewportResolution();
         float viewportRatio = viewportResolution.x / (float) viewportResolution.y;
         if (viewportRatio > NEEDED_VIEWPORT_RATIO) {
             mSquareSize = Math.round(viewportResolution.y / (float)NEEDED_VIEWPORT_ROWS);
-            mOffsetLeft +=
-                    Math.round(viewportResolution.x * (viewportRatio - NEEDED_VIEWPORT_RATIO) / 2f);
+            //mOffsetLeft +=
+            //        Math.round(viewportResolution.x * (viewportRatio - NEEDED_VIEWPORT_RATIO) / 2f);
         } else {
             mSquareSize = Math.round(viewportResolution.x / (float)NEEDED_VIEWPORT_COLUMNS);
             mOffsetTop +=

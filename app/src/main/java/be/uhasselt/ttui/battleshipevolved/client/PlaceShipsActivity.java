@@ -316,11 +316,11 @@ public class PlaceShipsActivity extends AppCompatActivity {
 
     private void onFinished() {
         mReady = true;
-        if (!mAllClientsConnected) {
+        /*if (!mAllClientsConnected) {
             mFinish.setBackgroundColor(Color.rgb(64, 64, 64));
             mFinish.setText("Waiting for other players...");
             return;
-        }
+        }*/
         placeShip("aircraftcarrier", mShipAircraftCarrierPos, mShipOrientation[0]);
         placeShip("battleship", mShipBattleshipPos, mShipOrientation[1]);
         placeShip("cruiser", mShipCruiserPos, mShipOrientation[2]);
@@ -332,18 +332,21 @@ public class PlaceShipsActivity extends AppCompatActivity {
         mBoundService.sendMessage("end placement");
 
         Intent intent = new Intent(PlaceShipsActivity.this, PlayActivity.class);
-        addToIntent(intent, "aircraftcarrier", mShipAircraftCarrierPos, mShipOrientation[0]);
-        addToIntent(intent, "battleship", mShipBattleshipPos, mShipOrientation[1]);
-        addToIntent(intent, "cruiser", mShipCruiserPos, mShipOrientation[2]);
-        addToIntent(intent, "decoy", mShipDecoyPos, mShipOrientation[3]);
-        addToIntent(intent, "destroyer", mShipDestroyerPos, mShipOrientation[4]);
-        addToIntent(intent, "marineradar", mShipMarineRadarPos, mShipOrientation[5]);
-        addToIntent(intent, "missilecommand", mShipMissileCommandPos, mShipOrientation[6]);
-        addToIntent(intent, "patrolboat", mShipPatrolBoatPos, mShipOrientation[7]);
+        addToIntent(intent, "aircraftcarrier", mShipAircraftCarrierPos, mShipAircraftCarrierSize, mShipOrientation[0]);
+        addToIntent(intent, "battleship", mShipBattleshipPos, mShipBattleshipSize, mShipOrientation[1]);
+        addToIntent(intent, "cruiser", mShipCruiserPos, mShipCruiserSize, mShipOrientation[2]);
+        addToIntent(intent, "decoy", mShipDecoyPos, mShipDecoySize, mShipOrientation[3]);
+        addToIntent(intent, "destroyer", mShipDestroyerPos, mShipDestroyerSize, mShipOrientation[4]);
+        addToIntent(intent, "marineradar", mShipMarineRadarPos, mShipMarineRadarSize, mShipOrientation[5]);
+        addToIntent(intent, "missilecommand", mShipMissileCommandPos, mShipMissileCommandSize, mShipOrientation[6]);
+        addToIntent(intent, "patrolboat", mShipPatrolBoatPos, mShipPatrolBoatSize, mShipOrientation[7]);
         startActivity(intent);
     }
 
-    private void addToIntent(Intent intent, String name, Coordinate position, boolean vertical) {
+    private void addToIntent(Intent intent, String name, Coordinate position,
+                             Coordinate size, boolean vertical) {
+        intent.putExtra(name + "_width", size.getColumn());
+        intent.putExtra(name + "_height", size.getRow());
         intent.putExtra(name + "_left", position.getColumn());
         intent.putExtra(name + "_top", position.getRow());
         intent.putExtra(name + "_vertical", vertical);
