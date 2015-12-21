@@ -23,12 +23,20 @@
         android:id="@+id/text_layout"
         android:layout_gravity="right|top">
         <TextView
+            android:id="@+id/playerText"
+            android:text=""
+            android:textSize="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTitle"/>
+        <TextView
             android:id="@+id/turnText"
             android:text="Waiting for players..."
             android:textSize="24dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorTitle"/>
+            android:textColor="@color/colorTitle"
+            android:layout_below="@+id/playerText"/>
         <Button
             android:id="@+id/speechButton"
             android:text="Press to command"

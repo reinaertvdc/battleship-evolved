@@ -140,6 +140,9 @@ public class PlayActivity extends Activity {
         String command = words[0];
         if (message.equalsIgnoreCase("your turn")) {
             myTurn();
+        } else if (message.contains("you are player")) {
+            TextView tv = (TextView) findViewById(R.id.playerText);
+            tv.setText("Player " + message.charAt(15));
         } else if (message.equalsIgnoreCase("game start")) {
             clearCooldowns();
             mBoundService.sendMessage("Send cooldowns");

@@ -88,6 +88,7 @@ public class ObserverEncoder implements Observer {
             for (int i = 0; i < mClients.size(); i++) {
                 PlayerServer server = mClients.get(i);
                 server.sendMessage("game start");
+                server.sendMessage("you are player " + (i+1));
                 if (mGame.isOnTurn(i))
                     server.sendMessage("your turn");
             }
