@@ -91,26 +91,33 @@ public class GridDrawer {
         setShipImagePosition(mImgShipAircraftCarrier, bundle, "aircraftcarrier");
         setShipImagePosition(mImgShipBattleship, bundle, "battleship");
         setShipImagePosition(mImgShipCruiser, bundle, "cruiser");
-        setShipImagePosition(mImgShipDestroyer, bundle, "decoy");
-        setShipImagePosition(mImgShipMarineRadar, bundle, "destroyer");
-        setShipImagePosition(mImgShipPatrolBoat, bundle, "marineradar");
+        setShipImagePosition(mImgShipDestroyer, bundle, "destroyer");
+        setShipImagePosition(mImgShipMarineRadar, bundle, "marineradar");
+        setShipImagePosition(mImgShipPatrolBoat, bundle, "patrolboat");
         setShipImagePosition(mImgShipMissileCommand, bundle, "missilecommand");
-        setShipImagePosition(mImgShipDecoy, bundle, "patrolboat");
+        setShipImagePosition(mImgShipDecoy, bundle, "decoy");
     }
 
     private void setShipImagePosition(View ship, Bundle bundle, String name) {
+        int width = bundle.getInt(name + "_width");
+        int height = bundle.getInt(name + "_height");
         int left = bundle.getInt(name + "_left");
         int top = bundle.getInt(name + "_top");
         boolean vertical = bundle.getBoolean(name + "_vertical");
 
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) ship.getLayoutParams();
-        layoutParams.leftMargin = mOffsetLeft + Math.round((mSquareSize * left * 1.5f));
-        layoutParams.topMargin =
-                mOffsetTop + Math.round((mSquareSize * top * 1.5f) + mSquareSize / 2);
-        ship.setLayoutParams(layoutParams);
+        layoutParams.leftMargin = mOffsetLeft + Math.round((mSquareSize * left)) + mSquareSize;
+        layoutParams.topMargin = mOffsetTop + Math.round((mSquareSize * top)) + mSquareSize;
         if (vertical) {
             ship.setRotation(90);
+            layoutParams.leftMargin -= (width - height) / 2 * mSquareSize;
+            layoutParams.topMargin += (width - height) / 2 * mSquareSize;
+            if (width % 2 == 0 && height % 2 != 0) {
+                layoutParams.leftMargin -= 0.5 * mSquareSize;
+                layoutParams.topMargin += 0.5 * mSquareSize;
+            }
         }
+        ship.setLayoutParams(layoutParams);
         ship.bringToFront();
     }
 
