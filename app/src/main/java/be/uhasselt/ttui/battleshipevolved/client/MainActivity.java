@@ -78,7 +78,11 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener mConnectListener = new View.OnClickListener() {
         public void onClick(View v) {
             // do something when the button is clicked
-            if (!isBound) {
+            if (isBound) {
+                doUnbinding();
+            }
+
+            //if (!isBound) {
                 String ip = mConnectTextView.getText().toString();
                 System.out.println("Connecting to: " + ip);
                 Intent intent = new Intent(MainActivity.this, ConnectionThread.class);
@@ -88,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 startService(intent); //starting the service will send out the handshake
                 System.out.println("Service should be started");
                 doBinding();
-            }
+            //}
         }
     };
 
