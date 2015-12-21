@@ -8,7 +8,7 @@ import java.util.Random;
  * @author Reinaert Van de Cruys
  */
 public class WeaponShot extends Weapon {
-    private static final int COOL_DOWN = 1; //change to 0 to shoot unlimited :D
+    private static final int COOL_DOWN = 2; //change to 0 to shoot unlimited :D
     Random rand = new Random();
 
     public WeaponShot() {
