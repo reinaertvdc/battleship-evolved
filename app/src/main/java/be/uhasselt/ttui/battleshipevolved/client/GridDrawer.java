@@ -1,17 +1,15 @@
 package be.uhasselt.ttui.battleshipevolved.client;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import be.uhasselt.ttui.battleshipevolved.Coordinate;
@@ -43,10 +41,6 @@ public class GridDrawer {
     private ImageView mImgShipAircraftCarrier, mImgShipBattleship, mImgShipCruiser,
             mImgShipDecoy, mImgShipDestroyer, mImgShipMarineRadar,
             mImgShipMissileCommand, mImgShipPatrolBoat;
-
-    private Coordinate mShipAircraftCarrierPos, mShipBattleshipPos, mShipCruiserPos,
-            mShipDecoyPos, mShipDestroyerPos, mShipMarineRadarPos,
-            mShipMissileCommandPos, mShipPatrolBoatPos;
 
     private boolean[] mShipOrientation;
 
@@ -92,42 +86,32 @@ public class GridDrawer {
     }
 
     private void setShipImagePositions() {
-        Point mImgShipAircraftCarrierPos = new Point();
-        Point mImgShipBattleshipPos = new Point();
-        Point mImgShipCruiserPos = new Point();
-        Point mImgShipDestroyerPos = new Point();
-        Point mImgShipMarineRadarPos = new Point();
-        Point mImgShipPatrolBoatPos = new Point();
-        Point mImgShipMissileCommandPos = new Point();
-        Point mImgShipDecoyPos = new Point();
+        Bundle bundle = mParent.getIntent().getExtras();
 
-        mGridLayout.removeView(mImgShipAircraftCarrier);
-        mGridLayout.removeView(mImgShipBattleship);
-        mGridLayout.removeView(mImgShipCruiser);
-        mGridLayout.removeView(mImgShipDestroyer);
-        mGridLayout.removeView(mImgShipMarineRadar);
-        mGridLayout.removeView(mImgShipPatrolBoat);
-        mGridLayout.removeView(mImgShipMissileCommand);
-        mGridLayout.removeView(mImgShipDecoy);
-
-        setShipImagePosition(mImgShipAircraftCarrier, mImgShipAircraftCarrierPos, 0, 0);
-        setShipImagePosition(mImgShipBattleship, mImgShipBattleshipPos, 1, 0);
-        setShipImagePosition(mImgShipCruiser, mImgShipCruiserPos, 2, 0);
-        setShipImagePosition(mImgShipDestroyer, mImgShipDestroyerPos, 3, 0);
-        setShipImagePosition(mImgShipMarineRadar, mImgShipMarineRadarPos, 4, 0);
-        setShipImagePosition(mImgShipPatrolBoat, mImgShipPatrolBoatPos, 5, 0);
-        setShipImagePosition(mImgShipMissileCommand, mImgShipMissileCommandPos, 6, 0);
-        setShipImagePosition(mImgShipDecoy, mImgShipDecoyPos, 6, 2);
+        setShipImagePosition(mImgShipAircraftCarrier, bundle, "aircraftcarrier");
+        setShipImagePosition(mImgShipBattleship, bundle, "battleship");
+        setShipImagePosition(mImgShipCruiser, bundle, "cruiser");
+        setShipImagePosition(mImgShipDestroyer, bundle, "decoy");
+        setShipImagePosition(mImgShipMarineRadar, bundle, "destroyer");
+        setShipImagePosition(mImgShipPatrolBoat, bundle, "marineradar");
+        setShipImagePosition(mImgShipMissileCommand, bundle, "missilecommand");
+        setShipImagePosition(mImgShipDecoy, bundle, "patrolboat");
     }
 
-    private void setShipImagePosition(ImageView image, Point position, int top, int left) {
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) image.getLayoutParams();
+    private void setShipImagePosition(View ship, Bundle bundle, String name) {
+        int left = bundle.getInt(name + "_left");
+        int top = bundle.getInt(name + "_top");
+        boolean vertical = bundle.getBoolean(name + "_vertical");
+
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) ship.getLayoutParams();
         layoutParams.leftMargin = mOffsetLeft + Math.round((mSquareSize * left * 1.5f));
         layoutParams.topMargin =
                 mOffsetTop + Math.round((mSquareSize * top * 1.5f) + mSquareSize / 2);
-        position.set(layoutParams.leftMargin, layoutParams.topMargin);
-        image.setLayoutParams(layoutParams);
-        image.bringToFront();
+        ship.setLayoutParams(layoutParams);
+        if (vertical) {
+            ship.setRotation(90);
+        }
+        ship.bringToFront();
     }
 
     private void loadShipImages() {

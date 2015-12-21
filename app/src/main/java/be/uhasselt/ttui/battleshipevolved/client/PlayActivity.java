@@ -180,7 +180,7 @@ public class PlayActivity extends Activity {
                     mGrid.setWater(Integer.parseInt(words[1]), Integer.parseInt(words[2]));
                     break;
                 case "BOAT":
-                    // TODO mGrid.setShip(Integer.parseInt(words[1]), Integer.parseInt(words[2]));
+                    //mGrid.setShip(Integer.parseInt(words[1]), Integer.parseInt(words[2]));
                     break;
             }
         } catch (IndexOutOfBoundsException e) {
