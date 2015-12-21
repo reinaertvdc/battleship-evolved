@@ -10,6 +10,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import be.uhasselt.ttui.battleshipevolved.Coordinate;
@@ -66,10 +67,12 @@ public class GridDrawer {
         adjustShipImageSizes();
         setShipImagePositions();
 
-        setImagePosition(mParent.findViewById(R.id.turnText), Math.round(mSquareSize * 12.5f), mOffsetTop);
-        setImagePosition(mParent.findViewById(R.id.speechButton), Math.round(mSquareSize * 12.5f), mOffsetTop + (mSquareSize * 3));
-        setImagePosition(mParent.findViewById(R.id.onlineText), Math.round(mSquareSize * 12.5f), mOffsetTop + (mSquareSize * 5));
-        setImagePosition(mParent.findViewById(R.id.cooldownText), Math.round(mSquareSize * 12.5f), mOffsetTop + (mSquareSize * 9));
+        RelativeLayout textLayout = (RelativeLayout) mParent.findViewById(R.id.text_layout);
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) textLayout.getLayoutParams();
+        layoutParams.leftMargin = mOffsetLeft + Math.round(mSquareSize * 12.5f);
+        layoutParams.topMargin = mOffsetTop;
+        layoutParams.width = getViewportResolution().x - Math.round(mSquareSize * 12.5f) - mOffsetLeft * 2;
+        textLayout.setLayoutParams(layoutParams);
     }
 
     private void adjustShipImageSizes() {

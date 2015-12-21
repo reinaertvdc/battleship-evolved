@@ -5,36 +5,6 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary">
 
-    <TextView
-        android:id="@+id/turnText"
-        android:text="Waiting for other players"
-        android:textSize="24dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorTitle"/>
-    <Button
-        android:id="@+id/speechButton"
-        android:text="Press to command"
-        android:textSize="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimaryDark"
-        android:visibility="invisible" />
-    <TextView
-        android:id="@+id/onlineText"
-        android:text=""
-        android:textSize="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorOnline"/>
-    <TextView
-        android:id="@+id/cooldownText"
-        android:text=""
-        android:textSize="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorCooldown"/>
-
     <ImageView
         android:id="@+id/ship_aircraft_carrier"
         android:src="@drawable/ship_aircraft_carrier"
@@ -47,39 +17,84 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <ImageView
-        android:id="@+id/ship_cruiser"
-        android:src="@drawable/ship_cruiser"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <ImageView
-        android:id="@+id/ship_decoy"
-        android:src="@drawable/ship_decoy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <ImageView
-        android:id="@+id/ship_destroyer"
-        android:src="@drawable/ship_destroyer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <RelativeLayout
+        android:layout_width="206dp"
+        android:layout_height="match_parent"
+        android:id="@+id/text_layout"
+        android:layout_gravity="right|top">
+        <TextView
+            android:id="@+id/turnText"
+            android:text="Waiting for other players"
+            android:textSize="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTitle"/>
+        <Button
+            android:id="@+id/speechButton"
+            android:text="Press to command"
+            android:textSize="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimaryDark"
+            android:visibility="invisible"
+            android:layout_below="@+id/turnText"/>
+        <TextView
+            android:id="@+id/onlineText"
+            android:text=""
+            android:textSize="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorOnline"
+            android:layout_below="@+id/speechButton"/>
+        <TextView
+            android:id="@+id/cooldownText"
+            android:text=""
+            android:textSize="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorCooldown"
+            android:layout_below="@+id/onlineText"/>
+    </RelativeLayout>
 
     <ImageView
         android:id="@+id/ship_marine_radar"
         android:src="@drawable/ship_marine_radar"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|top" />
 
     <ImageView
         android:id="@+id/ship_missile_command"
         android:src="@drawable/ship_missile_command"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|top" />
+
+    <ImageView
+        android:id="@+id/ship_cruiser"
+        android:src="@drawable/ship_cruiser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|top" />
+
+    <ImageView
+        android:id="@+id/ship_destroyer"
+        android:src="@drawable/ship_destroyer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|top" />
 
     <ImageView
         android:id="@+id/ship_patrol_boat"
         android:src="@drawable/ship_patrol_boat"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|top" />
+
+    <ImageView
+        android:id="@+id/ship_decoy"
+        android:src="@drawable/ship_decoy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|top" />
 </FrameLayout>
