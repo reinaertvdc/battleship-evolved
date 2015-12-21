@@ -141,6 +141,7 @@ public class PlayActivity extends Activity {
         if (message.equalsIgnoreCase("your turn")) {
             myTurn();
         } else if (message.equalsIgnoreCase("game start")) {
+            clearCooldowns();
             mBoundService.sendMessage("Send cooldowns");
             mBoundService.sendMessage("Send turn");
             mBoundService.sendMessage("Send positions");
@@ -452,7 +453,7 @@ public class PlayActivity extends Activity {
     }
 
     private boolean wordEqualsPlayer(String str) {
-        return (str.equalsIgnoreCase("player") || str.equalsIgnoreCase("play") || str.equalsIgnoreCase("playing") || str.equalsIgnoreCase("players") || str.equalsIgnoreCase("place") || str.equalsIgnoreCase("played") || str.equalsIgnoreCase("layer"));
+        return (str.equalsIgnoreCase("player") || str.equalsIgnoreCase("play") || str.equalsIgnoreCase("playing") || str.equalsIgnoreCase("players") || str.equalsIgnoreCase("place") || str.equalsIgnoreCase("played") || str.equalsIgnoreCase("layer") || str.equalsIgnoreCase("there") || str.equalsIgnoreCase("their"));
     }
 
     private boolean handleShoot(ArrayList<String> words) {
@@ -464,6 +465,10 @@ public class PlayActivity extends Activity {
             return false;
 
         words.remove(0); // remove the word "player"
+
+        if (words.size() <= 0)
+            return false;
+
         //next word is the player we want to shoot
         int playerID = interpretPlayer(words.get(0));
         if (playerID <= 0) {
@@ -490,6 +495,9 @@ public class PlayActivity extends Activity {
             return false;
 
         words.remove(0); // remove the word "player"
+        if (words.size() <= 0)
+            return false;
+
         //next word is the player we want to scan
         int playerID = interpretPlayer(words.get(0));
         if (playerID <= 0) {
@@ -516,6 +524,9 @@ public class PlayActivity extends Activity {
             return false;
 
         words.remove(0); // remove the word "player"
+        if (words.size() <= 0)
+            return false;
+
         //next word is the player we want to airstrike
         int playerID = interpretPlayer(words.get(0));
         if (playerID <= 0) {
