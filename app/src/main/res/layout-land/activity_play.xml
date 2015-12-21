@@ -24,7 +24,7 @@
         android:layout_gravity="right|top">
         <TextView
             android:id="@+id/turnText"
-            android:text="Waiting for other players"
+            android:text="Waiting for players..."
             android:textSize="24dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

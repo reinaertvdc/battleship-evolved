@@ -275,7 +275,7 @@ public class PlayerServer extends Thread {
                 if (i == mPlayer.getID())
                     sendMessage("your turn");
                 else
-                    sendMessage("next turn for player " + (players.get(i).getID()));
+                    sendMessage("next turn for player " + (players.get(i).getID() + 1));
             }
         }
     }
