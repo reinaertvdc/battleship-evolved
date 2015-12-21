@@ -216,7 +216,7 @@ public class PlayActivity extends Activity {
 
     private void addPosition(String[] words) {
         try {
-            // TODO mGrid.setShip(Integer.parseInt(words[1]), Integer.parseInt(words[2]));
+            //mGrid.setShip(Integer.parseInt(words[1]), Integer.parseInt(words[2]));
         } catch (Exception e) {
 
         }

@@ -179,6 +179,7 @@ public class GridDrawer {
                 ContextCompat.getDrawable(mParent.getApplicationContext(), R.drawable.hit_tile);
         try {
             mGrid[column][row].setImageDrawable(hitTile);
+            mGrid[column][row].bringToFront();
         } catch (IndexOutOfBoundsException e) {
             System.err.println("Out of grid bounds.");
         }
@@ -189,6 +190,7 @@ public class GridDrawer {
                 ContextCompat.getDrawable(mParent.getApplicationContext(), R.drawable.water_tile);
         try {
             mGrid[column][row].setImageDrawable(waterTile);
+            mGrid[column][row].bringToFront();
         } catch (IndexOutOfBoundsException e) {
             System.err.println("Out of grid bounds.");
         }
