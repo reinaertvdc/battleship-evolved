@@ -148,7 +148,7 @@ public class PlayActivity extends Activity {
             updateGrid(words);
         } else if (command.equalsIgnoreCase("next")) {
             updateTurn(words);
-        } else if (command.equalsIgnoreCase("success")) {
+        } else if (command.equalsIgnoreCase("arrived")) {
             clearCooldowns();
             mBoundService.sendMessage("Send cooldowns");
         } else if (command.equalsIgnoreCase("cooldown")) {
