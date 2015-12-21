@@ -187,7 +187,7 @@ public class GridDrawer {
         Drawable hitTile =
                 ContextCompat.getDrawable(mParent.getApplicationContext(), R.drawable.hit_tile);
         try {
-            mGrid[row][column].setImageDrawable(hitTile);
+            mGrid[column][row].setImageDrawable(hitTile);
         } catch (IndexOutOfBoundsException e) {
             System.err.println("Out of grid bounds.");
         }
@@ -197,7 +197,7 @@ public class GridDrawer {
         Drawable waterTile =
                 ContextCompat.getDrawable(mParent.getApplicationContext(), R.drawable.water_tile);
         try {
-            mGrid[row][column].setImageDrawable(waterTile);
+            mGrid[column][row].setImageDrawable(waterTile);
         } catch (IndexOutOfBoundsException e) {
             System.err.println("Out of grid bounds.");
         }
